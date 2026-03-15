@@ -1,7 +1,17 @@
 <Solution>
+  <Folder Name="/Aspire/">
+    <Project Path="src/PokemonTools.AppHost/PokemonTools.AppHost.csproj" />
+    <Project Path="src/PokemonTools.ServiceDefaults/PokemonTools.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="src/PokemonTools.Tests/PokemonTools.Tests.csproj" />
+  </Folder>
+  <Project Path="src/PokemonTools.ApiService.Application/PokemonTools.ApiService.Application.csproj" />
+  <Project Path="src/PokemonTools.ApiService.Domain/PokemonTools.ApiService.Domain.csproj" />
+  <Project Path="src/PokemonTools.ApiService.Infrastructure/PokemonTools.ApiService.Infrastructure.csproj" />
   <Project Path="src/PokemonTools.ApiService/PokemonTools.ApiService.csproj" />
-  <Project Path="src/PokemonTools.AppHost/PokemonTools.AppHost.csproj" />
-  <Project Path="src/PokemonTools.ServiceDefaults/PokemonTools.ServiceDefaults.csproj" />
-  <Project Path="src/PokemonTools.Tests/PokemonTools.Tests.csproj" />
+  <Project Path="src/PokemonTools.Web.Application/PokemonTools.Web.Application.csproj" />
+  <Project Path="src/PokemonTools.Web.Domain/PokemonTools.Web.Domain.csproj" />
+  <Project Path="src/PokemonTools.Web.Infrastructure/PokemonTools.Web.Infrastructure.csproj" />
   <Project Path="src/PokemonTools.Web/PokemonTools.Web.csproj" />
 </Solution>
