@@ -1,4 +1,5 @@
-﻿using PokemonTools.Web;
+﻿using PokemonTools.ServiceDefaults;
+using PokemonTools.Web;
 using PokemonTools.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);

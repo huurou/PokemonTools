@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PokemonTools.ApiService.Application\PokemonTools.ApiService.Application.csproj" />
+    <ProjectReference Include="..\PokemonTools.ApiService.Infrastructure\PokemonTools.ApiService.Infrastructure.csproj" />
     <ProjectReference Include="..\PokemonTools.ServiceDefaults\PokemonTools.ServiceDefaults.csproj" />
   </ItemGroup>
 

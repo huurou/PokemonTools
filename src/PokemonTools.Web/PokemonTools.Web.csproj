@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PokemonTools.ServiceDefaults\PokemonTools.ServiceDefaults.csproj" />
     <ProjectReference Include="..\PokemonTools.Web.Application\PokemonTools.Web.Application.csproj" />
+    <ProjectReference Include="..\PokemonTools.Web.Infrastructure\PokemonTools.Web.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
