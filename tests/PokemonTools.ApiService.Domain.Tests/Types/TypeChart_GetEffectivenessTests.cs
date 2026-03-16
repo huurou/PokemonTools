@@ -76,7 +76,7 @@ public class TypeChart_GetEffectivenessTests
 
     [Theory]
     [MemberData(nameof(複合タイプ相性データ))]
-    public void 複合タイプ相性を確認する_正しい結果が返る(string attackTypeId, string defenseType1Id, string defenseType2Id, TypeEffectiveness expected)
+    public void 複合タイプ相性の確認_正しい結果が返る(string attackTypeId, string defenseType1Id, string defenseType2Id, TypeEffectiveness expected)
     {
         // Arrange
         var attackType = FindType(attackTypeId);
@@ -142,7 +142,7 @@ public class TypeChart_GetEffectivenessTests
     #region 複合タイプ動作テスト
 
     [Fact]
-    public void 防御タイプ2がnullの場合は単タイプとして計算()
+    public void 防御タイプ2がnull_単タイプとして計算()
     {
         // Act
         var result = TypeChart.GetEffectiveness(PokemonType.Fire, PokemonType.Grass, null);
@@ -153,7 +153,7 @@ public class TypeChart_GetEffectivenessTests
 
     [Theory]
     [MemberData(nameof(防御タイプ順序テストデータ))]
-    public void 防御タイプの順序が結果に影響しない(
+    public void 防御タイプの順序の入れ替え_結果に影響しない(
         string attackTypeId, string defenseType1Id, string defenseType2Id)
     {
         // Arrange
