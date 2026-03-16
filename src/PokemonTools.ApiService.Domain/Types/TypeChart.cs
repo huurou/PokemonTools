@@ -35,24 +35,18 @@ public static class TypeChart
 
     private static TypeEffectiveness Combine(TypeEffectiveness e1, TypeEffectiveness e2)
     {
-        if (e1 == TypeEffectiveness.HasNoEffect || e2 == TypeEffectiveness.HasNoEffect)
-        {
-            return TypeEffectiveness.HasNoEffect;
-        }
-
-        // 順序を正規化（e1 <= e2）してパターンマッチを簡潔にする
-        if (e1 > e2)
-        {
-            (e1, e2) = (e2, e1);
-        }
-
         return (e1, e2) switch
         {
+            _ when e1 == TypeEffectiveness.HasNoEffect || e2 == TypeEffectiveness.HasNoEffect
+                => TypeEffectiveness.HasNoEffect,
             (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.MostlyIneffective,
-            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.Neutral) => TypeEffectiveness.NotVeryEffective,
-            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.SuperEffective) => TypeEffectiveness.Neutral,
+            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.Neutral) or
+            (TypeEffectiveness.Neutral, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.NotVeryEffective,
+            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.SuperEffective) or
+            (TypeEffectiveness.SuperEffective, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.Neutral,
             (TypeEffectiveness.Neutral, TypeEffectiveness.Neutral) => TypeEffectiveness.Neutral,
-            (TypeEffectiveness.Neutral, TypeEffectiveness.SuperEffective) => TypeEffectiveness.SuperEffective,
+            (TypeEffectiveness.Neutral, TypeEffectiveness.SuperEffective) or
+            (TypeEffectiveness.SuperEffective, TypeEffectiveness.Neutral) => TypeEffectiveness.SuperEffective,
             (TypeEffectiveness.SuperEffective, TypeEffectiveness.SuperEffective) => TypeEffectiveness.ExtremelyEffective,
             _ => throw new InvalidOperationException($"予期しないタイプ相性の組み合わせです: {e1}, {e2}"),
         };
