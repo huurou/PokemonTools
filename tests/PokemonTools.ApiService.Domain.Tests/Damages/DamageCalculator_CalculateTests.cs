@@ -216,6 +216,62 @@ public class DamageCalculator_CalculateTests
     }
 
     [Fact]
+    public void タイプ相性が効果なし_ダメージが全て0になる()
+    {
+        // Act
+        var damage = CalculateWithDefaults(typeEffectiveness: 0.0);
+
+        // Assert
+        List<uint> expected = [0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u];
+        Assert.Equal(expected, damage.Values);
+    }
+
+    [Theory]
+    [InlineData(-7)]
+    [InlineData(7)]
+    public void 攻撃ランクが範囲外_ArgumentOutOfRangeExceptionがスローされる(int attackStage)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => CalculateWithDefaults(attackStage: attackStage));
+    }
+
+    [Theory]
+    [InlineData(-7)]
+    [InlineData(7)]
+    public void 防御ランクが範囲外_ArgumentOutOfRangeExceptionがスローされる(int defenseStage)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => CalculateWithDefaults(defenseStage: defenseStage));
+    }
+
+    [Fact]
+    public void 最小パラメータで計算_ダメージが正しく返る()
+    {
+        // Act
+        var damage = CalculateWithDefaults(power: 1u, attackStat: 1u, defenseStat: 1u, attackerLevel: 1u);
+
+        // Assert
+        Assert.All(damage.Values, x => Assert.True(x >= 1));
+    }
+
+    [Fact]
+    public void 全補正値を同時に適用_期待されたダメージが返る()
+    {
+        // Arrange
+        // すなのちから + ちからのハチマキ(威力)、こだわりハチマキ(攻撃)、しんかのきせき(防御)、いのちのたま(ダメージ)
+        // Act
+        var damage = CalculateWithDefaults(
+            powerModifiers: [5325u, 4505u],
+            attackModifiers: [6144u],
+            defenseModifiers: [6144u],
+            damageModifiers: [5324u]);
+
+        // Assert
+        Assert.Equal(16, damage.Values.Length);
+        Assert.All(damage.Values, x => Assert.True(x >= 1));
+    }
+
+    [Fact]
     public void ダメージの16bitオーバーフロー_オーバーフローした値が返る()
     {
         /*

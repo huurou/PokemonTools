@@ -168,6 +168,7 @@ public static class DamageCalculator
     )
     {
         var tmpDamage = ((double)attackerLevel * 2 / 5 + 2).FloorToUint();
+        // doubleの仮数部は52bitのため、実際のポケモンのパラメータ範囲では精度の問題は起きない
         tmpDamage = ((double)tmpDamage * finalPower * finalAttack / finalDefense).FloorToUint();
         tmpDamage = ((double)tmpDamage / 50 + 2).FloorToUint();
         // TODO: 複数対象 *3072/4096RoundHalfDown
@@ -193,7 +194,7 @@ public static class DamageCalculator
         }
         // TODO: Z技まもる *1024/4096RoundHalfDown
         // TODO: ダイマックス技まもる *1024/4096RoundHalfDown
-        if (typeEffectiveness != 0) { tmpDamages = tmpDamages.Select(x => Math.Max(x, 1u)); }
+        if (typeEffectiveness > 0) { tmpDamages = tmpDamages.Select(x => Math.Max(x, 1u)); }
         // 65536で割った余りが最終ダメージになる
         var finalDamages = tmpDamages.Select(x => x & 0xFFFF);
         return finalDamages;
