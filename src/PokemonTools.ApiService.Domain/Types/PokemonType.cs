@@ -1,5 +1,10 @@
 ﻿namespace PokemonTools.ApiService.Domain.Types;
 
+/// <summary>
+/// ポケモンのタイプを表現するクラス
+/// </summary>
+/// <param name="Id">タイプId</param>
+/// <param name="Name">タイプの日本語名</param>
 public record PokemonType(TypeId Id, string Name)
 {
     #region シングルトンプロパティ
@@ -94,4 +99,13 @@ public record PokemonType(TypeId Id, string Name)
     public static PokemonType Fairy { get; } = new PokemonType(new TypeId("fairy"), "フェアリー");
 
     #endregion シングルトンプロパティ
+
+    /// <summary>
+    /// 全18タイプのリスト
+    /// </summary>
+    public static IReadOnlyList<PokemonType> All { get; } =
+    [
+        Normal, Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel,
+        Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark, Fairy,
+    ];
 }
