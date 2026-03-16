@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokemonTools.AppHost\PokemonTools.AppHost.csproj" />
+    <ProjectReference Include="..\..\src\PokemonTools.AppHost\PokemonTools.AppHost.csproj" />
   </ItemGroup>
 
   <ItemGroup>
