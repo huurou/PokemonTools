@@ -2,7 +2,7 @@ using PokemonTools.ApiService.Domain.Types;
 
 namespace PokemonTools.ApiService.Domain.Tests.Types;
 
-public class TypeChartTests
+public class TypeChart_GetEffectivenessTests
 {
     // 略記用エイリアス (相性表のコンパクト表記用)
     private static readonly TypeEffectiveness X = TypeEffectiveness.HasNoEffect;
@@ -10,16 +10,11 @@ public class TypeChartTests
     private static readonly TypeEffectiveness N = TypeEffectiveness.Neutral;
     private static readonly TypeEffectiveness S = TypeEffectiveness.SuperEffective;
 
-    private static PokemonType FindType(string typeId)
-    {
-        return PokemonType.All.First(x => x.Id.Value == typeId);
-    }
-
     #region 単タイプ相性テスト（全324組み合わせ）
 
     [Theory]
     [MemberData(nameof(全単タイプ相性データ))]
-    public void 全単タイプ相性が正しい(string attackTypeId, string defenseTypeId, TypeEffectiveness expected)
+    public void 全単タイプ相性の確認_正しい結果が返る(string attackTypeId, string defenseTypeId, TypeEffectiveness expected)
     {
         // Arrange
         var attackType = FindType(attackTypeId);
@@ -81,8 +76,7 @@ public class TypeChartTests
 
     [Theory]
     [MemberData(nameof(複合タイプ相性データ))]
-    public void 複合タイプ相性が正しい(
-        string attackTypeId, string defenseType1Id, string defenseType2Id, TypeEffectiveness expected)
+    public void 複合タイプ相性の確認_正しい結果が返る(string attackTypeId, string defenseType1Id, string defenseType2Id, TypeEffectiveness expected)
     {
         // Arrange
         var attackType = FindType(attackTypeId);
@@ -148,7 +142,7 @@ public class TypeChartTests
     #region 複合タイプ動作テスト
 
     [Fact]
-    public void 防御タイプ2がnullの場合は単タイプとして計算()
+    public void 防御タイプ2がnull_単タイプとして計算()
     {
         // Act
         var result = TypeChart.GetEffectiveness(PokemonType.Fire, PokemonType.Grass, null);
@@ -159,7 +153,7 @@ public class TypeChartTests
 
     [Theory]
     [MemberData(nameof(防御タイプ順序テストデータ))]
-    public void 防御タイプの順序が結果に影響しない(
+    public void 防御タイプの順序の入れ替え_結果に影響しない(
         string attackTypeId, string defenseType1Id, string defenseType2Id)
     {
         // Arrange
@@ -186,4 +180,9 @@ public class TypeChartTests
     };
 
     #endregion 複合タイプ動作テスト
+
+    private static PokemonType FindType(string typeId)
+    {
+        return PokemonType.All.First(x => x.Id.Value == typeId);
+    }
 }
