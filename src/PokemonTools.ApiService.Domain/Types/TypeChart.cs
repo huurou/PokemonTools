@@ -32,30 +32,30 @@ public static class TypeChart
         {
             return GetEffectiveness(attackType, defenseType1);
         }
+    }
 
-        static TypeEffectiveness Combine(TypeEffectiveness effectiveness1, TypeEffectiveness effectiveness2)
+    internal static TypeEffectiveness Combine(TypeEffectiveness effectiveness1, TypeEffectiveness effectiveness2)
+    {
+        return (effectiveness1, effectiveness2) switch
         {
-            return (effectiveness1, effectiveness2) switch
-            {
-                (TypeEffectiveness.HasNoEffect, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.HasNoEffect, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.HasNoEffect, TypeEffectiveness.Neutral) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.HasNoEffect, TypeEffectiveness.SuperEffective) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.MostlyIneffective,
-                (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.Neutral) => TypeEffectiveness.NotVeryEffective,
-                (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.SuperEffective) => TypeEffectiveness.Neutral,
-                (TypeEffectiveness.Neutral, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.Neutral, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.NotVeryEffective,
-                (TypeEffectiveness.Neutral, TypeEffectiveness.Neutral) => TypeEffectiveness.Neutral,
-                (TypeEffectiveness.Neutral, TypeEffectiveness.SuperEffective) => TypeEffectiveness.SuperEffective,
-                (TypeEffectiveness.SuperEffective, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
-                (TypeEffectiveness.SuperEffective, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.Neutral,
-                (TypeEffectiveness.SuperEffective, TypeEffectiveness.Neutral) => TypeEffectiveness.SuperEffective,
-                (TypeEffectiveness.SuperEffective, TypeEffectiveness.SuperEffective) => TypeEffectiveness.ExtremelyEffective,
-                _ => throw new InvalidOperationException($"予期しないタイプ相性の組み合わせです: {effectiveness1}, {effectiveness2}"),
-            };
-        }
+            (TypeEffectiveness.HasNoEffect, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.HasNoEffect, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.HasNoEffect, TypeEffectiveness.Neutral) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.HasNoEffect, TypeEffectiveness.SuperEffective) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.MostlyIneffective,
+            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.Neutral) => TypeEffectiveness.NotVeryEffective,
+            (TypeEffectiveness.NotVeryEffective, TypeEffectiveness.SuperEffective) => TypeEffectiveness.Neutral,
+            (TypeEffectiveness.Neutral, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.Neutral, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.NotVeryEffective,
+            (TypeEffectiveness.Neutral, TypeEffectiveness.Neutral) => TypeEffectiveness.Neutral,
+            (TypeEffectiveness.Neutral, TypeEffectiveness.SuperEffective) => TypeEffectiveness.SuperEffective,
+            (TypeEffectiveness.SuperEffective, TypeEffectiveness.HasNoEffect) => TypeEffectiveness.HasNoEffect,
+            (TypeEffectiveness.SuperEffective, TypeEffectiveness.NotVeryEffective) => TypeEffectiveness.Neutral,
+            (TypeEffectiveness.SuperEffective, TypeEffectiveness.Neutral) => TypeEffectiveness.SuperEffective,
+            (TypeEffectiveness.SuperEffective, TypeEffectiveness.SuperEffective) => TypeEffectiveness.ExtremelyEffective,
+            _ => throw new InvalidOperationException($"予期しないタイプ相性の組み合わせです: {effectiveness1}, {effectiveness2}"),
+        };
     }
 
     private static FrozenDictionary<(TypeId, TypeId), TypeEffectiveness> BuildChart()

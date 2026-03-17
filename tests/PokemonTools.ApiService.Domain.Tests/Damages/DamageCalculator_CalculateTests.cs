@@ -291,4 +291,14 @@ public class DamageCalculator_CalculateTests
         List<uint> expected = [32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u];
         Assert.Equal(expected, damage.Values);
     }
+
+    [Fact]
+    public void 無効なStabType_ArgumentOutOfRangeExceptionがスローされる()
+    {
+        // Act
+        var ex = Record.Exception(() => CalculateWithDefaults(stabType: (StabType)999));
+
+        // Assert
+        Assert.IsType<ArgumentOutOfRangeException>(ex);
+    }
 }
