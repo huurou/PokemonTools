@@ -9,14 +9,22 @@
         Get-ChildItem -Path $resultsRoot -Recurse -Force | Remove-Item -Recurse -Force
     }
 
+    $solutionRoot = Join-Path $PSScriptRoot ".."
     $testsRoot = Join-Path $PSScriptRoot "..\tests"
-    Write-Output "テストを実行し、コードカバレッジ情報を収集しています..."
     $testProjects = Get-ChildItem -Path $testsRoot -Recurse -Filter *.csproj | Where-Object { $_.Name -match '\.Tests\.csproj$' }
     if (-not $testProjects -or $testProjects.Count -eq 0) {
         throw "テスト プロジェクト (*.Tests.csproj) が $testsRoot 配下に見つかりません。"
     }
 
+    # 先にソリューション全体をビルド（カバレッジ収集時のビルド競合を防止）
+    Write-Output "ソリューションをビルドしています..."
+    dotnet build (Join-Path $solutionRoot "PokemonTools.slnx")
+    if ($LASTEXITCODE -ne 0) {
+        throw "ソリューションのビルドに失敗しました。"
+    }
+
     # 各テストプロジェクトを対象にカバレッジを計測
+    Write-Output "テストを実行し、コードカバレッジ情報を収集しています..."
     $projectCoverageFiles = @()
     foreach ($project in $testProjects) {
         $projectPath = $project.FullName
@@ -27,12 +35,12 @@
         }
 
         Write-Output "カバレッジ付きでテストを実行中: $projectPath"
-        dotnet test $projectPath --collect:"XPlat Code Coverage" --results-directory $projectResultsDir
+        dotnet test $projectPath --no-build --no-restore --collect "Code Coverage;Format=cobertura" --results-directory $projectResultsDir
         if ($LASTEXITCODE -ne 0) {
             throw "dotnet test が $projectPath で失敗しました。"
         }
 
-        $coverageFile = Get-ChildItem -Path $projectResultsDir -Recurse -Filter "coverage.cobertura.xml" | Sort-Object -Descending LastWriteTime | Select-Object -First 1
+        $coverageFile = Get-ChildItem -Path $projectResultsDir -Recurse -Filter "*.cobertura.xml" | Sort-Object -Descending LastWriteTime | Select-Object -First 1
         if (-not $coverageFile) {
             throw "カバレッジ ファイルが $projectPath で生成されませんでした。"
         }
@@ -51,23 +59,18 @@
 
     try {
         Write-Output "HTML レポートを生成しています..."
-        reportgenerator -reports:$coverageReportSource -targetdir:$coverageRoot -reporttypes:Html
+        reportgenerator -reports:$coverageReportSource -targetdir:$coverageRoot -reporttypes:Html "-assemblyfilters:+PokemonTools.*;-PokemonTools.ApiService;-PokemonTools.Web"
     }
     catch {
         throw "reportgenerator の実行に失敗しました。dotnet-reportgenerator-globaltool がインストールされているか確認してください (例: dotnet tool install -g dotnet-reportgenerator-globaltool)。"
     }
 
-    # 生成されたレポート資産を TestResults 直下に集約
-    $reportFiles = Get-ChildItem -Path $coverageRoot -Include "*.xml", "*.html", "*.htm", "*.css", "*.js", "*.ico", "*.png", "*.svg" -Recurse -ErrorAction SilentlyContinue
-    foreach ($file in $reportFiles) {
-        Move-Item -Path $file.FullName -Destination $resultsRoot -Force
-    }
-    if (Test-Path -Path $coverageRoot) {
-        Remove-Item -Path $coverageRoot -Recurse -Force -ErrorAction SilentlyContinue
+    # レポートのパスをブラウザで開ける形式に整形
+    $reportPath = Join-Path -Path $coverageRoot -ChildPath "index.html"
+    if (-not (Test-Path -Path $reportPath)) {
+        throw "生成されたレポート ファイルが見つかりません: $reportPath"
     }
 
-    # レポートのパスをブラウザで開ける形式に整形
-    $reportPath = Join-Path -Path $resultsRoot -ChildPath "index.html"
     $absoluteReportPath = Resolve-Path $reportPath | Select-Object -ExpandProperty Path
     $fileUrl = "file:///" + ($absoluteReportPath -replace '\\','/')
 
@@ -82,10 +85,6 @@
     )
 
     $chromePath = $chromeCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
-
-    if (-not (Test-Path -Path $reportPath)) {
-        throw "生成されたレポート ファイルが見つかりません: $reportPath"
-    }
 
     if ($chromePath) {
         Write-Output "Google Chrome でレポートを開いています..."
@@ -102,4 +101,3 @@ catch {
     Write-Error "スタック トレース: $($_.ScriptStackTrace)"
     Pause
 }
-
