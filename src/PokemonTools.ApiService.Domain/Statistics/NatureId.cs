@@ -1,7 +1,18 @@
-namespace PokemonTools.ApiService.Domain.Statistics;
+﻿namespace PokemonTools.ApiService.Domain.Statistics;
 
 /// <summary>
 /// 性格Idを表現するクラス
 /// </summary>
-/// <param name="Value">性格Idの値</param>
-public record NatureId(string Value);
+public record NatureId
+{
+    /// <summary>
+    /// 性格Idの値
+    /// </summary>
+    public string Value { get; }
+
+    public NatureId(string value)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+        Value = value;
+    }
+}
