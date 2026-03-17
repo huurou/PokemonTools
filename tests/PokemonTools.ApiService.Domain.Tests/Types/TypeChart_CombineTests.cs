@@ -82,5 +82,11 @@ public class TypeChart_CombineTests
         // effectiveness2 が無効 (effectiveness1 が SuperEffective)
         { S, MI },
         { S, EE },
+
+        // 両方が無効値
+        { MI, MI },
+        { MI, EE },
+        { EE, MI },
+        { EE, EE },
     };
 }
