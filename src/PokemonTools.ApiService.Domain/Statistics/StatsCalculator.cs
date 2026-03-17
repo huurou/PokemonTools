@@ -4,10 +4,13 @@ namespace PokemonTools.ApiService.Domain.Statistics;
 
 public static class StatsCalculator
 {
-    public static Stats Calculate(BaseStats baseStats, IndividualValues individualValues, EffortValues effortValues, Nature nature, Level? level = default)
+    public static Stats Calculate(BaseStats baseStats, IndividualValues individualValues, EffortValues effortValues, Nature nature)
     {
-        level ??= new Level(50);
+        return Calculate(baseStats, individualValues, effortValues, nature, new Level(50));
+    }
 
+    public static Stats Calculate(BaseStats baseStats, IndividualValues individualValues, EffortValues effortValues, Nature nature, Level level)
+    {
         var hp = CalculateHp(baseStats.Hp, individualValues.Hp, effortValues.Hp, level.Value);
         var attack = CalculateOtherStat(baseStats.Attack, individualValues.Attack, effortValues.Attack, nature, StatType.Attack, level.Value);
         var defense = CalculateOtherStat(baseStats.Defense, individualValues.Defense, effortValues.Defense, nature, StatType.Defense, level.Value);

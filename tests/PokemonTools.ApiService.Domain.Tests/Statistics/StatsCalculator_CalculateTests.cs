@@ -59,10 +59,11 @@ public class StatsCalculator_CalculateTests
         var baseStats = new BaseStats(baseHp, baseAttack, baseDefense, baseSpecialAttack, baseSpecialDefense, baseSpeed);
         var individualValues = new IndividualValues(individualHp, individualAttack, individualDefense, individualSpecialAttack, individualSpecialDefense, individualSpeed);
         var effortValues = new EffortValues(effortHp, effortAttack, effortDefense, effortSpecialAttack, effortSpecialDefense, effortSpeed);
-        var level = levelValue.HasValue ? new Level(levelValue.Value) : null;
 
         // Act
-        var actual = StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature, level);
+        var actual = levelValue.HasValue
+            ? StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature, new Level(levelValue.Value))
+            : StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature);
 
         // Assert
         Assert.Equal(expectedHp, actual.Hp);
