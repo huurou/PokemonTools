@@ -231,8 +231,12 @@ public class DamageCalculator_CalculateTests
     [InlineData(7)]
     public void 攻撃ランクが範囲外_ArgumentOutOfRangeExceptionがスローされる(int attackStage)
     {
-        // Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => CalculateWithDefaults(attackStage: attackStage));
+        // Act
+        var ex = Record.Exception(() => CalculateWithDefaults(attackStage: attackStage));
+
+        // Assert
+        var argEx = Assert.IsType<ArgumentOutOfRangeException>(ex);
+        Assert.Equal("attackStage", argEx.ParamName);
     }
 
     [Theory]
@@ -240,8 +244,12 @@ public class DamageCalculator_CalculateTests
     [InlineData(7)]
     public void 防御ランクが範囲外_ArgumentOutOfRangeExceptionがスローされる(int defenseStage)
     {
-        // Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => CalculateWithDefaults(defenseStage: defenseStage));
+        // Act
+        var ex = Record.Exception(() => CalculateWithDefaults(defenseStage: defenseStage));
+
+        // Assert
+        var argEx = Assert.IsType<ArgumentOutOfRangeException>(ex);
+        Assert.Equal("defenseStage", argEx.ParamName);
     }
 
     [Fact]
@@ -290,5 +298,15 @@ public class DamageCalculator_CalculateTests
         // とりあえず前者を採用する
         List<uint> expected = [32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u];
         Assert.Equal(expected, damage.Values);
+    }
+
+    [Fact]
+    public void 無効なStabType_ArgumentOutOfRangeExceptionがスローされる()
+    {
+        // Act
+        var ex = Record.Exception(() => CalculateWithDefaults(stabType: (StabType)999));
+
+        // Assert
+        Assert.IsType<ArgumentOutOfRangeException>(ex);
     }
 }
