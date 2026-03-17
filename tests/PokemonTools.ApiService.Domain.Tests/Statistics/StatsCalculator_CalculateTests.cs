@@ -5,47 +5,7 @@ namespace PokemonTools.ApiService.Domain.Tests.Statistics;
 public class StatsCalculator_CalculateTests
 {
     [Theory]
-    [InlineData(
-        45u, 49u, 49u, 65u, 65u, 45u,
-        31u, 31u, 31u, 31u, 31u, 31u,
-        0u, 0u, 0u, 0u, 0u, 0u,
-        null,
-        Nature.Hardy,
-        120u, 69u, 69u, 85u, 85u, 65u
-    )]
-    [InlineData(
-        130u, 120u, 120u, 95u, 95u, 60u,
-        31u, 31u, 31u, 31u, 31u, 31u,
-        252u, 252u, 0u, 0u, 4u, 0u,
-        50u,
-        Nature.Adamant,
-        237u, 189u, 140u, 103u, 116u, 80u
-    )]
-    [InlineData(
-        70u, 55u, 65u, 95u, 105u, 85u,
-        31u, 31u, 31u, 31u, 31u, 31u,
-        0u, 0u, 0u, 0u, 0u, 0u,
-        50u,
-        Nature.Lonely,
-        145u, 82u, 76u, 115u, 125u, 105u
-    )]
-    [InlineData(
-        1u, 1u, 1u, 1u, 1u, 1u,
-        0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u,
-        1u,
-        Nature.Timid,
-        11u, 4u, 5u, 5u, 5u, 5u
-    )]
-    // レベル78 いじっぱり ガブリアス https://bulbapedia.bulbagarden.net/wiki/Stat にあった例
-    [InlineData(
-        108u, 130u, 95u, 80u, 85u, 102u,
-        24u, 12u, 30u, 16u, 23u, 5u,
-        74u, 190u, 91u, 48u, 84u, 23u,
-        78u,
-        Nature.Adamant,
-        289u, 278u, 193u, 135u, 171u, 171u
-    )]
+    [MemberData(nameof(CalculateData))]
     public void 各種パラメータ組み合わせ_期待通りのステータスを計算する(
         uint baseHp, uint baseAttack, uint baseDefense, uint baseSpecialAttack, uint baseSpecialDefense, uint baseSpeed,
         uint individualHp, uint individualAttack, uint individualDefense, uint individualSpecialAttack, uint individualSpecialDefense, uint individualSpeed,
@@ -98,6 +58,16 @@ public class StatsCalculator_CalculateTests
         Assert.Equal(expectedIncreased, GetStatValue(actual, increasedStatName));
         Assert.Equal(expectedDecreased, GetStatValue(actual, decreasedStatName));
     }
+
+    public static IEnumerable<object?[]> CalculateData =>
+    [
+        [45u, 49u, 49u, 65u, 65u, 45u, 31u, 31u, 31u, 31u, 31u, 31u, 0u, 0u, 0u, 0u, 0u, 0u, null, Nature.Hardy, 120u, 69u, 69u, 85u, 85u, 65u],
+        [130u, 120u, 120u, 95u, 95u, 60u, 31u, 31u, 31u, 31u, 31u, 31u, 252u, 252u, 0u, 0u, 4u, 0u, (uint?)50u, Nature.Adamant, 237u, 189u, 140u, 103u, 116u, 80u],
+        [70u, 55u, 65u, 95u, 105u, 85u, 31u, 31u, 31u, 31u, 31u, 31u, 0u, 0u, 0u, 0u, 0u, 0u, (uint?)50u, Nature.Lonely, 145u, 82u, 76u, 115u, 125u, 105u],
+        [1u, 1u, 1u, 1u, 1u, 1u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, (uint?)1u, Nature.Timid, 11u, 4u, 5u, 5u, 5u, 5u],
+        // レベル78 いじっぱり ガブリアス https://bulbapedia.bulbagarden.net/wiki/Stat にあった例
+        [108u, 130u, 95u, 80u, 85u, 102u, 24u, 12u, 30u, 16u, 23u, 5u, 74u, 190u, 91u, 48u, 84u, 23u, (uint?)78u, Nature.Adamant, 289u, 278u, 193u, 135u, 171u, 171u],
+    ];
 
     public static TheoryData<Nature, string, string> NatureAdjustmentData => new()
     {
