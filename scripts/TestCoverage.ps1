@@ -2,15 +2,15 @@
     Set-Location $PSScriptRoot
 
     # カバレッジ結果を格納する TestResults ディレクトリを初期化
-    $resultsRoot = Join-Path $PSScriptRoot "..\TestResults"
+    $resultsRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\TestResults"))
     if (-not (Test-Path -Path $resultsRoot)) {
         New-Item -ItemType Directory -Path $resultsRoot | Out-Null
     } else {
         Get-ChildItem -Path $resultsRoot -Recurse -Force | Remove-Item -Recurse -Force
     }
 
-    $solutionRoot = Join-Path $PSScriptRoot ".."
-    $testsRoot = Join-Path $PSScriptRoot "..\tests"
+    $solutionRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
+    $testsRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\tests"))
     $testProjects = Get-ChildItem -Path $testsRoot -Recurse -Filter *.csproj | Where-Object { $_.Name -match '\.Tests\.csproj$' }
     if (-not $testProjects -or $testProjects.Count -eq 0) {
         throw "テスト プロジェクト (*.Tests.csproj) が $testsRoot 配下に見つかりません。"
@@ -35,7 +35,8 @@
         }
 
         Write-Output "カバレッジ付きでテストを実行中: $projectPath"
-        dotnet test $projectPath --no-build --no-restore --collect "Code Coverage;Format=cobertura" --results-directory $projectResultsDir
+        $coverageOutputFile = Join-Path $projectResultsDir "coverage.cobertura.xml"
+        dotnet test --project $projectPath --no-build --coverage --coverage-output-format cobertura --coverage-output $coverageOutputFile
         if ($LASTEXITCODE -ne 0) {
             throw "dotnet test が $projectPath で失敗しました。"
         }
