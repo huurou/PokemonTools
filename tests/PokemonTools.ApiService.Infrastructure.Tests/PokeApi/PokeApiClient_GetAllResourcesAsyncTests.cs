@@ -7,7 +7,7 @@ namespace PokemonTools.ApiService.Infrastructure.Tests.PokeApi;
 
 public class PokeApiClient_GetAllResourcesAsyncTests
 {
-    private const string BaseAddress = "https://pokeapi.co/api/v2/";
+    private const string BASE_ADDRESS = "https://pokeapi.co/api/v2/";
 
     [Fact]
     public async Task 単一ページ_全リソースが返る()
@@ -20,15 +20,14 @@ public class PokeApiClient_GetAllResourcesAsyncTests
             previous = (string?)null,
             results = new[]
             {
-                new { name = "bulbasaur", url = $"{BaseAddress}pokemon/1/" },
-                new { name = "ivysaur", url = $"{BaseAddress}pokemon/2/" },
+                new { name = "bulbasaur", url = $"{BASE_ADDRESS}pokemon/1/" },
+                new { name = "ivysaur", url = $"{BASE_ADDRESS}pokemon/2/" },
             },
         };
         var client = CreateClient((_, _) => CreateJsonResponse(responseBody));
 
         // Act
-        var resources = await CollectAsync(
-            client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken));
+        var resources = await CollectAsync(client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken));
 
         // Assert
         Assert.Equal(2, resources.Count);
@@ -43,37 +42,38 @@ public class PokeApiClient_GetAllResourcesAsyncTests
         var page1 = new
         {
             count = 3,
-            next = $"{BaseAddress}pokemon?offset=2&limit=2",
+            next = $"{BASE_ADDRESS}pokemon?offset=2&limit=2",
             previous = (string?)null,
             results = new[]
             {
-                new { name = "bulbasaur", url = $"{BaseAddress}pokemon/1/" },
-                new { name = "ivysaur", url = $"{BaseAddress}pokemon/2/" },
+                new { name = "bulbasaur", url = $"{BASE_ADDRESS}pokemon/1/" },
+                new { name = "ivysaur", url = $"{BASE_ADDRESS}pokemon/2/" },
             },
         };
         var page2 = new
         {
             count = 3,
             next = (string?)null,
-            previous = $"{BaseAddress}pokemon?offset=0&limit=2",
+            previous = $"{BASE_ADDRESS}pokemon?offset=0&limit=2",
             results = new[]
             {
-                new { name = "venusaur", url = $"{BaseAddress}pokemon/3/" },
+                new { name = "venusaur", url = $"{BASE_ADDRESS}pokemon/3/" },
             },
         };
 
         var requestCount = 0;
-        var client = CreateClient((request, _) =>
-        {
-            requestCount++;
-            return requestCount == 1
-                ? CreateJsonResponse(page1)
-                : CreateJsonResponse(page2);
-        });
+        var client = CreateClient(
+            (request, _) =>
+            {
+                requestCount++;
+                return requestCount == 1
+                    ? CreateJsonResponse(page1)
+                    : CreateJsonResponse(page2);
+            }
+        );
 
         // Act
-        var resources = await CollectAsync(
-            client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken));
+        var resources = await CollectAsync(client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken));
 
         // Assert
         Assert.Equal(3, resources.Count);
@@ -97,8 +97,7 @@ public class PokeApiClient_GetAllResourcesAsyncTests
         var client = CreateClient((_, _) => CreateJsonResponse(responseBody));
 
         // Act
-        var resources = await CollectAsync(
-            client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken));
+        var resources = await CollectAsync(client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken));
 
         // Assert
         Assert.Empty(resources);
@@ -108,13 +107,12 @@ public class PokeApiClient_GetAllResourcesAsyncTests
     public async Task HTTPエラー_HttpRequestExceptionがスローされる()
     {
         // Arrange
-        var client = CreateClient((_, _) =>
-            Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError)));
+        var client = CreateClient((_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError)));
 
         // Act
         var exception = await Record.ExceptionAsync(
-            () => CollectAsync(
-                client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken)));
+            () => CollectAsync(client.GetAllResourcesAsync("pokemon", TestContext.Current.CancellationToken))
+        );
 
         // Assert
         Assert.IsType<HttpRequestException>(exception);
@@ -125,12 +123,14 @@ public class PokeApiClient_GetAllResourcesAsyncTests
     {
         var timeProvider = new FakeTimeProvider();
         var limiter = new PokeApiRequestLimiter(timeProvider);
-        var mockHandler = new MockHttpMessageHandler((request, ct) =>
-        {
-            timeProvider.Advance(TimeSpan.FromMilliseconds(200));
-            return handler(request, ct);
-        });
-        var httpClient = new HttpClient(mockHandler) { BaseAddress = new Uri(BaseAddress) };
+        var mockHandler = new MockHttpMessageHandler(
+            (request, ct) =>
+            {
+                timeProvider.Advance(TimeSpan.FromMilliseconds(200));
+                return handler(request, ct);
+            }
+        );
+        var httpClient = new HttpClient(mockHandler) { BaseAddress = new Uri(BASE_ADDRESS) };
         return new PokeApiClient(httpClient, limiter);
     }
 

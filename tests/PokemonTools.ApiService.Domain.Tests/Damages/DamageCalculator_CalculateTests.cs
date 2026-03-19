@@ -24,7 +24,8 @@ public class DamageCalculator_CalculateTests
             attackStat, attackStage, attackModifiers ?? [],
             defenseStat, defenseStage, defenseModifiers ?? [],
             damageModifiers ?? [],
-            attackerLevel, isCriticalHit, stabType, typeEffectiveness);
+            attackerLevel, isCriticalHit, stabType, typeEffectiveness
+        );
     }
 
     [Fact]

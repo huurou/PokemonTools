@@ -8,7 +8,7 @@ namespace PokemonTools.ApiService.Infrastructure.Tests.PokeApi;
 
 public class PokeApiClient_GetResourceAsyncTests
 {
-    private const string BaseAddress = "https://pokeapi.co/api/v2/";
+    private const string BASE_ADDRESS = "https://pokeapi.co/api/v2/";
 
     [Fact]
     public async Task エンドポイントと名前で取得_正しくデシリアライズされる()
@@ -23,31 +23,31 @@ public class PokeApiClient_GetResourceAsyncTests
         });
 
         // Act
-        var result = await client.GetResourceAsync<TestResource>(
-            "pokemon", "pikachu", TestContext.Current.CancellationToken);
+        var result = await client.GetResourceAsync<TestResource>("pokemon", "pikachu", TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal(25, result.Id);
         Assert.Equal("pikachu", result.Name);
-        Assert.Equal($"{BaseAddress}pokemon/pikachu", requestedUrl);
+        Assert.Equal($"{BASE_ADDRESS}pokemon/pikachu", requestedUrl);
     }
 
     [Fact]
     public async Task NamedApiResourceで取得_URLで取得できる()
     {
         // Arrange
-        var resource = new NamedApiResource("pikachu", $"{BaseAddress}pokemon/25/");
+        var resource = new NamedApiResource("pikachu", $"{BASE_ADDRESS}pokemon/25/");
         var responseBody = new { id = 25, name = "pikachu" };
         var requestedUrl = "";
-        var client = CreateClient((request, _) =>
-        {
-            requestedUrl = request.RequestUri!.ToString();
-            return CreateJsonResponse(responseBody);
-        });
+        var client = CreateClient(
+            (request, _) =>
+            {
+                requestedUrl = request.RequestUri!.ToString();
+                return CreateJsonResponse(responseBody);
+            }
+        );
 
         // Act
-        var result = await client.GetResourceAsync<TestResource>(
-            resource, TestContext.Current.CancellationToken);
+        var result = await client.GetResourceAsync<TestResource>(resource, TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal(25, result.Id);
@@ -65,8 +65,8 @@ public class PokeApiClient_GetResourceAsyncTests
 
         // Act
         var exception = await Record.ExceptionAsync(
-            () => client.GetResourceAsync<TestResource>(
-                resource, TestContext.Current.CancellationToken));
+            () => client.GetResourceAsync<TestResource>(resource, TestContext.Current.CancellationToken)
+        );
 
         // Assert
         Assert.IsType<ArgumentException>(exception);
@@ -76,13 +76,12 @@ public class PokeApiClient_GetResourceAsyncTests
     public async Task HTTPエラー_HttpRequestExceptionがスローされる()
     {
         // Arrange
-        var client = CreateClient((_, _) =>
-            Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)));
+        var client = CreateClient((_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)));
 
         // Act
         var exception = await Record.ExceptionAsync(
-            () => client.GetResourceAsync<TestResource>(
-                "pokemon", "nonexistent", TestContext.Current.CancellationToken));
+            () => client.GetResourceAsync<TestResource>("pokemon", "nonexistent", TestContext.Current.CancellationToken)
+        );
 
         // Assert
         Assert.IsType<HttpRequestException>(exception);
@@ -93,12 +92,14 @@ public class PokeApiClient_GetResourceAsyncTests
     {
         var timeProvider = new FakeTimeProvider();
         var limiter = new PokeApiRequestLimiter(timeProvider);
-        var mockHandler = new MockHttpMessageHandler((request, ct) =>
-        {
-            timeProvider.Advance(TimeSpan.FromMilliseconds(200));
-            return handler(request, ct);
-        });
-        var httpClient = new HttpClient(mockHandler) { BaseAddress = new Uri(BaseAddress) };
+        var mockHandler = new MockHttpMessageHandler(
+            (request, ct) =>
+            {
+                timeProvider.Advance(TimeSpan.FromMilliseconds(200));
+                return handler(request, ct);
+            }
+        );
+        var httpClient = new HttpClient(mockHandler) { BaseAddress = new Uri(BASE_ADDRESS) };
         return new PokeApiClient(httpClient, limiter);
     }
 
@@ -115,4 +116,5 @@ public class PokeApiClient_GetResourceAsyncTests
 
 internal record TestResource(
     [property: JsonPropertyName("id")] int Id,
-    [property: JsonPropertyName("name")] string Name);
+    [property: JsonPropertyName("name")] string Name
+);
