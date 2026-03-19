@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace PokemonTools.ApiService.Infrastructure.PokeApi;
 
@@ -12,6 +13,7 @@ public static class PokeApiServiceExtensions
     /// </summary>
     public static IServiceCollection AddPokeApiClient(this IServiceCollection services)
     {
+        services.TryAddSingleton(TimeProvider.System);
         services.AddSingleton<PokeApiRequestLimiter>();
         services.AddHttpClient<PokeApiClient>(client => client.BaseAddress = new Uri("https://pokeapi.co/api/v2/"));
         return services;

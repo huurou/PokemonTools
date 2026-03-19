@@ -29,9 +29,10 @@ internal class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limite
             await limiter.WaitAsync(cancellationToken);
             var response = await httpClient.GetAsync(url, cancellationToken);
             response.EnsureSuccessStatusCode();
-            var page = await response.Content.ReadFromJsonAsync<NamedApiResourceList>(cancellationToken);
+            var page = await response.Content.ReadFromJsonAsync<NamedApiResourceList>(cancellationToken)
+                ?? throw new InvalidOperationException($"Failed to deserialize response from: {url}");
 
-            foreach (var resource in page!.Results)
+            foreach (var resource in page.Results)
             {
                 yield return resource;
             }
@@ -78,13 +79,15 @@ internal class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limite
         await limiter.WaitAsync(cancellationToken);
         var response = await httpClient.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return (await response.Content.ReadFromJsonAsync<T>(cancellationToken))!;
+        return await response.Content.ReadFromJsonAsync<T>(cancellationToken)
+            ?? throw new InvalidOperationException($"Failed to deserialize response from: {url}");
     }
 
     private void ValidateResourceUrl(string url)
     {
-        var baseAddress = httpClient.BaseAddress?.ToString();
-        if (baseAddress is not null && !url.StartsWith(baseAddress, StringComparison.Ordinal))
+        var baseAddress = httpClient.BaseAddress?.ToString()
+            ?? throw new InvalidOperationException("BaseAddress is not configured.");
+        if (!url.StartsWith(baseAddress, StringComparison.Ordinal))
         {
             throw new ArgumentException($"URL must be under the base address: {baseAddress}", nameof(url));
         }

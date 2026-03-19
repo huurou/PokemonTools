@@ -6,9 +6,7 @@
 /// </summary>
 internal sealed class PokeApiRequestLimiter(TimeProvider timeProvider) : IDisposable
 {
-    private const int INTERVAL_MS = 200;
-
-    private static readonly TimeSpan RequestInterval = TimeSpan.FromMilliseconds(INTERVAL_MS);
+    private static readonly TimeSpan RequestInterval = TimeSpan.FromMilliseconds(200);
     private readonly SemaphoreSlim semaphore_ = new(1, 1);
     private long lastRequestTick_;
 
