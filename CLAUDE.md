@@ -49,6 +49,12 @@ AppHost
 └── ServiceDefaults（両サービス共通：OpenTelemetry、ヘルスチェック、サービスディスカバリ）
 ```
 
+### 横断的関心事の配置
+
+- **ServiceDefaults**: OpenTelemetry・ヘルスチェック・サービスディスカバリ・レジリエンスなど、両サービス共通の横断的関心事を集約する。個別サービスは`AddServiceDefaults()`を呼ぶだけでこれらを取得する
+- **AppHost**: サービス間の依存関係と起動順序を管理する。ApiServiceのヘルスチェック通過→Web起動の順序保証はここで定義する
+- **Infrastructure層**: 外部APIアクセス（PokeAPI等）はInfrastructure層に閉じ込める。DI登録は層ごとの拡張メソッド（例: `AddPokeApiClient()`）で隠蔽し、ホスト側は実装詳細を知らない
+
 ### ドメイン層の境界付きコンテキスト（ApiService.Domain）
 
 | コンテキスト | 内容 |
@@ -67,6 +73,12 @@ AppHost
 
 `DamageCalculator`は8段階のパイプラインで計算する: 威力補正 → 威力 → 攻撃補正 → 攻撃 → 防御補正 → 防御 → ダメージ補正 → 最終ダメージ（乱数16通り）
 
+### Infrastructure層の設計方針
+
+- 外部API（PokeAPI v2）へのアクセスはInfrastructure層に閉じ込め、Domain層は外部依存を持たない
+- PokeAPIはフェアユースポリシー遵守のため、リクエスト間隔を最低200msに制限する（`PokeApiRequestLimiter`）
+- テスト可能性のため`TimeProvider`をDI注入し、テストでは`FakeTimeProvider`に差し替える
+
 ## コーディング規約
 
 - プライベートフィールドはキャメルケース + `_` サフィックス（例: `rands_`）
@@ -84,7 +96,14 @@ AppHost
 - **構造**: AAA（Arrange-Act-Assert）パターン
 - **例外テスト**: `Assert.Throws`ではなく`Record.Exception()` / `Record.ExceptionAsync()` + `Assert.IsType<>()`でAct/Assertを分離する
 - **ドキュメントコメント**: テストコードには付与しない
-- **テストプロジェクト構成**: `ApiService.Domain.Tests`（ドメインロジックの単体テスト）と `PokemonTools.Tests`（Aspireホスト統合テスト）の2系統
+- **テストプロジェクト構成**: 以下の3系統
+  - `ApiService.Domain.Tests` — ドメインロジックの単体テスト
+  - `ApiService.Infrastructure.Tests` — 外部依存（PokeAPIクライアント等）のテスト。実ネットワークに出ず、偽のHTTPハンドラと`FakeTimeProvider`でレート制限・ページング・キャンセルを決定論的に検証する
+  - `PokemonTools.Tests` — Aspireホスト統合テスト
+
+## リポジトリ不変条件
+
+- **エンコーディング**: `.cs` / `.xaml` ファイルはUTF-8 BOM付き・CRLF改行で管理する。Claude Code の Stop フックで `scripts/ConvertToUtf8Bom.ps1` が自動実行され、これを強制する
 
 ## CI/CD
 
