@@ -16,9 +16,15 @@
         throw "テスト プロジェクト (*.Tests.csproj) が $testsRoot 配下に見つかりません。"
     }
 
+    # slnx ファイルを検索
+    $slnxFile = Get-ChildItem -Path (Join-Path $solutionRoot "*.slnx") | Select-Object -First 1
+    if (-not $slnxFile) {
+        throw "slnx ファイルが $solutionRoot に見つかりません。"
+    }
+
     # 先にソリューション全体をビルド（カバレッジ収集時のビルド競合を防止）
     Write-Output "ソリューションをビルドしています..."
-    dotnet build (Join-Path $solutionRoot "PokemonTools.slnx")
+    dotnet build $slnxFile.FullName
     if ($LASTEXITCODE -ne 0) {
         throw "ソリューションのビルドに失敗しました。"
     }
@@ -58,9 +64,22 @@
     }
     New-Item -ItemType Directory -Path $coverageRoot | Out-Null
 
+    # slnx からプロジェクト名を取得し、テスト・AppHost・ServiceDefaults・エントリポイント(Web/ApiService) を除外した assemblyfilters を構築
+    [xml]$slnx = Get-Content $slnxFile.FullName
+    $excludePatterns = @("*.Tests", "*.AppHost", "*.ServiceDefaults", "*.Web", "*.ApiService")
+    $excludeAssemblies = $slnx.Solution.SelectNodes("//Project") |
+        ForEach-Object { [System.IO.Path]::GetFileNameWithoutExtension($_.Path) } |
+        Where-Object {
+            $name = $_
+            $excludePatterns | Where-Object { $name -like $_ } | Select-Object -First 1
+        } |
+        ForEach-Object { "-$_" }
+    $allAssemblies = @("+*") + $excludeAssemblies
+    $assemblyFilter = $allAssemblies -join ";"
+
     try {
         Write-Output "HTML レポートを生成しています..."
-        reportgenerator -reports:$coverageReportSource -targetdir:$coverageRoot -reporttypes:Html "-assemblyfilters:+PokemonTools.*;-PokemonTools.ApiService;-PokemonTools.Web"
+        reportgenerator -reports:$coverageReportSource -targetdir:$coverageRoot -reporttypes:Html "-assemblyfilters:$assemblyFilter"
     }
     catch {
         throw "reportgenerator の実行に失敗しました。dotnet-reportgenerator-globaltool がインストールされているか確認してください (例: dotnet tool install -g dotnet-reportgenerator-globaltool)。"
