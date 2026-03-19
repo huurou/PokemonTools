@@ -7,31 +7,22 @@ public class StatsCalculator_CalculateTests
     [Theory]
     [MemberData(nameof(CalculateData))]
     public void 各種パラメータ組み合わせ_期待通りのステータスを計算する(
-        uint baseHp, uint baseAttack, uint baseDefense, uint baseSpecialAttack, uint baseSpecialDefense, uint baseSpeed,
-        uint individualHp, uint individualAttack, uint individualDefense, uint individualSpecialAttack, uint individualSpecialDefense, uint individualSpeed,
-        uint effortHp, uint effortAttack, uint effortDefense, uint effortSpecialAttack, uint effortSpecialDefense, uint effortSpeed,
-        uint? levelValue,
-        Nature nature,
-        uint expectedHp, uint expectedAttack, uint expectedDefense, uint expectedSpecialAttack, uint expectedSpecialDefense, uint expectedSpeed
+        BaseStats baseStats, IndividualValues individualValues, EffortValues effortValues,
+        uint? levelValue, Nature nature, Stats expected
     )
     {
-        // Arrange
-        var baseStats = new BaseStats(baseHp, baseAttack, baseDefense, baseSpecialAttack, baseSpecialDefense, baseSpeed);
-        var individualValues = new IndividualValues(individualHp, individualAttack, individualDefense, individualSpecialAttack, individualSpecialDefense, individualSpeed);
-        var effortValues = new EffortValues(effortHp, effortAttack, effortDefense, effortSpecialAttack, effortSpecialDefense, effortSpeed);
-
         // Act
         var actual = levelValue.HasValue
             ? StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature, new Level(levelValue.Value))
             : StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature);
 
         // Assert
-        Assert.Equal(expectedHp, actual.Hp);
-        Assert.Equal(expectedAttack, actual.Attack);
-        Assert.Equal(expectedDefense, actual.Defense);
-        Assert.Equal(expectedSpecialAttack, actual.SpecialAttack);
-        Assert.Equal(expectedSpecialDefense, actual.SpecialDefense);
-        Assert.Equal(expectedSpeed, actual.Speed);
+        Assert.Equal(expected.Hp, actual.Hp);
+        Assert.Equal(expected.Attack, actual.Attack);
+        Assert.Equal(expected.Defense, actual.Defense);
+        Assert.Equal(expected.SpecialAttack, actual.SpecialAttack);
+        Assert.Equal(expected.SpecialDefense, actual.SpecialDefense);
+        Assert.Equal(expected.Speed, actual.Speed);
     }
 
     [Theory]
@@ -59,15 +50,54 @@ public class StatsCalculator_CalculateTests
         Assert.Equal(expectedDecreased, GetStatValue(actual, decreasedStatName));
     }
 
-    public static IEnumerable<object?[]> CalculateData =>
-    [
-        [45u, 49u, 49u, 65u, 65u, 45u, 31u, 31u, 31u, 31u, 31u, 31u, 0u, 0u, 0u, 0u, 0u, 0u, null, Nature.Hardy, 120u, 69u, 69u, 85u, 85u, 65u],
-        [130u, 120u, 120u, 95u, 95u, 60u, 31u, 31u, 31u, 31u, 31u, 31u, 252u, 252u, 0u, 0u, 4u, 0u, (uint?)50u, Nature.Adamant, 237u, 189u, 140u, 103u, 116u, 80u],
-        [70u, 55u, 65u, 95u, 105u, 85u, 31u, 31u, 31u, 31u, 31u, 31u, 0u, 0u, 0u, 0u, 0u, 0u, (uint?)50u, Nature.Lonely, 145u, 82u, 76u, 115u, 125u, 105u],
-        [1u, 1u, 1u, 1u, 1u, 1u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, (uint?)1u, Nature.Timid, 11u, 4u, 5u, 5u, 5u, 5u],
-        // レベル78 いじっぱり ガブリアス https://bulbapedia.bulbagarden.net/wiki/Stat にあった例
-        [108u, 130u, 95u, 80u, 85u, 102u, 24u, 12u, 30u, 16u, 23u, 5u, 74u, 190u, 91u, 48u, 84u, 23u, (uint?)78u, Nature.Adamant, 289u, 278u, 193u, 135u, 171u, 171u],
-    ];
+    public static TheoryData<BaseStats, IndividualValues, EffortValues, uint?, Nature, Stats> CalculateData => new()
+    {
+        // フシギダネ Lv50 がんばりや 個体値MAX 努力値0
+        {
+            new BaseStats(45, 49, 49, 65, 65, 45),
+            new IndividualValues(31, 31, 31, 31, 31, 31),
+            new EffortValues(0, 0, 0, 0, 0, 0),
+            null,
+            Nature.Hardy,
+            new Stats(120, 69, 69, 85, 85, 65)
+        },
+        // カビゴン Lv50 いじっぱり HP・攻撃極振り 特防4
+        {
+            new BaseStats(130, 120, 120, 95, 95, 60),
+            new IndividualValues(31, 31, 31, 31, 31, 31),
+            new EffortValues(252, 252, 0, 0, 4, 0),
+            50u,
+            Nature.Adamant,
+            new Stats(237, 189, 140, 103, 116, 80)
+        },
+        // ミロカロス Lv50 さみしがり 個体値MAX 努力値0
+        {
+            new BaseStats(70, 55, 65, 95, 105, 85),
+            new IndividualValues(31, 31, 31, 31, 31, 31),
+            new EffortValues(0, 0, 0, 0, 0, 0),
+            50u,
+            Nature.Lonely,
+            new Stats(145, 82, 76, 115, 125, 105)
+        },
+        // 種族値オール1 Lv1 おくびょう 個体値0 努力値0
+        {
+            new BaseStats(1, 1, 1, 1, 1, 1),
+            new IndividualValues(0, 0, 0, 0, 0, 0),
+            new EffortValues(0, 0, 0, 0, 0, 0),
+            1u,
+            Nature.Timid,
+            new Stats(11, 4, 5, 5, 5, 5)
+        },
+        // ガブリアス Lv78 いじっぱり (Bulbapedia の計算例)
+        {
+            new BaseStats(108, 130, 95, 80, 85, 102),
+            new IndividualValues(24, 12, 30, 16, 23, 5),
+            new EffortValues(74, 190, 91, 48, 84, 23),
+            78u,
+            Nature.Adamant,
+            new Stats(289, 278, 193, 135, 171, 171)
+        },
+    };
 
     public static TheoryData<Nature, string, string> NatureAdjustmentData => new()
     {

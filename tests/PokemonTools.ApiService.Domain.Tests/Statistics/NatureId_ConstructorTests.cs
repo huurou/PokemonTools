@@ -15,7 +15,7 @@ public class NatureId_ConstructorTests
     }
 
     [Fact]
-    public void nullを渡す_ArgumentExceptionがスローされる()
+    public void Nullを渡す_ArgumentExceptionがスローされる()
     {
         // Arrange & Act
         var exception = Record.Exception(() => new NatureId(null!));

@@ -1,4 +1,4 @@
-namespace PokemonTools.ApiService.Domain.Statistics;
+﻿namespace PokemonTools.ApiService.Domain.Statistics;
 
 /// <summary>
 /// 性格を表現するクラス

@@ -1,4 +1,4 @@
-using PokemonTools.ApiService.Domain.Damages;
+﻿using PokemonTools.ApiService.Domain.Damages;
 
 namespace PokemonTools.ApiService.Domain.Tests.Damages;
 

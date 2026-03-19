@@ -1,4 +1,4 @@
-namespace PokemonTools.ApiService.Domain.Statistics;
+﻿namespace PokemonTools.ApiService.Domain.Statistics;
 
 /// <summary>
 /// レベルを表現するクラス

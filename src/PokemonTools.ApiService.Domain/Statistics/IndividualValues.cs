@@ -1,4 +1,4 @@
-namespace PokemonTools.ApiService.Domain.Statistics;
+﻿namespace PokemonTools.ApiService.Domain.Statistics;
 
 /// <summary>
 /// 個体値を表現するクラス

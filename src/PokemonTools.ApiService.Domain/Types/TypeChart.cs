@@ -1,4 +1,4 @@
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 
 namespace PokemonTools.ApiService.Domain.Types;
 

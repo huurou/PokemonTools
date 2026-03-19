@@ -1,4 +1,4 @@
-using PokemonTools.ApiService.Domain.Types;
+﻿using PokemonTools.ApiService.Domain.Types;
 
 namespace PokemonTools.ApiService.Domain.Tests.Types;
 

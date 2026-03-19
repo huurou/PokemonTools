@@ -1,4 +1,4 @@
-namespace PokemonTools.ApiService.Domain.Damages;
+﻿namespace PokemonTools.ApiService.Domain.Damages;
 
 /// <summary>
 /// タイプ一致ボーナス(STAB)の種類を表す列挙型

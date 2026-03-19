@@ -1,4 +1,4 @@
-namespace PokemonTools.ApiService.Domain.Types;
+﻿namespace PokemonTools.ApiService.Domain.Types;
 
 /// <summary>
 /// タイプ相性の倍率を表す列挙型
