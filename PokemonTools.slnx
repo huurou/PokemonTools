@@ -6,6 +6,7 @@
   <Folder Name="/Test/">
     <Project Path="tests/PokemonTools.Tests/PokemonTools.Tests.csproj" />
     <Project Path="tests/PokemonTools.ApiService.Domain.Tests/PokemonTools.ApiService.Domain.Tests.csproj" />
+    <Project Path="tests/PokemonTools.ApiService.Infrastructure.Tests/PokemonTools.ApiService.Infrastructure.Tests.csproj" />
   </Folder>
   <Project Path="src/PokemonTools.ApiService.Application/PokemonTools.ApiService.Application.csproj" />
   <Project Path="src/PokemonTools.ApiService.Domain/PokemonTools.ApiService.Domain.csproj" />
