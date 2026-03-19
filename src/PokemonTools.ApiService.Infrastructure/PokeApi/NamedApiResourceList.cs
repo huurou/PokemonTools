@@ -1,0 +1,15 @@
+﻿namespace PokemonTools.ApiService.Infrastructure.PokeApi;
+
+/// <summary>
+/// PokeAPI のページネーションレスポンス
+/// </summary>
+/// <param name="Count">総リソース数</param>
+/// <param name="Previous">前のページの URL</param>
+/// <param name="Next">次のページの URL</param>
+/// <param name="Results">リソースの一覧</param>
+internal record NamedApiResourceList(
+    int Count,
+    string? Previous,
+    string? Next,
+    IReadOnlyList<NamedApiResource> Results
+);
