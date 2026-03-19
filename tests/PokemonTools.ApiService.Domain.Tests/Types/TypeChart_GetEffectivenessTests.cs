@@ -183,6 +183,6 @@ public class TypeChart_GetEffectivenessTests
 
     private static PokemonType FindType(string typeId)
     {
-        return PokemonType.All.First(x => x.Id.Value == typeId);
+        return PokemonType.All.Single(x => x.Id.Value == typeId);
     }
 }

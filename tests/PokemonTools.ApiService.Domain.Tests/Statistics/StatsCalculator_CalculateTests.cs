@@ -132,7 +132,9 @@ public class StatsCalculator_CalculateTests
     };
 
     private static Nature FindNature(string natureId)
-        => Nature.All.First(x => x.Id.Value == natureId);
+    {
+        return Nature.All.Single(x => x.Id.Value == natureId);
+    }
 
     private static uint GetStatValue(Stats stats, string statName)
     {
