@@ -49,6 +49,8 @@ AppHost
 └── ServiceDefaults（両サービス共通：OpenTelemetry、ヘルスチェック、サービスディスカバリ）
 ```
 
+- Application層（ApiService.Application / Web.Application）は現在空で、ユースケース定義の準備段階
+
 ### 横断的関心事の配置
 
 - **ServiceDefaults**: OpenTelemetry・ヘルスチェック・サービスディスカバリ・レジリエンスなど、両サービス共通の横断的関心事を集約する。個別サービスは`AddServiceDefaults()`を呼ぶだけでこれらを取得する
@@ -96,6 +98,9 @@ AppHost
 - **構造**: AAA（Arrange-Act-Assert）パターン
 - **例外テスト**: `Assert.Throws`ではなく`Record.Exception()` / `Record.ExceptionAsync()` + `Assert.IsType<>()`でAct/Assertを分離する
 - **ドキュメントコメント**: テストコードには付与しない
+- **ヘルパーパターン**: テストクラスにはデフォルト値付きの`private static`ヘルパーメソッド（例: `CalculateWithDefaults()`）を定義し、テストメソッドでは変更したいパラメータのみnamed argumentで指定する
+- **カバレッジ**: ブランチカバレッジ100%を目標とする。カバレッジレポートのアセンブリフィルタはエントリポイント（ApiService/Web）を除外し、Domain/Infrastructure/Applicationのみ計測する
+- **テストプロジェクト設定**: MTP v2ランナーのため`OutputType`は`Exe`が必須。パッケージは`xunit.v3.mtp-v2` + `Microsoft.Testing.Extensions.CodeCoverage`
 - **テストプロジェクト構成**: 以下の3系統
   - `ApiService.Domain.Tests` — ドメインロジックの単体テスト
   - `ApiService.Infrastructure.Tests` — 外部依存（PokeAPIクライアント等）のテスト。実ネットワークに出ず、偽のHTTPハンドラと`FakeTimeProvider`でレート制限・ページング・キャンセルを決定論的に検証する
