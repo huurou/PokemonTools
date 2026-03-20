@@ -99,14 +99,34 @@ public record PokemonType(TypeId Id, string Name)
     /// </summary>
     public static PokemonType Fairy { get; } = new PokemonType(new TypeId(18), "フェアリー");
 
+    /// <summary>
+    /// ステラ
+    /// </summary>
+    public static PokemonType Stellar { get; } = new PokemonType(new TypeId(19), "ステラ");
+
+    /// <summary>
+    /// ???
+    /// </summary>
+    public static PokemonType Unknown { get; } = new PokemonType(new TypeId(10001), "???");
+
     #endregion シングルトンプロパティ
 
     /// <summary>
-    /// 全18タイプのリスト
+    /// 相性表が定義されている18タイプのリスト
+    /// </summary>
+    public static IReadOnlyList<PokemonType> BattleTypes { get; } =
+    [
+        Normal, Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel,
+        Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark, Fairy,
+    ];
+
+    /// <summary>
+    /// 全20タイプのリスト（ステラ・???含む）
     /// </summary>
     public static IReadOnlyList<PokemonType> All { get; } =
     [
         Normal, Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel,
         Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark, Fairy,
+        Stellar, Unknown,
     ];
 }

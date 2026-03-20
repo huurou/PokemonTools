@@ -33,7 +33,7 @@ public class TypeChart_GetEffectivenessTests
         get
         {
             var data = new TheoryData<int, int, TypeEffectiveness>();
-            var allTypes = PokemonType.All;
+            var allTypes = PokemonType.BattleTypes;
 
             // 相性表
             TypeEffectiveness[][] chart =
@@ -180,6 +180,95 @@ public class TypeChart_GetEffectivenessTests
     };
 
     #endregion 複合タイプ動作テスト
+
+    #region ステラ・???タイプの相性テスト
+
+    [Theory]
+    [MemberData(nameof(ステラまたは不明タイプの単タイプ相性データ))]
+    public void ステラまたは不明タイプを含む単タイプ相性_常に等倍が返る(int attackTypeId, int defenseTypeId)
+    {
+        // Arrange
+        var attackType = FindType(attackTypeId);
+        var defenseType = FindType(defenseTypeId);
+
+        // Act
+        var result = TypeChart.GetEffectiveness(attackType, defenseType);
+
+        // Assert
+        Assert.Equal(TypeEffectiveness.Neutral, result);
+    }
+
+    public static TheoryData<int, int> ステラまたは不明タイプの単タイプ相性データ
+    {
+        get
+        {
+            var data = new TheoryData<int, int>();
+            var specialTypes = new[] { PokemonType.Stellar, PokemonType.Unknown };
+
+            foreach (var special in specialTypes)
+            {
+                foreach (var target in PokemonType.All)
+                {
+                    // 特殊タイプが攻撃側
+                    data.Add(special.Id.Value, target.Id.Value);
+
+                    // 特殊タイプが防御側（攻撃側が特殊タイプでない場合のみ追加）
+                    if (target != PokemonType.Stellar && target != PokemonType.Unknown)
+                    {
+                        data.Add(target.Id.Value, special.Id.Value);
+                    }
+                }
+            }
+
+            return data;
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ステラまたは不明タイプを含む複合タイプ相性データ))]
+    public void ステラまたは不明タイプを含む複合防御_もう片方の防御タイプの相性がそのまま返る(
+        int attackTypeId, int defenseType1Id, int defenseType2Id, TypeEffectiveness expected)
+    {
+        // Arrange
+        var attackType = FindType(attackTypeId);
+        var defenseType1 = FindType(defenseType1Id);
+        var defenseType2 = FindType(defenseType2Id);
+
+        // Act
+        var result = TypeChart.GetEffectiveness(attackType, defenseType1, defenseType2);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    public static TheoryData<int, int, int, TypeEffectiveness> ステラまたは不明タイプを含む複合タイプ相性データ => new()
+    {
+        // 防御側にステラ: もう片方の相性がそのまま返る
+        // ほのお vs (くさ, ステラ) → ほのお vs くさ = 効果バツグン
+        { 10, 12, 19, TypeEffectiveness.SuperEffective },
+        // ほのお vs (みず, ステラ) → ほのお vs みず = 今一つ
+        { 10, 11, 19, TypeEffectiveness.NotVeryEffective },
+        // ノーマル vs (ゴースト, ステラ) → ノーマル vs ゴースト = 効果なし
+        { 1, 8, 19, TypeEffectiveness.HasNoEffect },
+        // ノーマル vs (ノーマル, ステラ) → ノーマル vs ノーマル = 等倍
+        { 1, 1, 19, TypeEffectiveness.Neutral },
+
+        // 防御側に???: もう片方の相性がそのまま返る
+        // でんき vs (みず, ???) → でんき vs みず = 効果バツグン
+        { 13, 11, 10001, TypeEffectiveness.SuperEffective },
+        // くさ vs (ほのお, ???) → くさ vs ほのお = 今一つ
+        { 12, 10, 10001, TypeEffectiveness.NotVeryEffective },
+        // でんき vs (じめん, ???) → でんき vs じめん = 効果なし
+        { 13, 5, 10001, TypeEffectiveness.HasNoEffect },
+
+        // 攻撃側がステラ: 複合防御でも常に等倍
+        // ステラ vs (ほのお, みず) → 等倍
+        { 19, 10, 11, TypeEffectiveness.Neutral },
+        // ??? vs (くさ, どく) → 等倍
+        { 10001, 12, 4, TypeEffectiveness.Neutral },
+    };
+
+    #endregion ステラ・???タイプの相性テスト
 
     private static PokemonType FindType(int typeId)
     {
