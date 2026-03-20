@@ -14,7 +14,7 @@ public class TypeChart_GetEffectivenessTests
 
     [Theory]
     [MemberData(nameof(全単タイプ相性データ))]
-    public void 全単タイプ相性の確認_正しい結果が返る(string attackTypeId, string defenseTypeId, TypeEffectiveness expected)
+    public void 全単タイプ相性の確認_正しい結果が返る(int attackTypeId, int defenseTypeId, TypeEffectiveness expected)
     {
         // Arrange
         var attackType = FindType(attackTypeId);
@@ -28,11 +28,11 @@ public class TypeChart_GetEffectivenessTests
     }
 
     // 防御タイプの並び順: ノーマル, かくとう, ひこう, どく, じめん, いわ, むし, ゴースト, はがね, ほのお, みず, くさ, でんき, エスパー, こおり, ドラゴン, あく, フェアリー
-    public static TheoryData<string, string, TypeEffectiveness> 全単タイプ相性データ
+    public static TheoryData<int, int, TypeEffectiveness> 全単タイプ相性データ
     {
         get
         {
-            var data = new TheoryData<string, string, TypeEffectiveness>();
+            var data = new TheoryData<int, int, TypeEffectiveness>();
             var allTypes = PokemonType.All;
 
             // 相性表
@@ -76,7 +76,7 @@ public class TypeChart_GetEffectivenessTests
 
     [Theory]
     [MemberData(nameof(複合タイプ相性データ))]
-    public void 複合タイプ相性の確認_正しい結果が返る(string attackTypeId, string defenseType1Id, string defenseType2Id, TypeEffectiveness expected)
+    public void 複合タイプ相性の確認_正しい結果が返る(int attackTypeId, int defenseType1Id, int defenseType2Id, TypeEffectiveness expected)
     {
         // Arrange
         var attackType = FindType(attackTypeId);
@@ -90,51 +90,51 @@ public class TypeChart_GetEffectivenessTests
         Assert.Equal(expected, result);
     }
 
-    public static TheoryData<string, string, string, TypeEffectiveness> 複合タイプ相性データ => new()
+    public static TheoryData<int, int, int, TypeEffectiveness> 複合タイプ相性データ => new()
     {
         // --- ExtremelyEffective (4倍) ---
-        { "electric", "water", "flying", TypeEffectiveness.ExtremelyEffective },
-        { "ground", "fire", "steel", TypeEffectiveness.ExtremelyEffective },
-        { "grass", "water", "ground", TypeEffectiveness.ExtremelyEffective },
-        { "ice", "grass", "ground", TypeEffectiveness.ExtremelyEffective },
-        { "fighting", "normal", "rock", TypeEffectiveness.ExtremelyEffective },
+        { 13, 11, 3, TypeEffectiveness.ExtremelyEffective },
+        { 5, 10, 9, TypeEffectiveness.ExtremelyEffective },
+        { 12, 11, 5, TypeEffectiveness.ExtremelyEffective },
+        { 15, 12, 5, TypeEffectiveness.ExtremelyEffective },
+        { 2, 1, 6, TypeEffectiveness.ExtremelyEffective },
 
         // --- SuperEffective (2倍) ---
-        { "fire", "grass", "normal", TypeEffectiveness.SuperEffective },
-        { "water", "ground", "normal", TypeEffectiveness.SuperEffective },
-        { "ice", "flying", "normal", TypeEffectiveness.SuperEffective },
-        { "dark", "ghost", "normal", TypeEffectiveness.SuperEffective },
-        { "fairy", "dragon", "normal", TypeEffectiveness.SuperEffective },
+        { 10, 12, 1, TypeEffectiveness.SuperEffective },
+        { 11, 5, 1, TypeEffectiveness.SuperEffective },
+        { 15, 3, 1, TypeEffectiveness.SuperEffective },
+        { 17, 8, 1, TypeEffectiveness.SuperEffective },
+        { 18, 16, 1, TypeEffectiveness.SuperEffective },
 
         // --- Neutral (等倍) ---
-        { "fire", "grass", "water", TypeEffectiveness.Neutral },
-        { "water", "fire", "grass", TypeEffectiveness.Neutral },
-        { "electric", "water", "grass", TypeEffectiveness.Neutral },
-        { "normal", "normal", "fighting", TypeEffectiveness.Neutral },
-        { "fighting", "ice", "flying", TypeEffectiveness.Neutral },
+        { 10, 12, 11, TypeEffectiveness.Neutral },
+        { 11, 10, 12, TypeEffectiveness.Neutral },
+        { 13, 11, 12, TypeEffectiveness.Neutral },
+        { 1, 1, 2, TypeEffectiveness.Neutral },
+        { 2, 15, 3, TypeEffectiveness.Neutral },
 
         // --- NotVeryEffective (0.5倍) ---
-        { "fire", "water", "normal", TypeEffectiveness.NotVeryEffective },
-        { "grass", "fire", "normal", TypeEffectiveness.NotVeryEffective },
-        { "electric", "grass", "normal", TypeEffectiveness.NotVeryEffective },
-        { "normal", "rock", "fighting", TypeEffectiveness.NotVeryEffective },
-        { "dragon", "steel", "normal", TypeEffectiveness.NotVeryEffective },
+        { 10, 11, 1, TypeEffectiveness.NotVeryEffective },
+        { 12, 10, 1, TypeEffectiveness.NotVeryEffective },
+        { 13, 12, 1, TypeEffectiveness.NotVeryEffective },
+        { 1, 6, 2, TypeEffectiveness.NotVeryEffective },
+        { 16, 9, 1, TypeEffectiveness.NotVeryEffective },
 
         // --- MostlyIneffective (0.25倍) ---
-        { "fire", "water", "dragon", TypeEffectiveness.MostlyIneffective },
-        { "grass", "fire", "flying", TypeEffectiveness.MostlyIneffective },
-        { "grass", "poison", "flying", TypeEffectiveness.MostlyIneffective },
-        { "bug", "fire", "flying", TypeEffectiveness.MostlyIneffective },
-        { "electric", "grass", "dragon", TypeEffectiveness.MostlyIneffective },
+        { 10, 11, 16, TypeEffectiveness.MostlyIneffective },
+        { 12, 10, 3, TypeEffectiveness.MostlyIneffective },
+        { 12, 4, 3, TypeEffectiveness.MostlyIneffective },
+        { 7, 10, 3, TypeEffectiveness.MostlyIneffective },
+        { 13, 12, 16, TypeEffectiveness.MostlyIneffective },
 
         // --- HasNoEffect (効果なし) ---
-        { "normal", "ghost", "dark", TypeEffectiveness.HasNoEffect },
-        { "electric", "water", "ground", TypeEffectiveness.HasNoEffect },
-        { "fighting", "ghost", "dark", TypeEffectiveness.HasNoEffect },
-        { "ground", "flying", "steel", TypeEffectiveness.HasNoEffect },
-        { "dragon", "fairy", "dragon", TypeEffectiveness.HasNoEffect },
-        { "psychic", "dark", "fighting", TypeEffectiveness.HasNoEffect },
-        { "poison", "steel", "fairy", TypeEffectiveness.HasNoEffect },
+        { 1, 8, 17, TypeEffectiveness.HasNoEffect },
+        { 13, 11, 5, TypeEffectiveness.HasNoEffect },
+        { 2, 8, 17, TypeEffectiveness.HasNoEffect },
+        { 5, 3, 9, TypeEffectiveness.HasNoEffect },
+        { 16, 18, 16, TypeEffectiveness.HasNoEffect },
+        { 14, 17, 2, TypeEffectiveness.HasNoEffect },
+        { 4, 9, 18, TypeEffectiveness.HasNoEffect },
     };
 
     #endregion 複合タイプ相性テスト
@@ -154,7 +154,7 @@ public class TypeChart_GetEffectivenessTests
     [Theory]
     [MemberData(nameof(防御タイプ順序テストデータ))]
     public void 防御タイプの順序の入れ替え_結果に影響しない(
-        string attackTypeId, string defenseType1Id, string defenseType2Id)
+        int attackTypeId, int defenseType1Id, int defenseType2Id)
     {
         // Arrange
         var attackType = FindType(attackTypeId);
@@ -169,19 +169,19 @@ public class TypeChart_GetEffectivenessTests
         Assert.Equal(result1, result2);
     }
 
-    public static TheoryData<string, string, string> 防御タイプ順序テストデータ => new()
+    public static TheoryData<int, int, int> 防御タイプ順序テストデータ => new()
     {
-        { "electric", "water", "flying" },
-        { "fire", "grass", "water" },
-        { "normal", "ghost", "dark" },
-        { "ground", "fire", "steel" },
-        { "ice", "grass", "ground" },
-        { "fighting", "ghost", "dark" },
+        { 13, 11, 3 },
+        { 10, 12, 11 },
+        { 1, 8, 17 },
+        { 5, 10, 9 },
+        { 15, 12, 5 },
+        { 2, 8, 17 },
     };
 
     #endregion 複合タイプ動作テスト
 
-    private static PokemonType FindType(string typeId)
+    private static PokemonType FindType(int typeId)
     {
         return PokemonType.All.Single(x => x.Id.Value == typeId);
     }
