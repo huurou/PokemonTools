@@ -8,7 +8,7 @@ public class StatsCalculator_CalculateTests
     [MemberData(nameof(CalculateData))]
     public void 各種パラメータ組み合わせ_期待通りのステータスを計算する(
         uint[] baseStatsValues, uint[] ivValues, uint[] evValues,
-        uint? levelValue, string natureId, uint[] expectedValues
+        uint? levelValue, int natureId, uint[] expectedValues
     )
     {
         // Arrange
@@ -34,7 +34,7 @@ public class StatsCalculator_CalculateTests
 
     [Theory]
     [MemberData(nameof(NatureAdjustmentData))]
-    public void 各性格の補正が10パーセント増減となる_期待通りの補正がかかる(string natureId, string increasedStatName, string decreasedStatName)
+    public void 各性格の補正が10パーセント増減となる_期待通りの補正がかかる(int natureId, string increasedStatName, string decreasedStatName)
     {
         // Arrange
         var baseStats = new BaseStats(80, 80, 80, 80, 80, 80);
@@ -58,7 +58,7 @@ public class StatsCalculator_CalculateTests
         Assert.Equal(expectedDecreased, GetStatValue(actual, decreasedStatName));
     }
 
-    public static TheoryData<uint[], uint[], uint[], uint?, string, uint[]> CalculateData => new()
+    public static TheoryData<uint[], uint[], uint[], uint?, int, uint[]> CalculateData => new()
     {
         // フシギダネ Lv50 がんばりや 個体値MAX 努力値0
         {
@@ -66,7 +66,7 @@ public class StatsCalculator_CalculateTests
             new uint[] { 31, 31, 31, 31, 31, 31 },
             new uint[] { 0, 0, 0, 0, 0, 0 },
             null,
-            "hardy",
+            1,
             new uint[] { 120, 69, 69, 85, 85, 65 }
         },
         // カビゴン Lv50 いじっぱり HP・攻撃極振り 特防4
@@ -75,7 +75,7 @@ public class StatsCalculator_CalculateTests
             new uint[] { 31, 31, 31, 31, 31, 31 },
             new uint[] { 252, 252, 0, 0, 4, 0 },
             50u,
-            "adamant",
+            11,
             new uint[] { 237, 189, 140, 103, 116, 80 }
         },
         // ミロカロス Lv50 さみしがり 個体値MAX 努力値0
@@ -84,7 +84,7 @@ public class StatsCalculator_CalculateTests
             new uint[] { 31, 31, 31, 31, 31, 31 },
             new uint[] { 0, 0, 0, 0, 0, 0 },
             50u,
-            "lonely",
+            6,
             new uint[] { 145, 82, 76, 115, 125, 105 }
         },
         // 種族値オール1 Lv1 おくびょう 個体値0 努力値0
@@ -93,7 +93,7 @@ public class StatsCalculator_CalculateTests
             new uint[] { 0, 0, 0, 0, 0, 0 },
             new uint[] { 0, 0, 0, 0, 0, 0 },
             1u,
-            "timid",
+            5,
             new uint[] { 11, 4, 5, 5, 5, 5 }
         },
         // ガブリアス Lv78 いじっぱり (Bulbapedia の計算例)
@@ -102,36 +102,36 @@ public class StatsCalculator_CalculateTests
             new uint[] { 24, 12, 30, 16, 23, 5 },
             new uint[] { 74, 190, 91, 48, 84, 23 },
             78u,
-            "adamant",
+            11,
             new uint[] { 289, 278, 193, 135, 171, 171 }
         },
     };
 
-    public static TheoryData<string, string, string> NatureAdjustmentData => new()
+    public static TheoryData<int, string, string> NatureAdjustmentData => new()
     {
-        { "lonely", nameof(Stats.Attack), nameof(Stats.Defense) },
-        { "adamant", nameof(Stats.Attack), nameof(Stats.SpecialAttack) },
-        { "naughty", nameof(Stats.Attack), nameof(Stats.SpecialDefense) },
-        { "brave", nameof(Stats.Attack), nameof(Stats.Speed) },
-        { "bold", nameof(Stats.Defense), nameof(Stats.Attack) },
-        { "impish", nameof(Stats.Defense), nameof(Stats.SpecialAttack) },
-        { "lax", nameof(Stats.Defense), nameof(Stats.SpecialDefense) },
-        { "relaxed", nameof(Stats.Defense), nameof(Stats.Speed) },
-        { "modest", nameof(Stats.SpecialAttack), nameof(Stats.Attack) },
-        { "mild", nameof(Stats.SpecialAttack), nameof(Stats.Defense) },
-        { "rash", nameof(Stats.SpecialAttack), nameof(Stats.SpecialDefense) },
-        { "quiet", nameof(Stats.SpecialAttack), nameof(Stats.Speed) },
-        { "calm", nameof(Stats.SpecialDefense), nameof(Stats.Attack) },
-        { "gentle", nameof(Stats.SpecialDefense), nameof(Stats.Defense) },
-        { "careful", nameof(Stats.SpecialDefense), nameof(Stats.SpecialAttack) },
-        { "sassy", nameof(Stats.SpecialDefense), nameof(Stats.Speed) },
-        { "timid", nameof(Stats.Speed), nameof(Stats.Attack) },
-        { "hasty", nameof(Stats.Speed), nameof(Stats.Defense) },
-        { "jolly", nameof(Stats.Speed), nameof(Stats.SpecialAttack) },
-        { "naive", nameof(Stats.Speed), nameof(Stats.SpecialDefense) },
+        { 6, nameof(Stats.Attack), nameof(Stats.Defense) },
+        { 11, nameof(Stats.Attack), nameof(Stats.SpecialAttack) },
+        { 17, nameof(Stats.Attack), nameof(Stats.SpecialDefense) },
+        { 21, nameof(Stats.Attack), nameof(Stats.Speed) },
+        { 2, nameof(Stats.Defense), nameof(Stats.Attack) },
+        { 12, nameof(Stats.Defense), nameof(Stats.SpecialAttack) },
+        { 18, nameof(Stats.Defense), nameof(Stats.SpecialDefense) },
+        { 22, nameof(Stats.Defense), nameof(Stats.Speed) },
+        { 3, nameof(Stats.SpecialAttack), nameof(Stats.Attack) },
+        { 8, nameof(Stats.SpecialAttack), nameof(Stats.Defense) },
+        { 15, nameof(Stats.SpecialAttack), nameof(Stats.SpecialDefense) },
+        { 23, nameof(Stats.SpecialAttack), nameof(Stats.Speed) },
+        { 4, nameof(Stats.SpecialDefense), nameof(Stats.Attack) },
+        { 9, nameof(Stats.SpecialDefense), nameof(Stats.Defense) },
+        { 14, nameof(Stats.SpecialDefense), nameof(Stats.SpecialAttack) },
+        { 24, nameof(Stats.SpecialDefense), nameof(Stats.Speed) },
+        { 5, nameof(Stats.Speed), nameof(Stats.Attack) },
+        { 10, nameof(Stats.Speed), nameof(Stats.Defense) },
+        { 16, nameof(Stats.Speed), nameof(Stats.SpecialAttack) },
+        { 20, nameof(Stats.Speed), nameof(Stats.SpecialDefense) },
     };
 
-    private static Nature FindNature(string natureId)
+    private static Nature FindNature(int natureId)
     {
         return Nature.All.Single(x => x.Id.Value == natureId);
     }
