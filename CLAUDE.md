@@ -18,11 +18,11 @@ dotnet build PokemonTools.slnx
 # 全テスト実行
 dotnet test PokemonTools.slnx
 
-# 単一テストクラスの実行
-dotnet test tests/PokemonTools.ApiService.Domain.Tests --filter "FullyQualifiedName~DamageCalculator_CalculateTests"
+# 単一テストクラスの実行（MTP v2 では --project が必須）
+dotnet test --project tests/PokemonTools.ApiService.Domain.Tests --filter "FullyQualifiedName~DamageCalculator_CalculateTests"
 
 # 単一テストメソッドの実行
-dotnet test tests/PokemonTools.ApiService.Domain.Tests --filter "FullyQualifiedName~メソッド名"
+dotnet test --project tests/PokemonTools.ApiService.Domain.Tests --filter "FullyQualifiedName~メソッド名"
 
 # カバレッジレポート生成（要 dotnet-reportgenerator-globaltool）
 pwsh scripts/TestCoverage.ps1
