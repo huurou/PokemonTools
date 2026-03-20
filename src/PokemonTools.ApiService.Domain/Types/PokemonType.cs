@@ -12,91 +12,92 @@ public record PokemonType(TypeId Id, string Name)
     /// <summary>
     /// ノーマル
     /// </summary>
-    public static PokemonType Normal { get; } = new PokemonType(new TypeId("normal"), "ノーマル");
+    public static PokemonType Normal { get; } = new PokemonType(new TypeId(1), "ノーマル");
 
     /// <summary>
     /// かくとう
     /// </summary>
-    public static PokemonType Fighting { get; } = new PokemonType(new TypeId("fighting"), "かくとう");
+    public static PokemonType Fighting { get; } = new PokemonType(new TypeId(2), "かくとう");
 
     /// <summary>
     /// ひこう
     /// </summary>
-    public static PokemonType Flying { get; } = new PokemonType(new TypeId("flying"), "ひこう");
+    public static PokemonType Flying { get; } = new PokemonType(new TypeId(3), "ひこう");
+
     /// <summary>
     /// どく
     /// </summary>
-    public static PokemonType Poison { get; } = new PokemonType(new TypeId("poison"), "どく");
+    public static PokemonType Poison { get; } = new PokemonType(new TypeId(4), "どく");
 
     /// <summary>
     /// じめん
     /// </summary>
-    public static PokemonType Ground { get; } = new PokemonType(new TypeId("ground"), "じめん");
+    public static PokemonType Ground { get; } = new PokemonType(new TypeId(5), "じめん");
 
     /// <summary>
     /// いわ
     /// </summary>
-    public static PokemonType Rock { get; } = new PokemonType(new TypeId("rock"), "いわ");
+    public static PokemonType Rock { get; } = new PokemonType(new TypeId(6), "いわ");
 
     /// <summary>
     /// むし
     /// </summary>
-    public static PokemonType Bug { get; } = new PokemonType(new TypeId("bug"), "むし");
+    public static PokemonType Bug { get; } = new PokemonType(new TypeId(7), "むし");
 
     /// <summary>
     /// ゴースト
     /// </summary>
-    public static PokemonType Ghost { get; } = new PokemonType(new TypeId("ghost"), "ゴースト");
+    public static PokemonType Ghost { get; } = new PokemonType(new TypeId(8), "ゴースト");
 
     /// <summary>
     /// はがね
     /// </summary>
-    public static PokemonType Steel { get; } = new PokemonType(new TypeId("steel"), "はがね");
+    public static PokemonType Steel { get; } = new PokemonType(new TypeId(9), "はがね");
 
     /// <summary>
     /// ほのお
     /// </summary>
-    public static PokemonType Fire { get; } = new PokemonType(new TypeId("fire"), "ほのお");
+    public static PokemonType Fire { get; } = new PokemonType(new TypeId(10), "ほのお");
 
     /// <summary>
     /// みず
     /// </summary>
-    public static PokemonType Water { get; } = new PokemonType(new TypeId("water"), "みず");
+    public static PokemonType Water { get; } = new PokemonType(new TypeId(11), "みず");
 
     /// <summary>
     /// くさ
     /// </summary>
-    public static PokemonType Grass { get; } = new PokemonType(new TypeId("grass"), "くさ");
+    public static PokemonType Grass { get; } = new PokemonType(new TypeId(12), "くさ");
 
     /// <summary>
     /// でんき
     /// </summary>
-    public static PokemonType Electric { get; } = new PokemonType(new TypeId("electric"), "でんき");
+    public static PokemonType Electric { get; } = new PokemonType(new TypeId(13), "でんき");
 
     /// <summary>
     /// エスパー
     /// </summary>
-    public static PokemonType Psychic { get; } = new PokemonType(new TypeId("psychic"), "エスパー");
+    public static PokemonType Psychic { get; } = new PokemonType(new TypeId(14), "エスパー");
 
     /// <summary>
     /// こおり
     /// </summary>
-    public static PokemonType Ice { get; } = new PokemonType(new TypeId("ice"), "こおり");
+    public static PokemonType Ice { get; } = new PokemonType(new TypeId(15), "こおり");
 
     /// <summary>
     /// ドラゴン
     /// </summary>
-    public static PokemonType Dragon { get; } = new PokemonType(new TypeId("dragon"), "ドラゴン");
+    public static PokemonType Dragon { get; } = new PokemonType(new TypeId(16), "ドラゴン");
 
     /// <summary>
     /// あく
     /// </summary>
-    public static PokemonType Dark { get; } = new PokemonType(new TypeId("dark"), "あく");
+    public static PokemonType Dark { get; } = new PokemonType(new TypeId(17), "あく");
 
     /// <summary>
     /// フェアリー
     /// </summary>
-    public static PokemonType Fairy { get; } = new PokemonType(new TypeId("fairy"), "フェアリー");
+    public static PokemonType Fairy { get; } = new PokemonType(new TypeId(18), "フェアリー");
 
     #endregion シングルトンプロパティ
 
