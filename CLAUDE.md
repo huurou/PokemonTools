@@ -84,6 +84,7 @@ AppHost
 ## コーディング規約
 
 - プライベートフィールドはキャメルケース + `_` サフィックス（例: `rands_`）
+- 定数（`const`）は `UPPER_SNAKE_CASE` を使用（例: `PAGE_SIZE`）
 - LINQの引数には `x`, `y`, `z` を使用
 - 値オブジェクトは `record` で定義し、必要に応じてコンストラクタでガード節（`ArgumentOutOfRangeException.ThrowIf*`等）によるバリデーション
 - `Pokemon` プリフィックスは名前空間や `System.Type` との衝突回避が必要な場合のみ付与（例: `PokemonType`, `PokemonSpecies`）。衝突がないクラス（`Move`, `Ability`等）には付けない

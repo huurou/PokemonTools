@@ -15,8 +15,8 @@ namespace PokemonTools.ServiceDefaults;
 // To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
 public static class Extensions
 {
-    private const string HealthEndpointPath = "/health";
-    private const string AlivenessEndpointPath = "/alive";
+    private const string HEALTH_ENDPOINT_PATH = "/health";
+    private const string ALIVENESS_ENDPOINT_PATH = "/alive";
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -61,8 +61,8 @@ public static class Extensions
                 .AddAspNetCoreInstrumentation(tracing =>
                     // Exclude health check requests from tracing
                     tracing.Filter = context =>
-                        !context.Request.Path.StartsWithSegments(HealthEndpointPath) &&
-                        !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
+                        !context.Request.Path.StartsWithSegments(HEALTH_ENDPOINT_PATH) &&
+                        !context.Request.Path.StartsWithSegments(ALIVENESS_ENDPOINT_PATH)
                 )
                 // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                 //.AddGrpcClientInstrumentation()
@@ -108,10 +108,10 @@ public static class Extensions
         if (app.Environment.IsDevelopment())
         {
             // All health checks must pass for app to be considered ready to accept traffic after starting
-            app.MapHealthChecks(HealthEndpointPath);
+            app.MapHealthChecks(HEALTH_ENDPOINT_PATH);
 
             // Only health checks tagged with the "live" tag must pass for app to be considered alive
-            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
+            app.MapHealthChecks(ALIVENESS_ENDPOINT_PATH, new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("live")
             });

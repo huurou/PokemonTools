@@ -14,127 +14,127 @@ public record Nature(NatureId Id, string Name, StatType? IncreasedStat, StatType
     /// <summary>
     /// がんばりや （補正なし）
     /// </summary>
-    public static Nature Hardy { get; } = new(new NatureId("hardy"), "がんばりや", null, null);
+    public static Nature Hardy { get; } = new(new NatureId(1), "がんばりや", null, null);
 
     /// <summary>
     /// さみしがり 攻撃↑ 防御↓
     /// </summary>
-    public static Nature Lonely { get; } = new(new NatureId("lonely"), "さみしがり", StatType.Attack, StatType.Defense);
+    public static Nature Lonely { get; } = new(new NatureId(6), "さみしがり", StatType.Attack, StatType.Defense);
 
     /// <summary>
     /// いじっぱり 攻撃↑ 特攻↓
     /// </summary>
-    public static Nature Adamant { get; } = new(new NatureId("adamant"), "いじっぱり", StatType.Attack, StatType.SpecialAttack);
+    public static Nature Adamant { get; } = new(new NatureId(11), "いじっぱり", StatType.Attack, StatType.SpecialAttack);
 
     /// <summary>
     /// やんちゃ 攻撃↑ 特防↓
     /// </summary>
-    public static Nature Naughty { get; } = new(new NatureId("naughty"), "やんちゃ", StatType.Attack, StatType.SpecialDefense);
+    public static Nature Naughty { get; } = new(new NatureId(17), "やんちゃ", StatType.Attack, StatType.SpecialDefense);
 
     /// <summary>
     /// ゆうかん 攻撃↑ 素早さ↓
     /// </summary>
-    public static Nature Brave { get; } = new(new NatureId("brave"), "ゆうかん", StatType.Attack, StatType.Speed);
+    public static Nature Brave { get; } = new(new NatureId(21), "ゆうかん", StatType.Attack, StatType.Speed);
 
     /// <summary>
     /// ずぶとい 防御↑ 攻撃↓
     /// </summary>
-    public static Nature Bold { get; } = new(new NatureId("bold"), "ずぶとい", StatType.Defense, StatType.Attack);
+    public static Nature Bold { get; } = new(new NatureId(2), "ずぶとい", StatType.Defense, StatType.Attack);
 
     /// <summary>
     /// すなお （補正なし）
     /// </summary>
-    public static Nature Docile { get; } = new(new NatureId("docile"), "すなお", null, null);
+    public static Nature Docile { get; } = new(new NatureId(7), "すなお", null, null);
 
     /// <summary>
     /// わんぱく 防御↑ 特攻↓
     /// </summary>
-    public static Nature Impish { get; } = new(new NatureId("impish"), "わんぱく", StatType.Defense, StatType.SpecialAttack);
+    public static Nature Impish { get; } = new(new NatureId(12), "わんぱく", StatType.Defense, StatType.SpecialAttack);
 
     /// <summary>
     /// のうてんき 防御↑ 特防↓
     /// </summary>
-    public static Nature Lax { get; } = new(new NatureId("lax"), "のうてんき", StatType.Defense, StatType.SpecialDefense);
+    public static Nature Lax { get; } = new(new NatureId(18), "のうてんき", StatType.Defense, StatType.SpecialDefense);
 
     /// <summary>
     /// のんき 防御↑ 素早さ↓
     /// </summary>
-    public static Nature Relaxed { get; } = new(new NatureId("relaxed"), "のんき", StatType.Defense, StatType.Speed);
+    public static Nature Relaxed { get; } = new(new NatureId(22), "のんき", StatType.Defense, StatType.Speed);
 
     /// <summary>
     /// ひかえめ 特攻↑ 攻撃↓
     /// </summary>
-    public static Nature Modest { get; } = new(new NatureId("modest"), "ひかえめ", StatType.SpecialAttack, StatType.Attack);
+    public static Nature Modest { get; } = new(new NatureId(3), "ひかえめ", StatType.SpecialAttack, StatType.Attack);
 
     /// <summary>
     /// おっとり 特攻↑ 防御↓
     /// </summary>
-    public static Nature Mild { get; } = new(new NatureId("mild"), "おっとり", StatType.SpecialAttack, StatType.Defense);
+    public static Nature Mild { get; } = new(new NatureId(8), "おっとり", StatType.SpecialAttack, StatType.Defense);
 
     /// <summary>
     /// てれや （補正なし）
     /// </summary>
-    public static Nature Bashful { get; } = new(new NatureId("bashful"), "てれや", null, null);
+    public static Nature Bashful { get; } = new(new NatureId(13), "てれや", null, null);
 
     /// <summary>
     /// うっかりや 特攻↑ 特防↓
     /// </summary>
-    public static Nature Rash { get; } = new(new NatureId("rash"), "うっかりや", StatType.SpecialAttack, StatType.SpecialDefense);
+    public static Nature Rash { get; } = new(new NatureId(15), "うっかりや", StatType.SpecialAttack, StatType.SpecialDefense);
 
     /// <summary>
     /// れいせい 特攻↑ 素早さ↓
     /// </summary>
-    public static Nature Quiet { get; } = new(new NatureId("quiet"), "れいせい", StatType.SpecialAttack, StatType.Speed);
+    public static Nature Quiet { get; } = new(new NatureId(23), "れいせい", StatType.SpecialAttack, StatType.Speed);
 
     /// <summary>
     /// おだやか 特防↑ 攻撃↓
     /// </summary>
-    public static Nature Calm { get; } = new(new NatureId("calm"), "おだやか", StatType.SpecialDefense, StatType.Attack);
+    public static Nature Calm { get; } = new(new NatureId(4), "おだやか", StatType.SpecialDefense, StatType.Attack);
 
     /// <summary>
     /// おとなしい 特防↑ 防御↓
     /// </summary>
-    public static Nature Gentle { get; } = new(new NatureId("gentle"), "おとなしい", StatType.SpecialDefense, StatType.Defense);
+    public static Nature Gentle { get; } = new(new NatureId(9), "おとなしい", StatType.SpecialDefense, StatType.Defense);
 
     /// <summary>
     /// しんちょう 特防↑ 特攻↓
     /// </summary>
-    public static Nature Careful { get; } = new(new NatureId("careful"), "しんちょう", StatType.SpecialDefense, StatType.SpecialAttack);
+    public static Nature Careful { get; } = new(new NatureId(14), "しんちょう", StatType.SpecialDefense, StatType.SpecialAttack);
 
     /// <summary>
     /// なまいき 特防↑ 素早さ↓
     /// </summary>
-    public static Nature Sassy { get; } = new(new NatureId("sassy"), "なまいき", StatType.SpecialDefense, StatType.Speed);
+    public static Nature Sassy { get; } = new(new NatureId(24), "なまいき", StatType.SpecialDefense, StatType.Speed);
 
     /// <summary>
     /// おくびょう 素早さ↑ 攻撃↓
     /// </summary>
-    public static Nature Timid { get; } = new(new NatureId("timid"), "おくびょう", StatType.Speed, StatType.Attack);
+    public static Nature Timid { get; } = new(new NatureId(5), "おくびょう", StatType.Speed, StatType.Attack);
 
     /// <summary>
     /// せっかち 素早さ↑ 防御↓
     /// </summary>
-    public static Nature Hasty { get; } = new(new NatureId("hasty"), "せっかち", StatType.Speed, StatType.Defense);
+    public static Nature Hasty { get; } = new(new NatureId(10), "せっかち", StatType.Speed, StatType.Defense);
 
     /// <summary>
     /// ようき 素早さ↑ 特攻↓
     /// </summary>
-    public static Nature Jolly { get; } = new(new NatureId("jolly"), "ようき", StatType.Speed, StatType.SpecialAttack);
+    public static Nature Jolly { get; } = new(new NatureId(16), "ようき", StatType.Speed, StatType.SpecialAttack);
 
     /// <summary>
     /// むじゃき 素早さ↑ 特防↓
     /// </summary>
-    public static Nature Naive { get; } = new(new NatureId("naive"), "むじゃき", StatType.Speed, StatType.SpecialDefense);
+    public static Nature Naive { get; } = new(new NatureId(20), "むじゃき", StatType.Speed, StatType.SpecialDefense);
 
     /// <summary>
     /// まじめ （補正なし）
     /// </summary>
-    public static Nature Serious { get; } = new(new NatureId("serious"), "まじめ", null, null);
+    public static Nature Serious { get; } = new(new NatureId(25), "まじめ", null, null);
 
     /// <summary>
     /// きまぐれ （補正なし）
     /// </summary>
-    public static Nature Quirky { get; } = new(new NatureId("quirky"), "きまぐれ", null, null);
+    public static Nature Quirky { get; } = new(new NatureId(19), "きまぐれ", null, null);
 
     /// <summary>
     /// 全25性格のリスト
