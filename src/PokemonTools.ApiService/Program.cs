@@ -1,4 +1,5 @@
-﻿using PokemonTools.ApiService.Infrastructure.PokeApi;
+﻿using PokemonTools.ApiService.Infrastructure.Db;
+using PokemonTools.ApiService.Infrastructure.PokeApi;
 using PokemonTools.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,10 @@ builder.Services.AddProblemDetails();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.AddNpgsqlDbContext<PokemonToolsDbContext>(
+    "pokemonToolsDb",
+    configureDbContextOptions: options => options.AddInterceptors(new TimestampSaveChangesInterceptor(TimeProvider.System))
+);
 builder.Services.AddPokeApiClient();
 
 var app = builder.Build();

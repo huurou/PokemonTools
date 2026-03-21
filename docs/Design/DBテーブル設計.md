@@ -9,6 +9,7 @@ Issue #19 にて確定した決定版。EF Core + PostgreSQL を使用する。
 * **性格の補正情報はコード管理**。Naturesテーブルは名前解決用
 * **努力値バリデーションはアプリ側**で実施（DB制約ではない）
 * **ID体系**: マスターデータ系は `int`（PokeAPI ID）、ユーザーデータ系は `text`（prefix\_uuidv7）
+* **タイムスタンプ**: 全テーブルに `CreatedAt` / `UpdatedAt`（`timestamp with time zone`、デフォルト `CURRENT_TIMESTAMP`）を付与。`UpdatedAt` は `SaveChangesInterceptor` で自動更新
 
 ## マスターデータテーブル
 
@@ -20,6 +21,8 @@ PokeAPIから取得・変換して保存する。
 | ----- | ----- | ----- | ----- |
 | TypeId | int | PK | タイプID PokeAPIでのid |
 | TypeName | text | NOT NULL | タイプ名 日本語名 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### Species（ポケモンの種族）
 
@@ -39,6 +42,8 @@ PokeAPIから取得・変換して保存する。
 | BaseStatSpecialDefense | int | NOT NULL | 種族値::とくぼう |
 | BaseStatSpeed | int | NOT NULL | 種族値::すばやさ |
 | Weight | int | NOT NULL | 体重 PokeAPIでの値そのまま |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### Moves（技）
 
@@ -51,6 +56,8 @@ PPと追加効果は後回し。命中率はダメージ計算には不要。
 | TypeId | int | FK, NOT NULL | タイプID |
 | MoveDamageClassId | int | FK, NOT NULL | 技分類ID |
 | Power | int | | 威力 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### MoveDamageClasses（技分類）
 
@@ -60,6 +67,8 @@ PPと追加効果は後回し。命中率はダメージ計算には不要。
 | ----- | ----- | ----- | ----- |
 | MoveDamageClassId | int | PK | 技分類ID PokeAPIでのid |
 | MoveDamageClassName | text | NOT NULL | 技分類名 日本語名 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### Abilities（特性）
 
@@ -69,6 +78,8 @@ PPと追加効果は後回し。命中率はダメージ計算には不要。
 | ----- | ----- | ----- | ----- |
 | AbilityId | int | PK | 特性ID PokeAPIでのid |
 | AbilityName | text | NOT NULL | 特性名 日本語名 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### Items（道具）
 
@@ -79,6 +90,8 @@ FlingEffectはダメージ計算には不要。
 | ItemId | int | PK | 道具ID PokeAPIでのid |
 | ItemName | text | NOT NULL | 道具名 日本語名 |
 | FlingPower | int | | 投げつけるの威力 投げつけるが失敗する道具はNULL |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### Natures（性格）
 
@@ -88,6 +101,8 @@ FlingEffectはダメージ計算には不要。
 | ----- | ----- | ----- | ----- |
 | NatureId | int | PK | 性格ID PokeAPIでのid |
 | NatureName | text | NOT NULL | 性格名 日本語名 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ## ユーザーデータテーブル
 
@@ -122,6 +137,8 @@ FlingEffectはダメージ計算には不要。
 | TeraTypeId | int | FK, NOT NULL | テラスタイプID |
 | Memo | text | | 備考 |
 | CategoryId | int | FK, NOT NULL | カテゴリID |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### IndividualCategories（個体カテゴリ）
 
@@ -131,6 +148,8 @@ FlingEffectはダメージ計算には不要。
 | ----- | ----- | ----- | ----- |
 | IndividualCategoryId | int | PK | 個体カテゴリ 連番 |
 | IndividualCategoryName | text | NOT NULL | 個体カテゴリ名 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ### Parties（パーティ）
 
@@ -147,6 +166,8 @@ FlingEffectはダメージ計算には不要。
 | Individual5Id | text | FK | 個体5ID |
 | Individual6Id | text | FK | 個体6ID |
 | Memo | text | | 備考 |
+| CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
+| UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
 ## スコープ外（後回し）
 
