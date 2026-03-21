@@ -31,7 +31,7 @@ pwsh scripts/TestCoverage.ps1
 ## アーキテクチャ
 
 - **.NET 10** / **Aspire** によるマルチサービスオーケストレーション
-- **クリーンアーキテクチャ**: Domain → Application → Infrastructure の依存方向
+- **クリーンアーキテクチャ**: Infrastructure / Application → Domain の依存方向（Domain層が最内層、外側から内側への依存のみ許可）
 - **2サービス構成**: ApiService（Web API）と Web（Blazor SSR）。AppHostが両者をオーケストレーション
 - Web → ApiService 間はAspireのサービスディスカバリで接続（`https+http://apiservice`）
 - AppHostは`WaitFor`でApiServiceのヘルスチェック通過を待ってからWebを開始する
@@ -40,11 +40,14 @@ pwsh scripts/TestCoverage.ps1
 
 ```
 AppHost
+├── PostgreSQL ("pokemonToolsDb")
 ├── ApiService ──→ Application → Domain
 │    │             Infrastructure → Domain
+│    ├──→ PostgreSQL（WaitFor）
 │    └──→ ServiceDefaults
 ├── Web ──→ Web.Application → Web.Domain
 │    │      Web.Infrastructure → Web.Domain
+│    ├──→ ApiService（WaitFor）
 │    └──→ ServiceDefaults
 └── ServiceDefaults（両サービス共通：OpenTelemetry、ヘルスチェック、サービスディスカバリ）
 ```
@@ -54,7 +57,7 @@ AppHost
 ### 横断的関心事の配置
 
 - **ServiceDefaults**: OpenTelemetry・ヘルスチェック・サービスディスカバリ・レジリエンスなど、両サービス共通の横断的関心事を集約する。個別サービスは`AddServiceDefaults()`を呼ぶだけでこれらを取得する
-- **AppHost**: サービス間の依存関係と起動順序を管理する。ApiServiceのヘルスチェック通過→Web起動の順序保証はここで定義する
+- **AppHost**: サービス間の依存関係と起動順序を管理する。PostgreSQL→ApiService→Webの順序保証（`WaitFor`+ヘルスチェック）はここで定義する
 - **Infrastructure層**: 外部APIアクセス（PokeAPI等）はInfrastructure層に閉じ込める。DI登録は層ごとの拡張メソッド（例: `AddPokeApiClient()`）で隠蔽し、ホスト側は実装詳細を知らない
 
 ### ドメイン層の境界付きコンテキスト（ApiService.Domain）
@@ -64,7 +67,8 @@ AppHost
 | `Damages/` | ダメージ計算エンジン。Q12形式（12bit固定小数点）で精密計算 |
 | `Statistics/` | 実数値計算（HP/攻撃/防御/特攻/特防/素早さ）。種族値・個体値・努力値・性格補正対応 |
 | `Types/` | 18タイプ相性表＋ステラ・???（相性未定義、等倍扱い）。FrozenDictionaryで管理。デュアルタイプ対応 |
-| `Utility/` | Q12演算の拡張メソッド（四捨五入・五捨五超入） |
+| `Moves/` | 技の分類（へんか・ぶつり・とくしゅ）。MoveDamageClassで3分類を管理 |
+| `Utility/` | Q12演算の拡張メソッド（四捨五入・五捨五超入）とdouble→uint変換 |
 
 ### Q12固定小数点演算
 
@@ -80,6 +84,9 @@ AppHost
 - 外部API（PokeAPI v2）へのアクセスはInfrastructure層に閉じ込め、Domain層は外部依存を持たない
 - PokeAPIはフェアユースポリシー遵守のため、リクエスト間隔を最低200msに制限する（`PokeApiRequestLimiter`）
 - テスト可能性のため`TimeProvider`をDI注入し、テストでは`FakeTimeProvider`に差し替える
+- **永続化**: EF Core + Npgsql（PostgreSQL）。Aspire統合（`AddNpgsqlDbContext`）でDbContextを登録
+- **エンティティ設計**: 各エンティティは`IEntityTypeConfiguration<T>`でFluent API設定。`IHasUpdatedAt`実装エンティティは`TimestampSaveChangesInterceptor`でUpdatedAtを自動管理。CreatedAtはDBデフォルト値（`CURRENT_TIMESTAMP`）で設定
+- **ID体系**: マスターデータはPokeAPI準拠の`int`、ユーザーデータは`prefix_uuidv7`形式の`string`
 
 ## コーディング規約
 
@@ -121,3 +128,4 @@ AppHost
 
 - `docs/ADR/` — アーキテクチャ決定記録（クラス命名規則等）
 - `docs/Requirements/` — 要件定義書
+- `docs/Design/` — DBテーブル設計書（エンティティ定義・リレーション・制約の詳細）

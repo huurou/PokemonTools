@@ -13,4 +13,8 @@
     <ProjectReference Include="..\PokemonTools.Web\PokemonTools.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.1.3" />
+  </ItemGroup>
+
 </Project>
