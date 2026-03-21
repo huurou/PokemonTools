@@ -15,7 +15,7 @@ builder.Services.AddOpenApi();
 
 builder.AddNpgsqlDbContext<PokemonToolsDbContext>(
     "pokemonToolsDb",
-    configureDbContextOptions: options => options.AddInterceptors(new TimestampSaveChangesInterceptor())
+    configureDbContextOptions: options => options.AddInterceptors(new TimestampSaveChangesInterceptor(TimeProvider.System))
 );
 builder.Services.AddPokeApiClient();
 

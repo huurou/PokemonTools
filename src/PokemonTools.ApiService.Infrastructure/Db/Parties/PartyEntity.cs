@@ -133,26 +133,32 @@ public class PartyEntityConfiguration : IEntityTypeConfiguration<PartyEntity>
 
         builder.HasOne(x => x.Individual1)
             .WithMany()
-            .HasForeignKey(x => x.Individual1Id);
+            .HasForeignKey(x => x.Individual1Id)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Individual2)
             .WithMany()
-            .HasForeignKey(x => x.Individual2Id);
+            .HasForeignKey(x => x.Individual2Id)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Individual3)
             .WithMany()
-            .HasForeignKey(x => x.Individual3Id);
+            .HasForeignKey(x => x.Individual3Id)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Individual4)
             .WithMany()
-            .HasForeignKey(x => x.Individual4Id);
+            .HasForeignKey(x => x.Individual4Id)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Individual5)
             .WithMany()
-            .HasForeignKey(x => x.Individual5Id);
+            .HasForeignKey(x => x.Individual5Id)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Individual6)
             .WithMany()
-            .HasForeignKey(x => x.Individual6Id);
+            .HasForeignKey(x => x.Individual6Id)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
