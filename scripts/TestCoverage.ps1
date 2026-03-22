@@ -64,9 +64,9 @@
     }
     New-Item -ItemType Directory -Path $coverageRoot | Out-Null
 
-    # slnx からプロジェクト名を取得し、テスト・AppHost・ServiceDefaults・エントリポイント(Web/ApiService) を除外した assemblyfilters を構築
+    # slnx からプロジェクト名を取得し、テスト・AppHost・ServiceDefaults・エントリポイント(Web) を除外した assemblyfilters を構築
     [xml]$slnx = Get-Content $slnxFile.FullName
-    $excludePatterns = @("*.Tests", "*.AppHost", "*.ServiceDefaults", "*.Web", "*.ApiService")
+    $excludePatterns = @("*.Tests", "*.AppHost", "*.ServiceDefaults", "*.Web")
     $excludeAssemblies = $slnx.Solution.SelectNodes("//Project") |
         ForEach-Object { [System.IO.Path]::GetFileNameWithoutExtension($_.Path) } |
         Where-Object {
