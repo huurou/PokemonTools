@@ -19,10 +19,10 @@ dotnet build PokemonTools.slnx
 dotnet test PokemonTools.slnx
 
 # 単一テストクラスの実行（MTP v2 では --project が必須）
-dotnet test --project tests/PokemonTools.ApiService.Domain.Tests --filter "FullyQualifiedName~DamageCalculator_CalculateTests"
+dotnet test --project tests/PokemonTools.Web.Domain.Tests --filter "FullyQualifiedName~DamageCalculator_CalculateTests"
 
 # 単一テストメソッドの実行
-dotnet test --project tests/PokemonTools.ApiService.Domain.Tests --filter "FullyQualifiedName~メソッド名"
+dotnet test --project tests/PokemonTools.Web.Domain.Tests --filter "FullyQualifiedName~メソッド名"
 
 # カバレッジレポート生成（要 dotnet-reportgenerator-globaltool）
 pwsh scripts/TestCoverage.ps1
@@ -30,37 +30,32 @@ pwsh scripts/TestCoverage.ps1
 
 ## アーキテクチャ
 
-- **.NET 10** / **Aspire** によるマルチサービスオーケストレーション
+- **.NET 10** / **Aspire** によるオーケストレーション
 - **クリーンアーキテクチャ**: Infrastructure / Application → Domain の依存方向（Domain層が最内層、外側から内側への依存のみ許可）
-- **2サービス構成**: ApiService（Web API）と Web（Blazor SSR）。AppHostが両者をオーケストレーション
-- Web → ApiService 間はAspireのサービスディスカバリで接続（`https+http://apiservice`）
-- AppHostは`WaitFor`でApiServiceのヘルスチェック通過を待ってからWebを開始する
+- **単一Webサービス構成**: Blazor SSR（Web）がドメインロジック・DB・外部APIを直接参照。AppHostがPostgreSQLとWebをオーケストレーション
 
 ### プロジェクト依存関係
 
 ```
 AppHost
 ├── PostgreSQL ("pokemonToolsDb")
-├── ApiService ──→ Application → Domain
-│    │             Infrastructure → Domain
-│    ├──→ PostgreSQL（WaitFor）
-│    └──→ ServiceDefaults
 ├── Web ──→ Web.Application → Web.Domain
 │    │      Web.Infrastructure → Web.Domain
-│    ├──→ ApiService（WaitFor）
+│    ├──→ PostgreSQL（WaitFor）
 │    └──→ ServiceDefaults
-└── ServiceDefaults（両サービス共通：OpenTelemetry、ヘルスチェック、サービスディスカバリ）
+└── ServiceDefaults（OpenTelemetry、ヘルスチェック、サービスディスカバリ）
 ```
 
-- Application層（ApiService.Application / Web.Application）は現在空で、ユースケース定義の準備段階
+- Web.Application は現在空で、ユースケース定義の準備段階
+- WebはDomain層を直接参照せず、Application/Infrastructureを経由してのみ依存する（クリーンアーキテクチャの依存ルール）
 
 ### 横断的関心事の配置
 
-- **ServiceDefaults**: OpenTelemetry・ヘルスチェック・サービスディスカバリ・レジリエンスなど、両サービス共通の横断的関心事を集約する。個別サービスは`AddServiceDefaults()`を呼ぶだけでこれらを取得する
-- **AppHost**: サービス間の依存関係と起動順序を管理する。PostgreSQL→ApiService→Webの順序保証（`WaitFor`+ヘルスチェック）はここで定義する
+- **ServiceDefaults**: OpenTelemetry・ヘルスチェック・サービスディスカバリ・レジリエンスなどの横断的関心事を集約する。Webは`AddServiceDefaults()`を呼ぶだけでこれらを取得する
+- **AppHost**: サービスの依存関係と起動順序を管理する。PostgreSQL→Webの順序保証（`WaitFor`+ヘルスチェック）はここで定義する
 - **Infrastructure層**: 外部APIアクセス（PokeAPI等）はInfrastructure層に閉じ込める。DI登録は層ごとの拡張メソッド（例: `AddPokeApiClient()`）で隠蔽し、ホスト側は実装詳細を知らない
 
-### ドメイン層の境界付きコンテキスト（ApiService.Domain）
+### ドメイン層の境界付きコンテキスト（Web.Domain）
 
 | コンテキスト | 内容 |
 |---|---|
@@ -107,12 +102,12 @@ AppHost
 - **例外テスト**: `Assert.Throws`ではなく`Record.Exception()` / `Record.ExceptionAsync()` + `Assert.IsType<>()`でAct/Assertを分離する
 - **ドキュメントコメント**: テストコードには付与しない
 - **ヘルパーパターン**: テストクラスにはデフォルト値付きの`private static`ヘルパーメソッド（例: `CalculateWithDefaults()`）を定義し、テストメソッドでは変更したいパラメータのみnamed argumentで指定する
-- **カバレッジ**: ブランチカバレッジ100%を目標とする。カバレッジレポートのアセンブリフィルタはエントリポイント（ApiService/Web）を除外し、Domain/Infrastructure/Applicationのみ計測する
+- **カバレッジ**: ブランチカバレッジ100%を目標とする。カバレッジレポートのアセンブリフィルタはエントリポイント（Web）を除外し、Domain/Infrastructure/Applicationのみ計測する
 - **テストプロジェクト設定**: MTP v2ランナーのため`OutputType`は`Exe`が必須。パッケージは`xunit.v3.mtp-v2` + `Microsoft.Testing.Extensions.CodeCoverage`
 - **テストプロジェクト構成**: 以下の3系統
-  - `ApiService.Domain.Tests` — ドメインロジックの単体テスト
-  - `ApiService.Infrastructure.Tests` — 外部依存（PokeAPIクライアント等）のテスト。実ネットワークに出ず、偽のHTTPハンドラと`FakeTimeProvider`でレート制限・ページング・キャンセルを決定論的に検証する
-  - `PokemonTools.Tests` — Aspireホスト統合テスト
+  - `Web.Domain.Tests` — ドメインロジックの単体テスト
+  - `Web.Infrastructure.Tests` — 外部依存（PokeAPIクライアント等）のテスト。実ネットワークに出ず、偽のHTTPハンドラと`FakeTimeProvider`でレート制限・ページング・キャンセルを決定論的に検証する
+  - `PokemonTools.Tests` — Aspireホスト統合テスト（PostgreSQLコンテナを使用するためDocker必須）
 
 ## リポジトリ不変条件
 

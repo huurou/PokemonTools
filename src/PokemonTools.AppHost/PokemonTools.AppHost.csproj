@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokemonTools.ApiService\PokemonTools.ApiService.csproj" />
     <ProjectReference Include="..\PokemonTools.Web\PokemonTools.Web.csproj" />
   </ItemGroup>
 

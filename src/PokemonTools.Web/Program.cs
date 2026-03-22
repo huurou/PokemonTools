@@ -1,6 +1,7 @@
 ﻿using PokemonTools.ServiceDefaults;
-using PokemonTools.Web;
 using PokemonTools.Web.Components;
+using PokemonTools.Web.Infrastructure.Db;
+using PokemonTools.Web.Infrastructure.PokeApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +14,11 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddOutputCache();
 
-// This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
-// Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
-builder.Services.AddHttpClient<WeatherApiClient>(client => client.BaseAddress = new("https+http://apiservice"));
+builder.AddNpgsqlDbContext<PokemonToolsDbContext>(
+    "pokemonToolsDb",
+    configureDbContextOptions: options => options.AddInterceptors(new TimestampSaveChangesInterceptor(TimeProvider.System))
+);
+builder.Services.AddPokeApiClient();
 
 var app = builder.Build();
 
