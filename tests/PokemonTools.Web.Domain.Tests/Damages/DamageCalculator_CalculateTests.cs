@@ -203,7 +203,6 @@ public class DamageCalculator_CalculateTests
         Assert.Equal(expected, damage.Values);
     }
 
-
     [Fact]
     public void 急所かつ防御ランクがマイナス_マイナスランクはそのまま適用される()
     {

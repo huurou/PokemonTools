@@ -1,4 +1,6 @@
-﻿namespace PokemonTools.Web.Domain.Moves;
+﻿using System.Collections.Immutable;
+
+namespace PokemonTools.Web.Domain.Moves;
 
 /// <summary>
 /// 技の分類（へんか・ぶつり・とくしゅ）を表現するクラス
@@ -29,7 +31,7 @@ public record MoveDamageClass(MoveDamageClassId Id, string Name)
     /// <summary>
     /// 全3分類のリスト
     /// </summary>
-    public static IReadOnlyList<MoveDamageClass> All { get; } =
+    public static ImmutableArray<MoveDamageClass> All { get; } =
     [
         Status, Physical, Special,
     ];

@@ -58,9 +58,9 @@ public class TypeChart_GetEffectivenessTests
                 /* フェアリー */ [N, S, N, H, N, N, N, N, H, H, N, N, N, N, N, S, S, N],
             ];
 
-            for (var i = 0; i < allTypes.Count; i++)
+            for (var i = 0; i < allTypes.Length; i++)
             {
-                for (var j = 0; j < allTypes.Count; j++)
+                for (var j = 0; j < allTypes.Length; j++)
                 {
                     data.Add(allTypes[i].Id.Value, allTypes[j].Id.Value, chart[i][j]);
                 }

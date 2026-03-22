@@ -5,36 +5,104 @@
 /// </summary>
 public record EffortValues
 {
+    // 各努力値は合計510の不変条件を共有するため、with式での個別更新を防ぐ。
+    // 値の変更はSetValues経由で行う。
+
     /// <summary>HP</summary>
-    public uint Hp { get; }
+    public uint Hp
+    {
+        get;
+        private init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            field = value;
+        }
+    }
+
     /// <summary>攻撃</summary>
-    public uint Attack { get; }
+    public uint Attack
+    {
+        get;
+        private init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            field = value;
+        }
+    }
+
     /// <summary>防御</summary>
-    public uint Defense { get; }
+    public uint Defense
+    {
+        get;
+        private init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            field = value;
+        }
+    }
+
     /// <summary>特攻</summary>
-    public uint SpecialAttack { get; }
+    public uint SpecialAttack
+    {
+        get;
+        private init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            field = value;
+        }
+    }
+
     /// <summary>特防</summary>
-    public uint SpecialDefense { get; }
+    public uint SpecialDefense
+    {
+        get;
+        private init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            field = value;
+        }
+    }
+
     /// <summary>素早さ</summary>
-    public uint Speed { get; }
+    public uint Speed
+    {
+        get;
+        private init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            field = value;
+        }
+    }
 
     public EffortValues(uint hp, uint attack, uint defense, uint specialAttack, uint specialDefense, uint speed)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(hp, 252u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(attack, 252u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(defense, 252u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(specialAttack, 252u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(specialDefense, 252u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(speed, 252u);
-
-        var total = hp + attack + defense + specialAttack + specialDefense + speed;
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(total, 510u);
-
         Hp = hp;
         Attack = attack;
         Defense = defense;
         SpecialAttack = specialAttack;
         SpecialDefense = specialDefense;
         Speed = speed;
+
+        var total = Hp + Attack + Defense + SpecialAttack + SpecialDefense + Speed;
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(total, 510u);
+    }
+
+    public EffortValues SetValues(
+        uint? hp = null,
+        uint? attack = null,
+        uint? defense = null,
+        uint? specialAttack = null,
+        uint? specialDefense = null,
+        uint? speed = null
+    )
+    {
+        return new EffortValues(
+            hp ?? Hp,
+            attack ?? Attack,
+            defense ?? Defense,
+            specialAttack ?? SpecialAttack,
+            specialDefense ?? SpecialDefense,
+            speed ?? Speed
+        );
     }
 }

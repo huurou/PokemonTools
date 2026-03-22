@@ -6,27 +6,73 @@
 public record IndividualValues
 {
     /// <summary>HP</summary>
-    public uint Hp { get; }
+    public uint Hp
+    {
+        get;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
+            field = value;
+        }
+    }
+
     /// <summary>攻撃</summary>
-    public uint Attack { get; }
+    public uint Attack
+    {
+        get;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
+            field = value;
+        }
+    }
+
     /// <summary>防御</summary>
-    public uint Defense { get; }
+    public uint Defense
+    {
+        get;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
+            field = value;
+        }
+    }
+
     /// <summary>特攻</summary>
-    public uint SpecialAttack { get; }
+    public uint SpecialAttack
+    {
+        get;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
+            field = value;
+        }
+    }
+
     /// <summary>特防</summary>
-    public uint SpecialDefense { get; }
+    public uint SpecialDefense
+    {
+        get;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
+            field = value;
+        }
+    }
+
     /// <summary>素早さ</summary>
-    public uint Speed { get; }
+    public uint Speed
+    {
+        get;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
+            field = value;
+        }
+    }
 
     public IndividualValues(uint hp, uint attack, uint defense, uint specialAttack, uint specialDefense, uint speed)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(hp, 31u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(attack, 31u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(defense, 31u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(specialAttack, 31u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(specialDefense, 31u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(speed, 31u);
-
         Hp = hp;
         Attack = attack;
         Defense = defense;
