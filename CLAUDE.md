@@ -38,7 +38,7 @@ pwsh scripts/TestCoverage.ps1
 
 ```
 AppHost
-├── PostgreSQL ("pokemonToolsDb")
+├── PostgreSQL ("pokemon-tools-db")
 ├── Web ──→ Web.Application → Web.Domain
 │    │      Web.Infrastructure → Web.Domain
 │    ├──→ PostgreSQL（WaitFor）
