@@ -1,4 +1,6 @@
-﻿namespace PokemonTools.Web.Infrastructure.PokeApi;
+﻿using System.Collections.Immutable;
+
+namespace PokemonTools.Web.Infrastructure.PokeApi;
 
 /// <summary>
 /// PokeAPI のページネーションレスポンス
@@ -11,5 +13,5 @@ internal record NamedApiResourceList(
     int Count,
     string? Previous,
     string? Next,
-    IReadOnlyList<NamedApiResource> Results
+    ImmutableList<NamedApiResource> Results
 );

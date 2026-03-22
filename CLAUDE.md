@@ -16,7 +16,7 @@ aspire run
 dotnet build PokemonTools.slnx
 
 # 全テスト実行
-dotnet test PokemonTools.slnx
+dotnet test --solution PokemonTools.slnx
 
 # 単一テストクラスの実行（MTP v2 では --project が必須）
 dotnet test --project tests/PokemonTools.Web.Domain.Tests --filter "FullyQualifiedName~DamageCalculator_CalculateTests"
@@ -32,7 +32,7 @@ pwsh scripts/TestCoverage.ps1
 
 - **.NET 10** / **Aspire** によるオーケストレーション
 - **クリーンアーキテクチャ**: Infrastructure / Application → Domain の依存方向（Domain層が最内層、外側から内側への依存のみ許可）
-- **単一Webサービス構成**: Blazor SSR（Web）がドメインロジック・DB・外部APIを直接参照。AppHostがPostgreSQLとWebをオーケストレーション
+- **単一Webサービス構成**: Blazor SSR（Web）がApplication/Infrastructureを経由してドメインロジック・DB・外部APIの機能を統合。AppHostがPostgreSQLとWebをオーケストレーション
 
 ### プロジェクト依存関係
 
@@ -59,10 +59,15 @@ AppHost
 
 | コンテキスト | 内容 |
 |---|---|
+| `Abilities/` | 特性（Ability + AbilityId）。マスターデータ |
 | `Damages/` | ダメージ計算エンジン。Q12形式（12bit固定小数点）で精密計算 |
-| `Statistics/` | 実数値計算（HP/攻撃/防御/特攻/特防/素早さ）。種族値・個体値・努力値・性格補正対応 |
+| `Individuals/` | 育成済みポケモン個体（Individual）。IndividualCategory（手持ち/ダメージ計算プリセット）で分類。ユーザーデータ |
+| `Items/` | 道具（Item + ItemId）。投げつける威力も保持。マスターデータ |
+| `Moves/` | 技の実体モデル（Move: タイプ・分類・威力）と技分類（MoveDamageClass: へんか・ぶつり・とくしゅ）。マスターデータ |
+| `Parties/` | パーティ（最大6体の個体スロット）。ユーザーデータ |
+| `Species/` | ポケモン種族（PokemonSpecies: タイプ・特性・種族値・体重）+ Weight値オブジェクト。マスターデータ |
+| `Statistics/` | 能力値関連の値オブジェクト群（Level, IndividualValues, EffortValues, BaseStats, Nature等）と実数値計算エンジン（StatsCalculator） |
 | `Types/` | 18タイプ相性表＋ステラ・???（相性未定義、等倍扱い）。FrozenDictionaryで管理。デュアルタイプ対応 |
-| `Moves/` | 技の分類（へんか・ぶつり・とくしゅ）。MoveDamageClassで3分類を管理 |
 | `Utility/` | Q12演算の拡張メソッド（四捨五入・五捨五超入）とdouble→uint変換 |
 
 ### Q12固定小数点演算
@@ -91,6 +96,9 @@ AppHost
 - 値オブジェクトは `record` で定義し、必要に応じてコンストラクタでガード節（`ArgumentOutOfRangeException.ThrowIf*`等）によるバリデーション
 - `Pokemon` プリフィックスは名前空間や `System.Type` との衝突回避が必要な場合のみ付与（例: `PokemonType`, `PokemonSpecies`）。衝突がないクラス（`Move`, `Ability`等）には付けない
 - 状態や外部依存を持たないドメインサービス（`DamageCalculator`, `StatsCalculator`, `TypeChart`）は`static`クラスとして実装
+- 別集約のドメインモデルはID値オブジェクト（例: `SpeciesId`, `AbilityId`）で参照し、実体を直接参照しない
+- 有限個のインスタンスを持つドメインモデル（`Nature`, `PokemonType`, `MoveDamageClass`, `IndividualCategory`等）はシングルトンプロパティ + `static ImmutableArray<T> All` パターンで実装
+- 固定スロット数が決まっている概念（技4枠、パーティ6枠等）は`List`ではなく番号付きプロパティ（`Move1Id`〜`Move4Id`等）で表現
 
 ## テスト規約
 

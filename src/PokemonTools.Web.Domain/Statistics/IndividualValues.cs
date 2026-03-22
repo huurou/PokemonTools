@@ -6,17 +6,22 @@
 public record IndividualValues
 {
     /// <summary>HP</summary>
-    public uint Hp { get; }
+    public uint Hp { get; init; }
+
     /// <summary>攻撃</summary>
-    public uint Attack { get; }
+    public uint Attack { get; init; }
+
     /// <summary>防御</summary>
-    public uint Defense { get; }
+    public uint Defense { get; init; }
+
     /// <summary>特攻</summary>
-    public uint SpecialAttack { get; }
+    public uint SpecialAttack { get; init; }
+
     /// <summary>特防</summary>
-    public uint SpecialDefense { get; }
+    public uint SpecialDefense { get; init; }
+
     /// <summary>素早さ</summary>
-    public uint Speed { get; }
+    public uint Speed { get; init; }
 
     public IndividualValues(uint hp, uint attack, uint defense, uint specialAttack, uint specialDefense, uint speed)
     {

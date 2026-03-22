@@ -1,4 +1,6 @@
-﻿namespace PokemonTools.Web.Domain.Types;
+﻿using System.Collections.Immutable;
+
+namespace PokemonTools.Web.Domain.Types;
 
 /// <summary>
 /// ポケモンのタイプを表現するクラス
@@ -114,7 +116,7 @@ public record PokemonType(TypeId Id, string Name)
     /// <summary>
     /// 相性表が定義されている18タイプのリスト
     /// </summary>
-    public static IReadOnlyList<PokemonType> BattleTypes { get; } =
+    public static ImmutableArray<PokemonType> BattleTypes { get; } =
     [
         Normal, Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel,
         Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark, Fairy,
@@ -123,7 +125,7 @@ public record PokemonType(TypeId Id, string Name)
     /// <summary>
     /// 全20タイプのリスト（ステラ・???含む）
     /// </summary>
-    public static IReadOnlyList<PokemonType> All { get; } =
+    public static ImmutableArray<PokemonType> All { get; } =
     [
         Normal, Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel,
         Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark, Fairy,

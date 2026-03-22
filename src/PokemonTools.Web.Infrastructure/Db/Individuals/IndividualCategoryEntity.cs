@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PokemonTools.Web.Domain.Individuals;
 
 namespace PokemonTools.Web.Infrastructure.Db.Individuals;
 
@@ -49,9 +50,13 @@ public class IndividualCategoryEntityConfiguration : IEntityTypeConfiguration<In
             .HasComment("更新日時")
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.HasData(
-            new IndividualCategoryEntity { IndividualCategoryId = 1, IndividualCategoryName = "手持ち個体" },
-            new IndividualCategoryEntity { IndividualCategoryId = 2, IndividualCategoryName = "ダメージ計算プリセット個体" }
+        builder.HasData(IndividualCategory.All
+            .OrderBy(x => x.Id.Value)
+            .Select(x => new IndividualCategoryEntity
+            {
+                IndividualCategoryId = x.Id.Value,
+                IndividualCategoryName = x.Name,
+            })
         );
     }
 }
