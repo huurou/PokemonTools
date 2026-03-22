@@ -1,7 +1,7 @@
 ﻿var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("postgres")
-    .AddDatabase("pokemonToolsDb");
+    .AddDatabase("pokemon-tools-db", "pokemon_tools");
 
 builder.AddProject<Projects.PokemonTools_Web>("webfrontend")
     .WithExternalHttpEndpoints()
