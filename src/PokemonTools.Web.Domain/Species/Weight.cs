@@ -8,7 +8,15 @@ public record Weight
     /// <summary>
     /// 体重（ヘクトグラム単位 PokeAPI生値）
     /// </summary>
-    public int Hectograms { get; init; }
+    public int Hectograms
+    {
+        get;
+        init
+        {
+            ValidateHectograms(value);
+            field = value;
+        }
+    }
 
     /// <summary>
     /// 体重（キログラム単位 表示用）
@@ -17,8 +25,11 @@ public record Weight
 
     public Weight(int hectograms)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(hectograms);
-
         Hectograms = hectograms;
+    }
+
+    private static void ValidateHectograms(int value)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
     }
 }

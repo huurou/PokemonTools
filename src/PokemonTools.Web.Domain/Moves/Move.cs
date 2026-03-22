@@ -20,12 +20,28 @@ public record Move
     /// <summary>
     /// タイプId
     /// </summary>
-    public TypeId TypeId { get; init; }
+    public TypeId TypeId
+    {
+        get;
+        init
+        {
+            ValidateTypeId(value);
+            field = value;
+        }
+    }
 
     /// <summary>
     /// 技分類Id
     /// </summary>
-    public MoveDamageClassId DamageClassId { get; init; }
+    public MoveDamageClassId DamageClassId
+    {
+        get;
+        init
+        {
+            ValidateDamageClassId(value);
+            field = value;
+        }
+    }
 
     /// <summary>
     /// 威力 へんか技等はnull
@@ -34,20 +50,26 @@ public record Move
 
     public Move(MoveId id, string name, TypeId typeId, MoveDamageClassId damageClassId, uint? power)
     {
-        if (!PokemonType.BattleTypes.Any(x => x.Id == typeId))
-        {
-            throw new ArgumentException("技のタイプは18タイプのいずれかを指定してください。", nameof(typeId));
-        }
-
-        if (!MoveDamageClass.All.Any(x => x.Id == damageClassId))
-        {
-            throw new ArgumentException("無効な技分類Idです。", nameof(damageClassId));
-        }
-
         Id = id;
         Name = name;
         TypeId = typeId;
         DamageClassId = damageClassId;
         Power = power;
+    }
+
+    private static void ValidateTypeId(TypeId value)
+    {
+        if (!PokemonType.BattleTypes.Any(x => x.Id == value))
+        {
+            throw new ArgumentException("技のタイプは18タイプのいずれかを指定してください。", nameof(TypeId));
+        }
+    }
+
+    private static void ValidateDamageClassId(MoveDamageClassId value)
+    {
+        if (!MoveDamageClass.All.Any(x => x.Id == value))
+        {
+            throw new ArgumentException("無効な技分類Idです。", nameof(DamageClassId));
+        }
     }
 }

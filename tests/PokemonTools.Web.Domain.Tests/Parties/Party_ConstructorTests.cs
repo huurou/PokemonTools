@@ -32,6 +32,36 @@ public class Party_ConstructorTests
         Assert.Null(party.Individual6Id);
     }
 
+    [Fact]
+    public void Nameが空文字列_例外が発生する()
+    {
+        // Act
+        var ex = Record.Exception(() => CreateWithDefaults(name: ""));
+
+        // Assert
+        Assert.IsType<ArgumentException>(ex);
+    }
+
+    [Fact]
+    public void Nameがnull_例外が発生する()
+    {
+        // Act
+        var ex = Record.Exception(() => CreateWithDefaults(name: null!));
+
+        // Assert
+        Assert.IsType<ArgumentNullException>(ex);
+    }
+
+    [Fact]
+    public void Nameが空白文字のみ_例外が発生する()
+    {
+        // Act
+        var ex = Record.Exception(() => CreateWithDefaults(name: "   "));
+
+        // Assert
+        Assert.IsType<ArgumentException>(ex);
+    }
+
     private static Party CreateWithDefaults(
         PartyId? id = null,
         string name = "テストパーティ",
@@ -43,11 +73,11 @@ public class Party_ConstructorTests
             id ?? new PartyId("pty_test"),
             name,
             individual1Id,
-            Individual2Id: null,
-            Individual3Id: null,
-            Individual4Id: null,
-            Individual5Id: null,
-            Individual6Id: null,
+            individual2Id: null,
+            individual3Id: null,
+            individual4Id: null,
+            individual5Id: null,
+            individual6Id: null,
             memo
         );
     }

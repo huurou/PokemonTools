@@ -22,11 +22,27 @@ public record PokemonSpecies
     /// <summary>
     /// タイプ1Id
     /// </summary>
-    public TypeId Type1Id { get; init; }
+    public TypeId Type1Id
+    {
+        get;
+        private init
+        {
+            ValidateBattleTypeId(value, "種族のタイプ1は18タイプのいずれかを指定してください。", nameof(Type1Id));
+            field = value;
+        }
+    }
     /// <summary>
     /// タイプ2Id
     /// </summary>
-    public TypeId? Type2Id { get; init; }
+    public TypeId? Type2Id
+    {
+        get;
+        private init
+        {
+            ValidateType2Id(value, Type1Id);
+            field = value;
+        }
+    }
 
     /// <summary>
     /// 特性1Id
@@ -63,24 +79,6 @@ public record PokemonSpecies
         Weight weight
     )
     {
-        if (!PokemonType.BattleTypes.Any(x => x.Id == type1Id))
-        {
-            throw new ArgumentException("種族のタイプ1は18タイプのいずれかを指定してください。", nameof(type1Id));
-        }
-
-        if (type2Id is not null)
-        {
-            if (!PokemonType.BattleTypes.Any(x => x.Id == type2Id))
-            {
-                throw new ArgumentException("種族のタイプ2は18タイプのいずれかを指定してください。", nameof(type2Id));
-            }
-
-            if (type2Id == type1Id)
-            {
-                throw new ArgumentException("タイプ2はタイプ1と異なる必要があります。", nameof(type2Id));
-            }
-        }
-
         Id = id;
         Name = name;
         Type1Id = type1Id;
@@ -90,5 +88,28 @@ public record PokemonSpecies
         HiddenAbilityId = hiddenAbilityId;
         BaseStats = baseStats;
         Weight = weight;
+    }
+
+    public PokemonSpecies SetTypes(TypeId type1Id, TypeId? type2Id) =>
+        new(Id, Name, type1Id, type2Id, Ability1Id, Ability2Id, HiddenAbilityId, BaseStats, Weight);
+
+    private static void ValidateBattleTypeId(TypeId value, string message, string paramName)
+    {
+        if (!PokemonType.BattleTypes.Any(x => x.Id == value))
+        {
+            throw new ArgumentException(message, paramName);
+        }
+    }
+
+    private static void ValidateType2Id(TypeId? value, TypeId type1Id)
+    {
+        if (value is null) return;
+
+        ValidateBattleTypeId(value, "種族のタイプ2は18タイプのいずれかを指定してください。", nameof(Type2Id));
+
+        if (value == type1Id)
+        {
+            throw new ArgumentException("タイプ2はタイプ1と異なる必要があります。", nameof(Type2Id));
+        }
     }
 }

@@ -30,7 +30,15 @@ public record Individual
     /// <summary>
     /// 性格Id
     /// </summary>
-    public NatureId NatureId { get; init; }
+    public NatureId NatureId
+    {
+        get;
+        init
+        {
+            ValidateNatureId(value);
+            field = value;
+        }
+    }
 
     /// <summary>
     /// 特性Id
@@ -72,7 +80,15 @@ public record Individual
     /// <summary>
     /// テラスタイプId
     /// </summary>
-    public TypeId TeraTypeId { get; init; }
+    public TypeId TeraTypeId
+    {
+        get;
+        init
+        {
+            ValidateTeraTypeId(value);
+            field = value;
+        }
+    }
 
     /// <summary>
     /// 備考
@@ -82,7 +98,15 @@ public record Individual
     /// <summary>
     /// 個体カテゴリId
     /// </summary>
-    public IndividualCategoryId CategoryId { get; init; }
+    public IndividualCategoryId CategoryId
+    {
+        get;
+        init
+        {
+            ValidateCategoryId(value);
+            field = value;
+        }
+    }
 
     public Individual(
         IndividualId id,
@@ -102,21 +126,6 @@ public record Individual
         IndividualCategoryId categoryId
     )
     {
-        if (!PokemonType.All.Any(x => x.Id == teraTypeId) || teraTypeId == PokemonType.Unknown.Id)
-        {
-            throw new ArgumentException("テラスタイプに???または無効なタイプは指定できません。", nameof(teraTypeId));
-        }
-
-        if (!Nature.All.Any(x => x.Id == natureId))
-        {
-            throw new ArgumentException("無効な性格Idです。", nameof(natureId));
-        }
-
-        if (!IndividualCategory.All.Any(x => x.Id == categoryId))
-        {
-            throw new ArgumentException("無効な個体カテゴリIdです。", nameof(categoryId));
-        }
-
         Id = id;
         Name = name;
         SpeciesId = speciesId;
@@ -132,5 +141,29 @@ public record Individual
         TeraTypeId = teraTypeId;
         Memo = memo;
         CategoryId = categoryId;
+    }
+
+    private static void ValidateTeraTypeId(TypeId value)
+    {
+        if (!PokemonType.All.Any(x => x.Id == value) || value == PokemonType.Unknown.Id)
+        {
+            throw new ArgumentException("テラスタイプに???または無効なタイプは指定できません。", nameof(TeraTypeId));
+        }
+    }
+
+    private static void ValidateNatureId(NatureId value)
+    {
+        if (!Nature.All.Any(x => x.Id == value))
+        {
+            throw new ArgumentException("無効な性格Idです。", nameof(NatureId));
+        }
+    }
+
+    private static void ValidateCategoryId(IndividualCategoryId value)
+    {
+        if (!IndividualCategory.All.Any(x => x.Id == value))
+        {
+            throw new ArgumentException("無効な個体カテゴリIdです。", nameof(CategoryId));
+        }
     }
 }
