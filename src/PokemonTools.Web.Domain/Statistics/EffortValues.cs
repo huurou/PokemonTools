@@ -85,9 +85,21 @@ public record EffortValues
     }
 
     public EffortValues SetValues(
-        uint? hp = null, uint? attack = null, uint? defense = null,
-        uint? specialAttack = null, uint? specialDefense = null, uint? speed = null
-    ) => new(
-        hp ?? Hp, attack ?? Attack, defense ?? Defense,
-        specialAttack ?? SpecialAttack, specialDefense ?? SpecialDefense, speed ?? Speed);
+        uint? hp = null,
+        uint? attack = null,
+        uint? defense = null,
+        uint? specialAttack = null,
+        uint? specialDefense = null,
+        uint? speed = null
+    )
+    {
+        return new EffortValues(
+            hp ?? Hp,
+            attack ?? Attack,
+            defense ?? Defense,
+            specialAttack ?? SpecialAttack,
+            specialDefense ?? SpecialDefense,
+            speed ?? Speed
+        );
+    }
 }

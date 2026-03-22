@@ -42,17 +42,9 @@ public record PokemonSpecies
         get;
         private init
         {
-            if (value is not null)
+            if (value is not null && !PokemonType.BattleTypes.Any(x => x.Id == value))
             {
-                if (!PokemonType.BattleTypes.Any(x => x.Id == value))
-                {
-                    throw new ArgumentException("種族のタイプ2は18タイプのいずれかを指定してください。", nameof(Type2Id));
-                }
-
-                if (value == Type1Id)
-                {
-                    throw new ArgumentException("タイプ2はタイプ1と異なる必要があります。", nameof(Type2Id));
-                }
+                throw new ArgumentException("種族のタイプ2は18タイプのいずれかを指定してください。", nameof(Type2Id));
             }
             field = value;
         }
@@ -97,6 +89,10 @@ public record PokemonSpecies
         Name = name;
         Type1Id = type1Id;
         Type2Id = type2Id;
+        if (type2Id is not null && type2Id == type1Id)
+        {
+            throw new ArgumentException("タイプ2はタイプ1と異なる必要があります。", nameof(type2Id));
+        }
         Ability1Id = ability1Id;
         Ability2Id = ability2Id;
         HiddenAbilityId = hiddenAbilityId;
@@ -104,6 +100,8 @@ public record PokemonSpecies
         Weight = weight;
     }
 
-    public PokemonSpecies SetTypes(TypeId type1Id, TypeId? type2Id) =>
-        new(Id, Name, type1Id, type2Id, Ability1Id, Ability2Id, HiddenAbilityId, BaseStats, Weight);
+    public PokemonSpecies SetTypes(TypeId type1Id, TypeId? type2Id)
+    {
+        return new PokemonSpecies(Id, Name, type1Id, type2Id, Ability1Id, Ability2Id, HiddenAbilityId, BaseStats, Weight);
+    }
 }
