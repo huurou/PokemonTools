@@ -53,14 +53,17 @@ public record PokemonSpecies
         }
     }
 
+    // Ability1IdとAbility2Idは組み合わせで不変条件を持つため、with式での部分更新を防ぐ。
+    // 特性変更はSetAbilities経由で行う。
+
     /// <summary>
     /// 特性1Id
     /// </summary>
-    public AbilityId Ability1Id { get; init; }
+    public AbilityId Ability1Id { get; private init; }
     /// <summary>
     /// 特性2Id
     /// </summary>
-    public AbilityId? Ability2Id { get; init; }
+    public AbilityId? Ability2Id { get; private init; }
     /// <summary>
     /// 隠れ特性Id
     /// </summary>
@@ -97,6 +100,10 @@ public record PokemonSpecies
         }
         Type2Id = type2Id;
         Ability1Id = ability1Id;
+        if (ability2Id is not null && ability2Id == ability1Id)
+        {
+            throw new ArgumentException("特性2は特性1と異なる必要があります。", nameof(ability2Id));
+        }
         Ability2Id = ability2Id;
         HiddenAbilityId = hiddenAbilityId;
         BaseStats = baseStats;
@@ -106,5 +113,10 @@ public record PokemonSpecies
     public PokemonSpecies SetTypes(TypeId type1Id, TypeId? type2Id)
     {
         return new PokemonSpecies(Id, Name, type1Id, type2Id, Ability1Id, Ability2Id, HiddenAbilityId, BaseStats, Weight);
+    }
+
+    public PokemonSpecies SetAbilities(AbilityId ability1Id, AbilityId? ability2Id)
+    {
+        return new PokemonSpecies(Id, Name, Type1Id, Type2Id, ability1Id, ability2Id, HiddenAbilityId, BaseStats, Weight);
     }
 }

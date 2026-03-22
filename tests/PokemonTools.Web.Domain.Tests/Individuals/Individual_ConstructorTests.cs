@@ -103,6 +103,61 @@ public class Individual_ConstructorTests
         Assert.IsType<ArgumentException>(exception);
     }
 
+    [Fact]
+    public void 技2Idが技1Idと同じ_例外が発生する()
+    {
+        // Act
+        var exception = Record.Exception(() => CreateWithDefaults(
+            move1Id: new MoveId(89),
+            move2Id: new MoveId(89)
+        ));
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+    }
+
+    [Fact]
+    public void 技3Idが技2Idと同じ_例外が発生する()
+    {
+        // Act
+        var exception = Record.Exception(() => CreateWithDefaults(
+            move2Id: new MoveId(200),
+            move3Id: new MoveId(200)
+        ));
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+    }
+
+    [Fact]
+    public void 技4Idが技1Idと同じ_例外が発生する()
+    {
+        // Act
+        var exception = Record.Exception(() => CreateWithDefaults(
+            move1Id: new MoveId(89),
+            move4Id: new MoveId(89)
+        ));
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+    }
+
+    [Fact]
+    public void nullのスロット同士は重複とみなさない_Individualが生成される()
+    {
+        // Act
+        var individual = CreateWithDefaults(
+            move2Id: null,
+            move3Id: null,
+            move4Id: null
+        );
+
+        // Assert
+        Assert.Null(individual.Move2Id);
+        Assert.Null(individual.Move3Id);
+        Assert.Null(individual.Move4Id);
+    }
+
     private static Individual CreateWithDefaults(
         IndividualId? id = null,
         string? name = null,

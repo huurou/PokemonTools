@@ -93,6 +93,45 @@ public class PokemonSpecies_ConstructorTests
     }
 
     [Fact]
+    public void 特性2が特性1と同じ_例外が発生する()
+    {
+        // Act
+        var exception = Record.Exception(() =>
+            CreateWithDefaults(
+                ability1Id: new AbilityId(8),
+                ability2Id: new AbilityId(8)
+            )
+        );
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+    }
+
+    [Fact]
+    public void 特性2がnull_例外が発生しない()
+    {
+        // Act
+        var species = CreateWithDefaults(ability1Id: new AbilityId(8), ability2Id: null);
+
+        // Assert
+        Assert.Null(species.Ability2Id);
+    }
+
+    [Fact]
+    public void 隠れ特性が特性1と同じ_例外が発生しない()
+    {
+        // Act
+        var species = CreateWithDefaults(
+            ability1Id: new AbilityId(8),
+            hiddenAbilityId: new AbilityId(8)
+        );
+
+        // Assert
+        Assert.Equal(new AbilityId(8), species.Ability1Id);
+        Assert.Equal(new AbilityId(8), species.HiddenAbilityId);
+    }
+
+    [Fact]
     public void タイプ2がタイプ1と同じ_例外が発生する()
     {
         // Act
