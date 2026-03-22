@@ -19,6 +19,9 @@ public record PokemonSpecies
     /// </summary>
     public string Name { get; init; }
 
+    // Type1IdとType2Idは組み合わせで不変条件を持つため、with式での部分更新を防ぐ。
+    // タイプ変更はSetTypes経由で行う。
+
     /// <summary>
     /// タイプ1Id
     /// </summary>
@@ -88,11 +91,11 @@ public record PokemonSpecies
         Id = id;
         Name = name;
         Type1Id = type1Id;
-        Type2Id = type2Id;
         if (type2Id is not null && type2Id == type1Id)
         {
             throw new ArgumentException("タイプ2はタイプ1と異なる必要があります。", nameof(type2Id));
         }
+        Type2Id = type2Id;
         Ability1Id = ability1Id;
         Ability2Id = ability2Id;
         HiddenAbilityId = hiddenAbilityId;

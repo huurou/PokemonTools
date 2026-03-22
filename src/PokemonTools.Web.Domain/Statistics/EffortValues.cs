@@ -5,6 +5,9 @@
 /// </summary>
 public record EffortValues
 {
+    // 各努力値は合計510の不変条件を共有するため、with式での個別更新を防ぐ。
+    // 値の変更はSetValues経由で行う。
+
     /// <summary>HP</summary>
     public uint Hp
     {
