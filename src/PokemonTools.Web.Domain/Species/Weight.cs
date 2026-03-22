@@ -13,7 +13,7 @@ public record Weight
         get;
         init
         {
-            ValidateHectograms(value);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
             field = value;
         }
     }
@@ -26,10 +26,5 @@ public record Weight
     public Weight(int hectograms)
     {
         Hectograms = hectograms;
-    }
-
-    private static void ValidateHectograms(int value)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
     }
 }

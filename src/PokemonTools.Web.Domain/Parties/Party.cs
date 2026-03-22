@@ -20,7 +20,7 @@ public record Party
         get;
         init
         {
-            ValidateName(value);
+            ArgumentException.ThrowIfNullOrWhiteSpace(value);
             field = value;
         }
     }
@@ -76,10 +76,5 @@ public record Party
         Individual5Id = individual5Id;
         Individual6Id = individual6Id;
         Memo = memo;
-    }
-
-    private static void ValidateName(string value)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(value);
     }
 }

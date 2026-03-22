@@ -35,7 +35,10 @@ public record Individual
         get;
         init
         {
-            ValidateNatureId(value);
+            if (!Nature.All.Any(x => x.Id == value))
+            {
+                throw new ArgumentException("無効な性格Idです。", nameof(NatureId));
+            }
             field = value;
         }
     }
@@ -85,7 +88,10 @@ public record Individual
         get;
         init
         {
-            ValidateTeraTypeId(value);
+            if (!PokemonType.All.Any(x => x.Id == value) || value == PokemonType.Unknown.Id)
+            {
+                throw new ArgumentException("テラスタイプに???または無効なタイプは指定できません。", nameof(TeraTypeId));
+            }
             field = value;
         }
     }
@@ -103,7 +109,10 @@ public record Individual
         get;
         init
         {
-            ValidateCategoryId(value);
+            if (!IndividualCategory.All.Any(x => x.Id == value))
+            {
+                throw new ArgumentException("無効な個体カテゴリIdです。", nameof(CategoryId));
+            }
             field = value;
         }
     }
@@ -141,29 +150,5 @@ public record Individual
         TeraTypeId = teraTypeId;
         Memo = memo;
         CategoryId = categoryId;
-    }
-
-    private static void ValidateTeraTypeId(TypeId value)
-    {
-        if (!PokemonType.All.Any(x => x.Id == value) || value == PokemonType.Unknown.Id)
-        {
-            throw new ArgumentException("テラスタイプに???または無効なタイプは指定できません。", nameof(TeraTypeId));
-        }
-    }
-
-    private static void ValidateNatureId(NatureId value)
-    {
-        if (!Nature.All.Any(x => x.Id == value))
-        {
-            throw new ArgumentException("無効な性格Idです。", nameof(NatureId));
-        }
-    }
-
-    private static void ValidateCategoryId(IndividualCategoryId value)
-    {
-        if (!IndividualCategory.All.Any(x => x.Id == value))
-        {
-            throw new ArgumentException("無効な個体カテゴリIdです。", nameof(CategoryId));
-        }
     }
 }

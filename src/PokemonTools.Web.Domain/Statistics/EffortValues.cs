@@ -11,7 +11,7 @@ public record EffortValues
         get;
         private init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
             field = value;
         }
     }
@@ -22,7 +22,7 @@ public record EffortValues
         get;
         private init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
             field = value;
         }
     }
@@ -33,7 +33,7 @@ public record EffortValues
         get;
         private init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
             field = value;
         }
     }
@@ -44,7 +44,7 @@ public record EffortValues
         get;
         private init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
             field = value;
         }
     }
@@ -55,7 +55,7 @@ public record EffortValues
         get;
         private init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
             field = value;
         }
     }
@@ -66,7 +66,7 @@ public record EffortValues
         get;
         private init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
             field = value;
         }
     }
@@ -90,9 +90,4 @@ public record EffortValues
     ) => new(
         hp ?? Hp, attack ?? Attack, defense ?? Defense,
         specialAttack ?? SpecialAttack, specialDefense ?? SpecialDefense, speed ?? Speed);
-
-    private static void ValidateStatValue(uint value)
-    {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
-    }
 }

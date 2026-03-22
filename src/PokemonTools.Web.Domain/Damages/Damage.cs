@@ -15,7 +15,7 @@ public record Damage
         get;
         init
         {
-            ValidateValues(value);
+            ArgumentOutOfRangeException.ThrowIfNotEqual(value.Length, 16, nameof(Values));
             field = value;
         }
     }
@@ -23,10 +23,5 @@ public record Damage
     public Damage(ImmutableArray<uint> values)
     {
         Values = values;
-    }
-
-    private static void ValidateValues(ImmutableArray<uint> value)
-    {
-        ArgumentOutOfRangeException.ThrowIfNotEqual(value.Length, 16, nameof(Values));
     }
 }

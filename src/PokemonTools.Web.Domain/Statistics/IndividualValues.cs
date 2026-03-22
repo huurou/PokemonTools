@@ -11,7 +11,7 @@ public record IndividualValues
         get;
         init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
             field = value;
         }
     }
@@ -22,7 +22,7 @@ public record IndividualValues
         get;
         init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
             field = value;
         }
     }
@@ -33,7 +33,7 @@ public record IndividualValues
         get;
         init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
             field = value;
         }
     }
@@ -44,7 +44,7 @@ public record IndividualValues
         get;
         init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
             field = value;
         }
     }
@@ -55,7 +55,7 @@ public record IndividualValues
         get;
         init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
             field = value;
         }
     }
@@ -66,7 +66,7 @@ public record IndividualValues
         get;
         init
         {
-            ValidateStatValue(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
             field = value;
         }
     }
@@ -79,10 +79,5 @@ public record IndividualValues
         SpecialAttack = specialAttack;
         SpecialDefense = specialDefense;
         Speed = speed;
-    }
-
-    private static void ValidateStatValue(uint value)
-    {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 31u);
     }
 }

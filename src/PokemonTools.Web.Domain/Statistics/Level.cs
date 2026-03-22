@@ -13,7 +13,8 @@ public record Level
         get;
         init
         {
-            ValidateValue(value);
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, 1u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 100u);
             field = value;
         }
     }
@@ -21,11 +22,5 @@ public record Level
     public Level(uint value)
     {
         Value = value;
-    }
-
-    private static void ValidateValue(uint value)
-    {
-        ArgumentOutOfRangeException.ThrowIfLessThan(value, 1u);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 100u);
     }
 }
