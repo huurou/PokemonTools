@@ -6,8 +6,8 @@ Issue #19 にて確定した決定版。EF Core + PostgreSQL を使用する。
 
 * **固定長の関係は列で持つ**（種族タイプ×2、特性×3、技×4、パーティスロット×6）
 * **タイプ相性はコード管理**（TypeChart）のためDBテーブル不要
-* **性格の補正情報はコード管理**。Naturesテーブルは名前解決用
-* **努力値バリデーションはアプリ側**で実施（DB制約ではない）
+* **能力補正の詳細はコード管理**。StatAlignmentsテーブルは名前解決用
+* **能力ポイントバリデーションはアプリ側**で実施（DB制約ではない）
 * **ID体系**: マスターデータ系は `int`（PokeAPI ID）、ユーザーデータ系は `text`（prefix\_uuidv7）
 * **タイムスタンプ**: 全テーブルに `CreatedAt` / `UpdatedAt`（`timestamp with time zone`、デフォルト `CURRENT_TIMESTAMP`）を付与。`UpdatedAt` は `SaveChangesInterceptor` で自動更新
 
@@ -93,14 +93,14 @@ FlingEffectはダメージ計算には不要。
 | CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
 | UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
-### Natures（性格）
+### StatAlignments（能力補正）
 
-性格の補正情報はコード管理。
+能力補正の詳細はコード管理。
 
 | 列名 | 型 | 制約 | メモ |
 | ----- | ----- | ----- | ----- |
-| NatureId | int | PK | 性格ID PokeAPIでのid |
-| NatureName | text | NOT NULL | 性格名 日本語名 |
+| StatAlignmentId | int | PK | 能力補正ID PokeAPIでのid |
+| StatAlignmentName | text | NOT NULL | 能力補正名 日本語名 |
 | CreatedAt | timestamp with time zone | NOT NULL, DEFAULT | 作成日時 |
 | UpdatedAt | timestamp with time zone | NOT NULL, DEFAULT | 更新日時 |
 
@@ -108,27 +108,21 @@ FlingEffectはダメージ計算には不要。
 
 ### Individuals（個体）
 
-育成済ポケモン。レベル50固定。努力値バリデーションはコードで。
+育成済ポケモン。レベル50固定。能力ポイントバリデーションはコードで。
 
 | 列名 | 型 | 制約 | メモ |
 | ----- | ----- | ----- | ----- |
 | IndividualId | text | PK | 個体ID prefix\_uuidv7 |
 | IndividualName | text | | 個体名 NULLだったら表示時に種族名を表示 |
 | SpeciesId | int | FK, NOT NULL | 種族ID |
-| NatureId | int | FK, NOT NULL | 性格ID |
+| StatAlignmentId | int | FK, NOT NULL | 能力補正ID |
 | AbilityId | int | FK, NOT NULL | 特性ID |
-| IndividualValueHp | int | NOT NULL | 個体値::HP |
-| IndividualValueAttack | int | NOT NULL | 個体値::こうげき |
-| IndividualValueDefense | int | NOT NULL | 個体値::ぼうぎょ |
-| IndividualValueSpecialAttack | int | NOT NULL | 個体値::とくこう |
-| IndividualValueSpecialDefense | int | NOT NULL | 個体値::とくぼう |
-| IndividualValueSpeed | int | NOT NULL | 個体値::すばやさ |
-| EffortValueHp | int | NOT NULL | 努力値::HP |
-| EffortValueAttack | int | NOT NULL | 努力値::こうげき |
-| EffortValueDefense | int | NOT NULL | 努力値::ぼうぎょ |
-| EffortValueSpecialAttack | int | NOT NULL | 努力値::とくこう |
-| EffortValueSpecialDefense | int | NOT NULL | 努力値::とくぼう |
-| EffortValueSpeed | int | NOT NULL | 努力値::すばやさ |
+| StatPointHp | int | NOT NULL | 能力ポイント::HP |
+| StatPointAttack | int | NOT NULL | 能力ポイント::こうげき |
+| StatPointDefense | int | NOT NULL | 能力ポイント::ぼうぎょ |
+| StatPointSpecialAttack | int | NOT NULL | 能力ポイント::とくこう |
+| StatPointSpecialDefense | int | NOT NULL | 能力ポイント::とくぼう |
+| StatPointSpeed | int | NOT NULL | 能力ポイント::すばやさ |
 | Move1Id | int | FK, NOT NULL | 技1ID |
 | Move2Id | int | FK | 技2ID |
 | Move3Id | int | FK | 技3ID |

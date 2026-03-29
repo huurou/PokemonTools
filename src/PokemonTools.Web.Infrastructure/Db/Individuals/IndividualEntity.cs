@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PokemonTools.Web.Infrastructure.Db.Abilities;
 using PokemonTools.Web.Infrastructure.Db.Items;
 using PokemonTools.Web.Infrastructure.Db.Moves;
-using PokemonTools.Web.Infrastructure.Db.Natures;
 using PokemonTools.Web.Infrastructure.Db.Species;
+using PokemonTools.Web.Infrastructure.Db.StatAlignments;
 using PokemonTools.Web.Infrastructure.Db.Types;
 
 namespace PokemonTools.Web.Infrastructure.Db.Individuals;
@@ -27,9 +27,9 @@ public class IndividualEntity : IHasUpdatedAt
     public required int SpeciesId { get; set; }
 
     /// <summary>
-    /// 性格ID
+    /// 能力補正ID
     /// </summary>
-    public required int NatureId { get; set; }
+    public required int StatAlignmentId { get; set; }
 
     /// <summary>
     /// 特性ID
@@ -37,54 +37,29 @@ public class IndividualEntity : IHasUpdatedAt
     public required int AbilityId { get; set; }
 
     /// <summary>
-    /// 個体値::HP
+    /// 能力ポイント::HP
     /// </summary>
-    public required int IndividualValueHp { get; set; }
+    public required int StatPointHp { get; set; }
     /// <summary>
-    /// 個体値::こうげき
+    /// 能力ポイント::こうげき
     /// </summary>
-    public required int IndividualValueAttack { get; set; }
+    public required int StatPointAttack { get; set; }
     /// <summary>
-    /// 個体値::ぼうぎょ
+    /// 能力ポイント::ぼうぎょ
     /// </summary>
-    public required int IndividualValueDefense { get; set; }
+    public required int StatPointDefense { get; set; }
     /// <summary>
-    /// 個体値::とくこう
+    /// 能力ポイント::とくこう
     /// </summary>
-    public required int IndividualValueSpecialAttack { get; set; }
+    public required int StatPointSpecialAttack { get; set; }
     /// <summary>
-    /// 個体値::とくぼう
+    /// 能力ポイント::とくぼう
     /// </summary>
-    public required int IndividualValueSpecialDefense { get; set; }
+    public required int StatPointSpecialDefense { get; set; }
     /// <summary>
-    /// 個体値::すばやさ
+    /// 能力ポイント::すばやさ
     /// </summary>
-    public required int IndividualValueSpeed { get; set; }
-
-    /// <summary>
-    /// 努力値::HP
-    /// </summary>
-    public required int EffortValueHp { get; set; }
-    /// <summary>
-    /// 努力値::こうげき
-    /// </summary>
-    public required int EffortValueAttack { get; set; }
-    /// <summary>
-    /// 努力値::ぼうぎょ
-    /// </summary>
-    public required int EffortValueDefense { get; set; }
-    /// <summary>
-    /// 努力値::とくこう
-    /// </summary>
-    public required int EffortValueSpecialAttack { get; set; }
-    /// <summary>
-    /// 努力値::とくぼう
-    /// </summary>
-    public required int EffortValueSpecialDefense { get; set; }
-    /// <summary>
-    /// 努力値::すばやさ
-    /// </summary>
-    public required int EffortValueSpeed { get; set; }
+    public required int StatPointSpeed { get; set; }
 
     /// <summary>
     /// 技1ID
@@ -141,9 +116,9 @@ public class IndividualEntity : IHasUpdatedAt
     public SpeciesEntity Species { get; set; } = null!;
 
     /// <summary>
-    /// 性格
+    /// 能力補正
     /// </summary>
-    public NatureEntity Nature { get; set; } = null!;
+    public StatAlignmentEntity StatAlignment { get; set; } = null!;
 
     /// <summary>
     /// 特性
@@ -201,47 +176,29 @@ public class IndividualEntityConfiguration : IEntityTypeConfiguration<Individual
         builder.Property(x => x.SpeciesId)
             .HasComment("種族ID");
 
-        builder.Property(x => x.NatureId)
-            .HasComment("性格ID");
+        builder.Property(x => x.StatAlignmentId)
+            .HasComment("能力補正ID");
 
         builder.Property(x => x.AbilityId)
             .HasComment("特性ID");
 
-        builder.Property(x => x.IndividualValueHp)
-            .HasComment("個体値::HP");
+        builder.Property(x => x.StatPointHp)
+            .HasComment("能力ポイント::HP");
 
-        builder.Property(x => x.IndividualValueAttack)
-            .HasComment("個体値::こうげき");
+        builder.Property(x => x.StatPointAttack)
+            .HasComment("能力ポイント::こうげき");
 
-        builder.Property(x => x.IndividualValueDefense)
-            .HasComment("個体値::ぼうぎょ");
+        builder.Property(x => x.StatPointDefense)
+            .HasComment("能力ポイント::ぼうぎょ");
 
-        builder.Property(x => x.IndividualValueSpecialAttack)
-            .HasComment("個体値::とくこう");
+        builder.Property(x => x.StatPointSpecialAttack)
+            .HasComment("能力ポイント::とくこう");
 
-        builder.Property(x => x.IndividualValueSpecialDefense)
-            .HasComment("個体値::とくぼう");
+        builder.Property(x => x.StatPointSpecialDefense)
+            .HasComment("能力ポイント::とくぼう");
 
-        builder.Property(x => x.IndividualValueSpeed)
-            .HasComment("個体値::すばやさ");
-
-        builder.Property(x => x.EffortValueHp)
-            .HasComment("努力値::HP");
-
-        builder.Property(x => x.EffortValueAttack)
-            .HasComment("努力値::こうげき");
-
-        builder.Property(x => x.EffortValueDefense)
-            .HasComment("努力値::ぼうぎょ");
-
-        builder.Property(x => x.EffortValueSpecialAttack)
-            .HasComment("努力値::とくこう");
-
-        builder.Property(x => x.EffortValueSpecialDefense)
-            .HasComment("努力値::とくぼう");
-
-        builder.Property(x => x.EffortValueSpeed)
-            .HasComment("努力値::すばやさ");
+        builder.Property(x => x.StatPointSpeed)
+            .HasComment("能力ポイント::すばやさ");
 
         builder.Property(x => x.Move1Id)
             .HasComment("技1ID");
@@ -282,9 +239,9 @@ public class IndividualEntityConfiguration : IEntityTypeConfiguration<Individual
             .HasForeignKey(x => x.SpeciesId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.Nature)
+        builder.HasOne(x => x.StatAlignment)
             .WithMany()
-            .HasForeignKey(x => x.NatureId)
+            .HasForeignKey(x => x.StatAlignmentId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Ability)

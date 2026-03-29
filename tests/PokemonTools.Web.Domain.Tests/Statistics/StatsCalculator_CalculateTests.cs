@@ -7,21 +7,18 @@ public class StatsCalculator_CalculateTests
     [Theory]
     [MemberData(nameof(CalculateData))]
     public void 各種パラメータ組み合わせ_期待通りのステータスを計算する(
-        uint[] baseStatsValues, uint[] ivValues, uint[] evValues,
-        uint? levelValue, int natureId, uint[] expectedValues
+        uint[] baseStatsValues, uint[] statPointValues,
+        int statAlignmentId, uint[] expectedValues
     )
     {
         // Arrange
         var baseStats = new BaseStats(baseStatsValues[0], baseStatsValues[1], baseStatsValues[2], baseStatsValues[3], baseStatsValues[4], baseStatsValues[5]);
-        var individualValues = new IndividualValues(ivValues[0], ivValues[1], ivValues[2], ivValues[3], ivValues[4], ivValues[5]);
-        var effortValues = new EffortValues(evValues[0], evValues[1], evValues[2], evValues[3], evValues[4], evValues[5]);
-        var nature = FindNature(natureId);
+        var statPoints = new StatPoints(statPointValues[0], statPointValues[1], statPointValues[2], statPointValues[3], statPointValues[4], statPointValues[5]);
+        var statAlignment = FindStatAlignment(statAlignmentId);
         var expected = new Stats(expectedValues[0], expectedValues[1], expectedValues[2], expectedValues[3], expectedValues[4], expectedValues[5]);
 
         // Act
-        var actual = levelValue.HasValue
-            ? StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature, new Level(levelValue.Value))
-            : StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature);
+        var actual = StatsCalculator.Calculate(baseStats, statPoints, statAlignment);
 
         // Assert
         Assert.Equal(expected.Hp, actual.Hp);
@@ -33,20 +30,18 @@ public class StatsCalculator_CalculateTests
     }
 
     [Theory]
-    [MemberData(nameof(NatureAdjustmentData))]
-    public void 各性格の補正が10パーセント増減となる_期待通りの補正がかかる(int natureId, string increasedStatName, string decreasedStatName)
+    [MemberData(nameof(StatAlignmentAdjustmentData))]
+    public void 各能力補正の補正が10パーセント増減となる_期待通りの補正がかかる(int statAlignmentId, string increasedStatName, string decreasedStatName)
     {
         // Arrange
         var baseStats = new BaseStats(80, 80, 80, 80, 80, 80);
-        var individualValues = new IndividualValues(0, 0, 0, 0, 0, 0);
-        var effortValues = new EffortValues(0, 0, 0, 0, 0, 0);
-        var level = new Level(50);
-        var nature = FindNature(natureId);
+        var statPoints = new StatPoints(0, 0, 0, 0, 0, 0);
+        var statAlignment = FindStatAlignment(statAlignmentId);
 
-        var neutral = StatsCalculator.Calculate(baseStats, individualValues, effortValues, Nature.Serious, level);
+        var neutral = StatsCalculator.Calculate(baseStats, statPoints, StatAlignment.Serious);
 
         // Act
-        var actual = StatsCalculator.Calculate(baseStats, individualValues, effortValues, nature, level);
+        var actual = StatsCalculator.Calculate(baseStats, statPoints, statAlignment);
 
         // Assert
         var neutralIncrease = GetStatValue(neutral, increasedStatName);
@@ -58,56 +53,32 @@ public class StatsCalculator_CalculateTests
         Assert.Equal(expectedDecreased, GetStatValue(actual, decreasedStatName));
     }
 
-    public static TheoryData<uint[], uint[], uint[], uint?, int, uint[]> CalculateData => new()
+    public static TheoryData<uint[], uint[], int, uint[]> CalculateData => new()
     {
-        // フシギダネ Lv50 がんばりや 個体値MAX 努力値0
+        // フシギダネ がんばりや 能力ポイント0
         {
             new uint[] { 45, 49, 49, 65, 65, 45 },
-            new uint[] { 31, 31, 31, 31, 31, 31 },
             new uint[] { 0, 0, 0, 0, 0, 0 },
-            null,
             1,
             new uint[] { 120, 69, 69, 85, 85, 65 }
         },
-        // カビゴン Lv50 いじっぱり HP・攻撃極振り 特防4
+        // カビゴン いじっぱり HP32 攻撃32 特防1
         {
             new uint[] { 130, 120, 120, 95, 95, 60 },
-            new uint[] { 31, 31, 31, 31, 31, 31 },
-            new uint[] { 252, 252, 0, 0, 4, 0 },
-            50u,
+            new uint[] { 32, 32, 0, 0, 1, 0 },
             11,
             new uint[] { 237, 189, 140, 103, 116, 80 }
         },
-        // ミロカロス Lv50 さみしがり 個体値MAX 努力値0
+        // ミロカロス さみしがり 能力ポイント0
         {
             new uint[] { 70, 55, 65, 95, 105, 85 },
-            new uint[] { 31, 31, 31, 31, 31, 31 },
             new uint[] { 0, 0, 0, 0, 0, 0 },
-            50u,
             6,
             new uint[] { 145, 82, 76, 115, 125, 105 }
         },
-        // 種族値オール1 Lv1 おくびょう 個体値0 努力値0
-        {
-            new uint[] { 1, 1, 1, 1, 1, 1 },
-            new uint[] { 0, 0, 0, 0, 0, 0 },
-            new uint[] { 0, 0, 0, 0, 0, 0 },
-            1u,
-            5,
-            new uint[] { 11, 4, 5, 5, 5, 5 }
-        },
-        // ガブリアス Lv78 いじっぱり (Bulbapedia の計算例)
-        {
-            new uint[] { 108, 130, 95, 80, 85, 102 },
-            new uint[] { 24, 12, 30, 16, 23, 5 },
-            new uint[] { 74, 190, 91, 48, 84, 23 },
-            78u,
-            11,
-            new uint[] { 289, 278, 193, 135, 171, 171 }
-        },
     };
 
-    public static TheoryData<int, string, string> NatureAdjustmentData => new()
+    public static TheoryData<int, string, string> StatAlignmentAdjustmentData => new()
     {
         { 6, nameof(Stats.Attack), nameof(Stats.Defense) },
         { 11, nameof(Stats.Attack), nameof(Stats.SpecialAttack) },
@@ -131,9 +102,9 @@ public class StatsCalculator_CalculateTests
         { 20, nameof(Stats.Speed), nameof(Stats.SpecialDefense) },
     };
 
-    private static Nature FindNature(int natureId)
+    private static StatAlignment FindStatAlignment(int statAlignmentId)
     {
-        return Nature.All.Single(x => x.Id.Value == natureId);
+        return StatAlignment.All.Single(x => x.Id.Value == statAlignmentId);
     }
 
     private static uint GetStatValue(Stats stats, string statName)

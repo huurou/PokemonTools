@@ -1,80 +1,92 @@
 ﻿namespace PokemonTools.Web.Domain.Statistics;
 
 /// <summary>
-/// 努力値を表現するクラス
+/// 能力ポイントを表現するクラス
 /// </summary>
-public record EffortValues
+public record StatPoints
 {
-    // 各努力値は合計510の不変条件を共有するため、with式での個別更新を防ぐ。
+    // 各能力ポイントは合計66の不変条件を共有するため、with式での個別更新を防ぐ。
     // 値の変更はSetValues経由で行う。
 
-    /// <summary>HP</summary>
+    /// <summary>
+    /// HP
+    /// </summary>
     public uint Hp
     {
         get;
         private init
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 32u);
             field = value;
         }
     }
 
-    /// <summary>攻撃</summary>
+    /// <summary>
+    /// 攻撃
+    /// </summary>
     public uint Attack
     {
         get;
         private init
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 32u);
             field = value;
         }
     }
 
-    /// <summary>防御</summary>
+    /// <summary>
+    /// 防御
+    /// </summary>
     public uint Defense
     {
         get;
         private init
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 32u);
             field = value;
         }
     }
 
-    /// <summary>特攻</summary>
+    /// <summary>
+    /// 特攻
+    /// </summary>
     public uint SpecialAttack
     {
         get;
         private init
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 32u);
             field = value;
         }
     }
 
-    /// <summary>特防</summary>
+    /// <summary>
+    /// 特防
+    /// </summary>
     public uint SpecialDefense
     {
         get;
         private init
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 32u);
             field = value;
         }
     }
 
-    /// <summary>素早さ</summary>
+    /// <summary>
+    /// 素早さ
+    /// </summary>
     public uint Speed
     {
         get;
         private init
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 252u);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 32u);
             field = value;
         }
     }
 
-    public EffortValues(uint hp, uint attack, uint defense, uint specialAttack, uint specialDefense, uint speed)
+    public StatPoints(uint hp, uint attack, uint defense, uint specialAttack, uint specialDefense, uint speed)
     {
         Hp = hp;
         Attack = attack;
@@ -84,10 +96,10 @@ public record EffortValues
         Speed = speed;
 
         var total = Hp + Attack + Defense + SpecialAttack + SpecialDefense + Speed;
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(total, 510u);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(total, 66u);
     }
 
-    public EffortValues SetValues(
+    public StatPoints SetValues(
         uint? hp = null,
         uint? attack = null,
         uint? defense = null,
@@ -96,7 +108,7 @@ public record EffortValues
         uint? speed = null
     )
     {
-        return new EffortValues(
+        return new StatPoints(
             hp ?? Hp,
             attack ?? Attack,
             defense ?? Defense,

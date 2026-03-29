@@ -4,34 +4,33 @@ namespace PokemonTools.Web.Domain.Statistics;
 
 public static class StatsCalculator
 {
-    public static Stats Calculate(BaseStats baseStats, IndividualValues individualValues, EffortValues effortValues, Nature nature)
+    public static Stats Calculate(BaseStats baseStats, StatPoints statPoints, StatAlignment statAlignment)
     {
-        return Calculate(baseStats, individualValues, effortValues, nature, new Level(50));
-    }
-
-    public static Stats Calculate(BaseStats baseStats, IndividualValues individualValues, EffortValues effortValues, Nature nature, Level level)
-    {
-        var hp = CalculateHp(baseStats.Hp, individualValues.Hp, effortValues.Hp, level.Value);
-        var attack = CalculateOtherStat(baseStats.Attack, individualValues.Attack, effortValues.Attack, nature, StatType.Attack, level.Value);
-        var defense = CalculateOtherStat(baseStats.Defense, individualValues.Defense, effortValues.Defense, nature, StatType.Defense, level.Value);
-        var specialAttack = CalculateOtherStat(baseStats.SpecialAttack, individualValues.SpecialAttack, effortValues.SpecialAttack, nature, StatType.SpecialAttack, level.Value);
-        var specialDefense = CalculateOtherStat(baseStats.SpecialDefense, individualValues.SpecialDefense, effortValues.SpecialDefense, nature, StatType.SpecialDefense, level.Value);
-        var speed = CalculateOtherStat(baseStats.Speed, individualValues.Speed, effortValues.Speed, nature, StatType.Speed, level.Value);
+        var hp = CalculateHp(baseStats.Hp, statPoints.Hp);
+        var attack = CalculateOtherStat(baseStats.Attack, statPoints.Attack, statAlignment, StatType.Attack);
+        var defense = CalculateOtherStat(baseStats.Defense, statPoints.Defense, statAlignment, StatType.Defense);
+        var specialAttack = CalculateOtherStat(baseStats.SpecialAttack, statPoints.SpecialAttack, statAlignment, StatType.SpecialAttack);
+        var specialDefense = CalculateOtherStat(baseStats.SpecialDefense, statPoints.SpecialDefense, statAlignment, StatType.SpecialDefense);
+        var speed = CalculateOtherStat(baseStats.Speed, statPoints.Speed, statAlignment, StatType.Speed);
 
         return new Stats(hp, attack, defense, specialAttack, specialDefense, speed);
     }
 
     // TODO: 種族クラス実装時にヌケニン（baseStat==1）のHP=1特例を対応
-    private static uint CalculateHp(uint baseStat, uint individualValue, uint effortValue, uint level)
+    private static uint CalculateHp(uint baseStat, uint statPoint)
     {
-        return (baseStat * 2 + individualValue + effortValue / 4) * level / 100 + level + 10;
+        // レベル50 個体値31に固定したため75に固定化
+        // 75 = 31/2+50+10
+        return baseStat + 75 + statPoint;
     }
 
-    private static uint CalculateOtherStat(uint baseStat, uint individualValue, uint effortValue, Nature nature, StatType statType, uint level)
+    private static uint CalculateOtherStat(uint baseStat, uint statPoint, StatAlignment statAlignment, StatType statType)
     {
-        var value = (baseStat * 2 + individualValue + effortValue / 4) * level / 100 + 5;
-        var natureMultiplier = nature.GetMultiplier(statType);
+        // レベル50 個体値31に固定したため20に固定化
+        // 20 = 31/2 + 5
+        var value = baseStat + 20 + statPoint;
+        var multiplier = statAlignment.GetMultiplier(statType);
 
-        return (value * natureMultiplier).FloorToUint();
+        return ((double)value * multiplier).FloorToUint();
     }
 }

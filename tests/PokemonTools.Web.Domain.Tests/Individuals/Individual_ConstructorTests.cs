@@ -84,10 +84,10 @@ public class Individual_ConstructorTests
     }
 
     [Fact]
-    public void 無効な性格IDを指定_例外が発生する()
+    public void 無効な能力補正IDを指定_例外が発生する()
     {
         // Act
-        var exception = Record.Exception(() => CreateWithDefaults(natureId: new NatureId(999)));
+        var exception = Record.Exception(() => CreateWithDefaults(statAlignmentId: new StatAlignmentId(999)));
 
         // Assert
         Assert.IsType<ArgumentException>(exception);
@@ -162,10 +162,9 @@ public class Individual_ConstructorTests
         IndividualId? id = null,
         string? name = null,
         SpeciesId? speciesId = null,
-        NatureId? natureId = null,
+        StatAlignmentId? statAlignmentId = null,
         AbilityId? abilityId = null,
-        IndividualValues? individualValues = null,
-        EffortValues? effortValues = null,
+        StatPoints? statPoints = null,
         MoveId? move1Id = null,
         MoveId? move2Id = null,
         MoveId? move3Id = null,
@@ -180,10 +179,9 @@ public class Individual_ConstructorTests
             id ?? new IndividualId("ind_test"),
             name,
             speciesId ?? new SpeciesId(445),
-            natureId ?? new NatureId(11),
+            statAlignmentId ?? new StatAlignmentId(11),
             abilityId ?? new AbilityId(8),
-            individualValues ?? new IndividualValues(31, 31, 31, 31, 31, 31),
-            effortValues ?? new EffortValues(0, 252, 0, 0, 4, 252),
+            statPoints ?? new StatPoints(0, 0, 0, 0, 0, 0),
             move1Id ?? new MoveId(89),
             move2Id,
             move3Id,

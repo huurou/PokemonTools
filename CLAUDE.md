@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-ポケモン対戦（ランクマッチ / Gen9 SV）を補助するWebアプリケーション。ダメージ計算・実数値計算・タイプ相性などの機能を提供する。
+ポケモン対戦（Pokemon Champions）を補助するWebアプリケーション。ダメージ計算・実数値計算・タイプ相性などの機能を提供する。
 
 ## ビルド・実行コマンド
 
@@ -66,7 +66,7 @@ AppHost
 | `Moves/` | 技の実体モデル（Move: タイプ・分類・威力）と技分類（MoveDamageClass: へんか・ぶつり・とくしゅ）。マスターデータ |
 | `Parties/` | パーティ（最大6体の個体スロット）。ユーザーデータ |
 | `Species/` | ポケモン種族（PokemonSpecies: タイプ・特性・種族値・体重）+ Weight値オブジェクト。マスターデータ |
-| `Statistics/` | 能力値関連の値オブジェクト群（Level, IndividualValues, EffortValues, BaseStats, Nature等）と実数値計算エンジン（StatsCalculator） |
+| `Statistics/` | 能力値関連の値オブジェクト群（StatPoints, BaseStats, StatAlignment等）と実数値計算エンジン（StatsCalculator） |
 | `Types/` | 18タイプ相性表＋ステラ・???（相性未定義、等倍扱い）。FrozenDictionaryで管理。デュアルタイプ対応 |
 | `Utility/` | Q12演算の拡張メソッド（四捨五入・五捨五超入）とdouble→uint変換 |
 
@@ -97,7 +97,7 @@ AppHost
 - `Pokemon` プリフィックスは名前空間や `System.Type` との衝突回避が必要な場合のみ付与（例: `PokemonType`, `PokemonSpecies`）。衝突がないクラス（`Move`, `Ability`等）には付けない
 - 状態や外部依存を持たないドメインサービス（`DamageCalculator`, `StatsCalculator`, `TypeChart`）は`static`クラスとして実装
 - 別集約のドメインモデルはID値オブジェクト（例: `SpeciesId`, `AbilityId`）で参照し、実体を直接参照しない
-- 有限個のインスタンスを持つドメインモデル（`Nature`, `PokemonType`, `MoveDamageClass`, `IndividualCategory`等）はシングルトンプロパティ + `static ImmutableArray<T> All` パターンで実装
+- 有限個のインスタンスを持つドメインモデル（`StatAlignment`, `PokemonType`, `MoveDamageClass`, `IndividualCategory`等）はシングルトンプロパティ + `static ImmutableArray<T> All` パターンで実装
 - 固定スロット数が決まっている概念（技4枠、パーティ6枠等）は`List`ではなく番号付きプロパティ（`Move1Id`〜`Move4Id`等）で表現
 
 ## テスト規約
@@ -129,6 +129,10 @@ AppHost
 
 ## 参考ドキュメント
 
-- `docs/ADR/` — アーキテクチャ決定記録（クラス命名規則等）
+- `docs/ADR/` — アーキテクチャ決定記録
+  - ADR-0001: タイプのクラス名について（`PokemonType`の命名理由）
+  - ADR-0002: 種族の名前空間・クラス名について（`PokemonSpecies`の命名理由）
+  - ADR-0003: Pokemonプリフィックスの使用について（プリフィックス付与基準）
+  - ADR-0004: 努力値・個体値vs能力ポイント（StatPoints/StatAlignment採用の方針）
 - `docs/Requirements/` — 要件定義書
 - `docs/Design/` — DBテーブル設計書（エンティティ定義・リレーション・制約の詳細）

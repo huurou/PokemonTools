@@ -14,7 +14,6 @@ public class DamageCalculator_CalculateTests
         int defenseStage = 0,
         IReadOnlyList<uint>? defenseModifiers = null,
         IReadOnlyList<uint>? damageModifiers = null,
-        uint attackerLevel = 50u,
         bool isCriticalHit = false,
         StabType stabType = StabType.None,
         double typeEffectiveness = 1.0)
@@ -24,7 +23,7 @@ public class DamageCalculator_CalculateTests
             attackStat, attackStage, attackModifiers ?? [],
             defenseStat, defenseStage, defenseModifiers ?? [],
             damageModifiers ?? [],
-            attackerLevel, isCriticalHit, stabType, typeEffectiveness
+            isCriticalHit, stabType, typeEffectiveness
         );
     }
 
@@ -256,28 +255,9 @@ public class DamageCalculator_CalculateTests
     public void ダメージの16bitオーバーフロー_オーバーフローした値が返る()
     {
         /*
-         * https://tetspond.hatenablog.com/entry/2020/12/05/122654
-         * 攻撃役　エースバーン
-         * ・レベル99
-         * ・特攻実数値222
-         * ・特攻ランク3段階上昇
-         * ・ほのおタイプ
-         * ・特性「てきおうりょく」
-         * ・持ち物「ピントレンズ」
-         * ・きゅうしょアップ状態
-         *
-         * 防御役　ゴース
-         * ・むしはがねタイプ（タイプを変更している）
-         * ・もりののろい状態（上記のタイプにくさタイプを追加している）
-         * ・タールショット状態
-         * ・レベル1
-         * ・特防実数値4
-         * ・特防ランク6段階下降
-         *
-         * 使用技　ブラストバーン
-         * ・特殊技
-         * ・ほのおタイプ
-         * ・威力150
+         * 攻撃側: 特攻実数値222、特攻ランク+3、特性「てきおうりょく」、急所
+         * 防御側: 特防実数値4、特防ランク-6
+         * 技: 威力150、タイプ相性16倍
          */
         // Act
         var damage = CalculateWithDefaults(
@@ -286,17 +266,14 @@ public class DamageCalculator_CalculateTests
             attackStage: 3,
             defenseStat: 4u,
             defenseStage: -6,
-            attackerLevel: 99u,
             isCriticalHit: true,
             stabType: StabType.Adaptability,
             typeEffectiveness: 16.0
         );
 
         // Assert
-        // 補正値がない場合は補正値の初期値4096もかけられないと仮定すると途中で32bitオーバーフローが起きず、1より小さい場合0になることもなくこうなる
-        // 補正値がなくても初期値4096がかけられ、1より小さい場合0になる処理がオーバーフロー後起きるなら、0ではなく1になる箇所が生まれるはず 真相は不明
-        // とりあえず前者を採用する
-        List<uint> expected = [32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u, 32768u, 0u];
+        // マスク前ダメージが65536を超えるため、x & 0xFFFF でオーバーフローする
+        List<uint> expected = [52768u, 4832u, 22400u, 40000u, 57568u, 9632u, 27200u, 44800u, 62368u, 14432u, 32000u, 49600u, 1632u, 19232u, 36800u, 54400u];
         Assert.Equal(expected, damage.Values);
     }
 

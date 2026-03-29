@@ -1,6 +1,5 @@
 ﻿using PokemonTools.Web.Domain.Abilities;
 using PokemonTools.Web.Domain.Individuals;
-using PokemonTools.Web.Domain.Items;
 using PokemonTools.Web.Domain.Moves;
 using PokemonTools.Web.Domain.Species;
 using PokemonTools.Web.Domain.Statistics;
@@ -39,10 +38,9 @@ public class Individual_SetMovesTests
         Assert.Equal(individual.Id, result.Id);
         Assert.Equal(individual.Name, result.Name);
         Assert.Equal(individual.SpeciesId, result.SpeciesId);
-        Assert.Equal(individual.NatureId, result.NatureId);
+        Assert.Equal(individual.StatAlignmentId, result.StatAlignmentId);
         Assert.Equal(individual.AbilityId, result.AbilityId);
-        Assert.Equal(individual.IndividualValues, result.IndividualValues);
-        Assert.Equal(individual.EffortValues, result.EffortValues);
+        Assert.Equal(individual.StatPoints, result.StatPoints);
         Assert.Equal(individual.HeldItemId, result.HeldItemId);
         Assert.Equal(individual.TeraTypeId, result.TeraTypeId);
         Assert.Equal(individual.Memo, result.Memo);
@@ -84,10 +82,9 @@ public class Individual_SetMovesTests
             new IndividualId("ind_test"),
             null,
             new SpeciesId(445),
-            new NatureId(11),
+            new StatAlignmentId(11),
             new AbilityId(8),
-            new IndividualValues(31, 31, 31, 31, 31, 31),
-            new EffortValues(0, 252, 0, 0, 4, 252),
+            new StatPoints(0, 32, 0, 0, 2, 32),
             new MoveId(89),
             null,
             null,
