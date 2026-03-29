@@ -19,14 +19,14 @@ public static class StatsCalculator
     // TODO: 種族クラス実装時にヌケニン（baseStat==1）のHP=1特例を対応
     private static uint CalculateHp(uint baseStat, uint statPoint)
     {
-        // レベル50 個体値15に固定したため75に固定化
+        // レベル50 個体値31に固定したため75に固定化
         // 75 = 31/2+50+10
         return baseStat + 75 + statPoint;
     }
 
     private static uint CalculateOtherStat(uint baseStat, uint statPoint, StatAlignment statAlignment, StatType statType)
     {
-        // レベル50 個体値15に固定したため20に固定化
+        // レベル50 個体値31に固定したため20に固定化
         // 20 = 31/2 + 5
         var value = baseStat + 20 + statPoint;
         var multiplier = statAlignment.GetMultiplier(statType);
