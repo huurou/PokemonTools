@@ -4,6 +4,7 @@ namespace PokemonTools.Web.Domain.Damages;
 
 public static class DamageCalculator
 {
+    private const uint ATTACKER_LEVEL = 50u;
     private static readonly double[] rands_ = [0.85, 0.86, 0.87, 0.88, 0.89, 0.90, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.00];
 
     /// <summary>
@@ -18,7 +19,6 @@ public static class DamageCalculator
     /// <param name="defenseStage">防御側のぼうぎょorとくぼうランク (-6〜+6)</param>
     /// <param name="defenseModifiers">防御の補正値のリスト 12bit固定小数点表記</param>
     /// <param name="damageModifiers">ダメージの補正値のリスト 12bit固定小数点表記</param>
-    /// <param name="attackerLevel">攻撃側のレベル</param>
     /// <param name="isCriticalHit">急所に当たったかどうか</param>
     /// <param name="stabType">タイプ一致ボーナスの種類</param>
     /// <param name="typeEffectiveness">タイプ相性補正</param>
@@ -28,7 +28,6 @@ public static class DamageCalculator
         uint attackStat, int attackStage, IReadOnlyList<uint> attackModifiers,
         uint defenseStat, int defenseStage, IReadOnlyList<uint> defenseModifiers,
         IReadOnlyList<uint> damageModifiers,
-        uint attackerLevel,
         bool isCriticalHit,
         StabType stabType,
         double typeEffectiveness
@@ -56,7 +55,6 @@ public static class DamageCalculator
         // ⑧ 最終ダメージ
         var finalDamages = CalculateFinalDamages(
             damageModifiers,
-            attackerLevel,
             isCriticalHit,
             stabType,
             typeEffectiveness,
@@ -157,7 +155,6 @@ public static class DamageCalculator
 
     private static IEnumerable<uint> CalculateFinalDamages(
         IReadOnlyList<uint> damageModifiers,
-        uint attackerLevel,
         bool isCriticalHit,
         StabType stabType,
         double typeEffectiveness,
@@ -167,7 +164,7 @@ public static class DamageCalculator
         uint combinedDamageModifier
     )
     {
-        var tmpDamage = ((double)attackerLevel * 2 / 5 + 2).FloorToUint();
+        var tmpDamage = ((double)ATTACKER_LEVEL * 2 / 5 + 2).FloorToUint();
         // doubleの仮数部は52bitのため、実際のポケモンのパラメータ範囲では精度の問題は起きない
         tmpDamage = ((double)tmpDamage * finalPower * finalAttack / finalDefense).FloorToUint();
         tmpDamage = ((double)tmpDamage / 50 + 2).FloorToUint();

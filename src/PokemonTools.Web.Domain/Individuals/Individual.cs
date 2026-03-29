@@ -28,16 +28,16 @@ public record Individual
     public SpeciesId SpeciesId { get; init; }
 
     /// <summary>
-    /// 性格Id
+    /// 能力補正Id
     /// </summary>
-    public NatureId NatureId
+    public StatAlignmentId StatAlignmentId
     {
         get;
         init
         {
-            if (!Nature.All.Any(x => x.Id == value))
+            if (!StatAlignment.All.Any(x => x.Id == value))
             {
-                throw new ArgumentException("無効な性格Idです。", nameof(NatureId));
+                throw new ArgumentException("無効な能力補正Idです。", nameof(StatAlignmentId));
             }
             field = value;
         }
@@ -49,14 +49,9 @@ public record Individual
     public AbilityId AbilityId { get; init; }
 
     /// <summary>
-    /// 個体値
+    /// 能力ポイント
     /// </summary>
-    public IndividualValues IndividualValues { get; init; }
-
-    /// <summary>
-    /// 努力値
-    /// </summary>
-    public EffortValues EffortValues { get; init; }
+    public StatPoints StatPoints { get; init; }
 
     // Move1Id~Move4Idは組み合わせで不変条件を持つため、with式での部分更新を防ぐ。
     // 技変更はSetMoves経由で行う。
@@ -124,10 +119,9 @@ public record Individual
         IndividualId id,
         string? name,
         SpeciesId speciesId,
-        NatureId natureId,
+        StatAlignmentId statAlignmentId,
         AbilityId abilityId,
-        IndividualValues individualValues,
-        EffortValues effortValues,
+        StatPoints statPoints,
         MoveId move1Id,
         MoveId? move2Id,
         MoveId? move3Id,
@@ -141,10 +135,9 @@ public record Individual
         Id = id;
         Name = name;
         SpeciesId = speciesId;
-        NatureId = natureId;
+        StatAlignmentId = statAlignmentId;
         AbilityId = abilityId;
-        IndividualValues = individualValues;
-        EffortValues = effortValues;
+        StatPoints = statPoints;
         Move1Id = move1Id;
         Move2Id = move2Id;
         Move3Id = move3Id;
@@ -165,7 +158,7 @@ public record Individual
 
     public Individual SetMoves(MoveId move1Id, MoveId? move2Id, MoveId? move3Id, MoveId? move4Id)
     {
-        return new Individual(Id, Name, SpeciesId, NatureId, AbilityId, IndividualValues, EffortValues,
+        return new Individual(Id, Name, SpeciesId, StatAlignmentId, AbilityId, StatPoints,
             move1Id, move2Id, move3Id, move4Id, HeldItemId, TeraTypeId, Memo, CategoryId);
     }
 }
