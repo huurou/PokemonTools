@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-ポケモン対戦（Pokemon Champions）を補助するWebアプリケーション。ダメージ計算・実数値計算・タイプ相性などの機能を提供する。
+Pokemon Champions専用の対戦補助Webアプリケーション（[ADR-0005](./docs/ADR/adr-0005-Pokemon-Champions専用ツールとする.md)）。ダメージ計算・実数値計算・タイプ相性などの機能を提供する。過去世代互換や将来作品を見越した汎用抽象化は初期スコープに含めない。
 
 ## ビルド・実行コマンド
 
@@ -134,5 +134,6 @@ AppHost
   - ADR-0002: 種族の名前空間・クラス名について（`PokemonSpecies`の命名理由）
   - ADR-0003: Pokemonプリフィックスの使用について（プリフィックス付与基準）
   - ADR-0004: 努力値・個体値vs能力ポイント（StatPoints/StatAlignment採用の方針）
+  - ADR-0005: Pokemon Champions専用ツールとする（スコープの正式決定、過去世代互換は対象外）
 - `docs/Requirements/` — 要件定義書
 - `docs/Design/` — DBテーブル設計書（エンティティ定義・リレーション・制約の詳細）
