@@ -33,8 +33,10 @@ public class AbilityRepository(PokemonToolsDbContext context) : IAbilityReposito
                 existing.Add(entity.AbilityId, entity);
                 context.Abilities.Add(entity);
             }
-
-            entity.AbilityName = ability.Name;
+            else
+            {
+                entity.AbilityName = ability.Name;
+            }
         }
 
         await context.SaveChangesAsync(cancellationToken);

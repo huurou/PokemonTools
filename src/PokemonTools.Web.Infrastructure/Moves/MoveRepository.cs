@@ -36,11 +36,13 @@ public class MoveRepository(PokemonToolsDbContext context) : IMoveRepository
                 existing.Add(entity.MoveId, entity);
                 context.Moves.Add(entity);
             }
-
-            entity.MoveName = move.Name;
-            entity.TypeId = move.TypeId.Value;
-            entity.MoveDamageClassId = move.DamageClassId.Value;
-            entity.Power = (int?)move.Power;
+            else
+            {
+                entity.MoveName = move.Name;
+                entity.TypeId = move.TypeId.Value;
+                entity.MoveDamageClassId = move.DamageClassId.Value;
+                entity.Power = (int?)move.Power;
+            }
         }
 
         await context.SaveChangesAsync(cancellationToken);

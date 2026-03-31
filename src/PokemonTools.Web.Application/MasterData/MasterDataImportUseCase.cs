@@ -87,15 +87,15 @@ public class MasterDataImportUseCase(
         var chunk = new List<T>();
         var current = 0;
 
-        await foreach (var item in source)
+        await foreach (var item in source.WithCancellation(cancellationToken))
         {
             chunk.Add(item);
             current++;
-            progress?.Report(new MasterDataImportProgress(category, current, total, nameSelector(item)));
 
             if (chunk.Count >= CHUNK_SIZE)
             {
                 await upsertAsync(chunk, cancellationToken);
+                progress?.Report(new MasterDataImportProgress(category, current, total, nameSelector(chunk[^1])));
                 chunk.Clear();
             }
         }
@@ -103,6 +103,7 @@ public class MasterDataImportUseCase(
         if (chunk.Count > 0)
         {
             await upsertAsync(chunk, cancellationToken);
+            progress?.Report(new MasterDataImportProgress(category, current, total, nameSelector(chunk[^1])));
         }
     }
 }

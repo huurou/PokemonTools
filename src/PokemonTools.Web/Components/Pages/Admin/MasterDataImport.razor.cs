@@ -73,14 +73,14 @@ public partial class MasterDataImport(
         finally
         {
             isRunning_ = false;
-            cts_.Dispose();
-            cts_ = null;
+            Interlocked.Exchange(ref cts_, null)?.Dispose();
         }
     }
 
     public void Dispose()
     {
-        cts_?.Cancel();
-        cts_?.Dispose();
+        var cts = Interlocked.Exchange(ref cts_, null);
+        cts?.Cancel();
+        cts?.Dispose();
     }
 }

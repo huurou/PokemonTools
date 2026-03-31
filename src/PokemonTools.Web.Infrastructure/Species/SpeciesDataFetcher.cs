@@ -60,6 +60,17 @@ public class SpeciesDataFetcher(PokeApiClient pokeApiClient, ILogger<SpeciesData
             var type1Id = new TypeId(PokeApiUrlHelper.ExtractIdFromUrl(type1.Type.Url));
             var type2Id = type2 is not null ? new TypeId(PokeApiUrlHelper.ExtractIdFromUrl(type2.Type.Url)) : null;
 
+            if (!PokemonType.SpeciesTypes.Any(x => x.Id == type1Id))
+            {
+                logger.LogWarning("タイプ1が無効なタイプ(TypeId={TypeId})のためスキップしました: id={Id}, name={Name}", type1Id.Value, pokemon.Id, pokemon.Name);
+                continue;
+            }
+            if (type2Id is not null && !PokemonType.SpeciesTypes.Any(x => x.Id == type2Id))
+            {
+                logger.LogWarning("タイプ2が無効なタイプ(TypeId={TypeId})のためスキップしました: id={Id}, name={Name}", type2Id.Value, pokemon.Id, pokemon.Name);
+                continue;
+            }
+
             var normalAbilities = pokemon.Abilities
                 .Where(x => !x.IsHidden)
                 .OrderBy(x => x.Slot)

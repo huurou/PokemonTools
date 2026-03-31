@@ -45,20 +45,22 @@ public class SpeciesRepository(PokemonToolsDbContext context) : ISpeciesReposito
                 existing.Add(entity.SpeciesId, entity);
                 context.Species.Add(entity);
             }
-
-            entity.SpeciesName = sp.Name;
-            entity.Type1Id = sp.Type1Id.Value;
-            entity.Type2Id = sp.Type2Id?.Value;
-            entity.Ability1Id = sp.Ability1Id.Value;
-            entity.Ability2Id = sp.Ability2Id?.Value;
-            entity.HiddenAbilityId = sp.HiddenAbilityId?.Value;
-            entity.BaseStatHp = (int)sp.BaseStats.Hp;
-            entity.BaseStatAttack = (int)sp.BaseStats.Attack;
-            entity.BaseStatDefense = (int)sp.BaseStats.Defense;
-            entity.BaseStatSpecialAttack = (int)sp.BaseStats.SpecialAttack;
-            entity.BaseStatSpecialDefense = (int)sp.BaseStats.SpecialDefense;
-            entity.BaseStatSpeed = (int)sp.BaseStats.Speed;
-            entity.Weight = sp.Weight.Hectograms;
+            else
+            {
+                entity.SpeciesName = sp.Name;
+                entity.Type1Id = sp.Type1Id.Value;
+                entity.Type2Id = sp.Type2Id?.Value;
+                entity.Ability1Id = sp.Ability1Id.Value;
+                entity.Ability2Id = sp.Ability2Id?.Value;
+                entity.HiddenAbilityId = sp.HiddenAbilityId?.Value;
+                entity.BaseStatHp = (int)sp.BaseStats.Hp;
+                entity.BaseStatAttack = (int)sp.BaseStats.Attack;
+                entity.BaseStatDefense = (int)sp.BaseStats.Defense;
+                entity.BaseStatSpecialAttack = (int)sp.BaseStats.SpecialAttack;
+                entity.BaseStatSpecialDefense = (int)sp.BaseStats.SpecialDefense;
+                entity.BaseStatSpeed = (int)sp.BaseStats.Speed;
+                entity.Weight = sp.Weight.Hectograms;
+            }
         }
 
         await context.SaveChangesAsync(cancellationToken);

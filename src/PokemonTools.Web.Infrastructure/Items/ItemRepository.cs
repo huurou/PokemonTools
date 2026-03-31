@@ -34,9 +34,11 @@ public class ItemRepository(PokemonToolsDbContext context) : IItemRepository
                 existing.Add(entity.ItemId, entity);
                 context.Items.Add(entity);
             }
-
-            entity.ItemName = item.Name;
-            entity.FlingPower = (int?)item.FlingPower;
+            else
+            {
+                entity.ItemName = item.Name;
+                entity.FlingPower = (int?)item.FlingPower;
+            }
         }
 
         await context.SaveChangesAsync(cancellationToken);

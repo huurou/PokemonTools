@@ -25,7 +25,7 @@ public record Move
         get;
         init
         {
-            if (!PokemonType.All.Any(x => x.Id == value))
+            if (!PokemonType.MoveTypes.Any(x => x.Id == value))
             {
                 throw new ArgumentException("技のタイプは有効なタイプを指定してください。", nameof(TypeId));
             }
