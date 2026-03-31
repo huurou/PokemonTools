@@ -8,6 +8,8 @@ Pokemon Champions専用の対戦補助Webアプリケーション（[ADR-0005](.
 
 ## ビルド・実行コマンド
 
+※ 以下のコマンドはすべてリポジトリルートから実行する。
+
 ```bash
 # アプリ全体の起動（Aspireオーケストレーション）
 aspire run
@@ -23,6 +25,15 @@ dotnet test --project tests/PokemonTools.Web.Domain.Tests --filter "FullyQualifi
 
 # 単一テストメソッドの実行
 dotnet test --project tests/PokemonTools.Web.Domain.Tests --filter "FullyQualifiedName~メソッド名"
+
+# ローカルツールのリストア（dotnet-ef等）
+dotnet tool restore
+
+# マイグレーション追加
+dotnet ef migrations add <MigrationName> --project src/PokemonTools.Web.Infrastructure --startup-project src/PokemonTools.Web
+
+# マイグレーション適用（通常はアプリ起動時に自動実行）
+dotnet ef database update --project src/PokemonTools.Web.Infrastructure --startup-project src/PokemonTools.Web
 
 # カバレッジレポート生成（要 dotnet-reportgenerator-globaltool）
 pwsh scripts/TestCoverage.ps1

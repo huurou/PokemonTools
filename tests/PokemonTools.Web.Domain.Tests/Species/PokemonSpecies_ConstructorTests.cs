@@ -33,13 +33,13 @@ public class PokemonSpecies_ConstructorTests
     }
 
     [Fact]
-    public void タイプ1にステラを指定_例外が発生する()
+    public void タイプ1にステラを指定_例外が発生しない()
     {
         // Act
         var exception = Record.Exception(() => CreateWithDefaults(type1Id: PokemonType.Stellar.Id));
 
         // Assert
-        Assert.IsType<ArgumentException>(exception);
+        Assert.Null(exception);
     }
 
     [Fact]
@@ -53,13 +53,13 @@ public class PokemonSpecies_ConstructorTests
     }
 
     [Fact]
-    public void タイプ2にステラを指定_例外が発生する()
+    public void タイプ2にステラを指定_例外が発生しない()
     {
         // Act
         var exception = Record.Exception(() => CreateWithDefaults(type2Id: PokemonType.Stellar.Id));
 
         // Assert
-        Assert.IsType<ArgumentException>(exception);
+        Assert.Null(exception);
     }
 
     [Fact]

@@ -123,6 +123,16 @@ public record PokemonType(TypeId Id, string Name)
     ];
 
     /// <summary>
+    /// 種族に設定可能なタイプのリスト（18タイプ＋ステラ）
+    /// </summary>
+    public static ImmutableArray<PokemonType> SpeciesTypes { get; } =
+    [
+        Normal, Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel,
+        Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark, Fairy,
+        Stellar,
+    ];
+
+    /// <summary>
     /// 全20タイプのリスト（ステラ・???含む）
     /// </summary>
     public static ImmutableArray<PokemonType> All { get; } =

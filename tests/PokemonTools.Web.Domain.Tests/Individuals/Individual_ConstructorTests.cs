@@ -143,7 +143,7 @@ public class Individual_ConstructorTests
     }
 
     [Fact]
-    public void nullのスロット同士は重複とみなさない_Individualが生成される()
+    public void Nullのスロット同士は重複とみなさない_Individualが生成される()
     {
         // Act
         var individual = CreateWithDefaults(
