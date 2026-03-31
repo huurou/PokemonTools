@@ -89,7 +89,7 @@ public class Party_ConstructorTests
     }
 
     [Fact]
-    public void nullのスロット同士は重複とみなさない_Partyが生成される()
+    public void Nullのスロット同士は重複とみなさない_Partyが生成される()
     {
         // Act
         var party = CreateWithDefaults();

@@ -30,9 +30,9 @@ public record PokemonSpecies
         get;
         private init
         {
-            if (!PokemonType.BattleTypes.Any(x => x.Id == value))
+            if (!PokemonType.SpeciesTypes.Any(x => x.Id == value))
             {
-                throw new ArgumentException("種族のタイプ1は18タイプのいずれかを指定してください。", nameof(Type1Id));
+                throw new ArgumentException("種族のタイプ1は有効なタイプを指定してください。", nameof(Type1Id));
             }
             field = value;
         }
@@ -45,9 +45,9 @@ public record PokemonSpecies
         get;
         private init
         {
-            if (value is not null && !PokemonType.BattleTypes.Any(x => x.Id == value))
+            if (value is not null && !PokemonType.SpeciesTypes.Any(x => x.Id == value))
             {
-                throw new ArgumentException("種族のタイプ2は18タイプのいずれかを指定してください。", nameof(Type2Id));
+                throw new ArgumentException("種族のタイプ2は有効なタイプを指定してください。", nameof(Type2Id));
             }
             field = value;
         }

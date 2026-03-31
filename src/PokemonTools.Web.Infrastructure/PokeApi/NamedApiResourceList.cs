@@ -9,7 +9,7 @@ namespace PokemonTools.Web.Infrastructure.PokeApi;
 /// <param name="Previous">前のページの URL</param>
 /// <param name="Next">次のページの URL</param>
 /// <param name="Results">リソースの一覧</param>
-internal record NamedApiResourceList(
+public record NamedApiResourceList(
     int Count,
     string? Previous,
     string? Next,

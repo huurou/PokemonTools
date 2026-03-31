@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace PokemonTools.Web.Infrastructure.PokeApi;
 
@@ -7,8 +8,13 @@ namespace PokemonTools.Web.Infrastructure.PokeApi;
 /// PokeAPI v2 のHTTPクライアント
 /// ページネーション処理とリクエスト間隔のスロットリングを提供します。
 /// </summary>
-internal class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limiter)
+public class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limiter)
 {
+    private static readonly JsonSerializerOptions jsonOptions_ = new(JsonSerializerDefaults.Web)
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+    };
+
     private const int PAGE_SIZE = 100;
 
     /// <summary>
@@ -29,8 +35,8 @@ internal class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limite
             await limiter.WaitAsync(cancellationToken);
             var response = await httpClient.GetAsync(url, cancellationToken);
             response.EnsureSuccessStatusCode();
-            var page = await response.Content.ReadFromJsonAsync<NamedApiResourceList>(cancellationToken)
-                ?? throw new InvalidOperationException($"Failed to deserialize response from: {url}");
+            var page = await response.Content.ReadFromJsonAsync<NamedApiResourceList>(jsonOptions_, cancellationToken)
+                ?? throw new InvalidOperationException($"レスポンスのデシリアライズに失敗しました: {url}");
 
             foreach (var resource in page.Results)
             {
@@ -39,6 +45,22 @@ internal class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limite
 
             url = page.Next;
         }
+    }
+
+    /// <summary>
+    /// 指定エンドポイントのリソース総数を取得します。
+    /// </summary>
+    /// <param name="endpoint">PokeAPI のリソースパス (例: "pokemon", "type")</param>
+    /// <param name="cancellationToken">キャンセルトークン</param>
+    /// <returns>リソースの総数</returns>
+    public async Task<int> GetResourceCountAsync(string endpoint, CancellationToken cancellationToken = default)
+    {
+        await limiter.WaitAsync(cancellationToken);
+        var response = await httpClient.GetAsync($"{endpoint}?limit=1", cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var page = await response.Content.ReadFromJsonAsync<NamedApiResourceList>(jsonOptions_, cancellationToken)
+            ?? throw new InvalidOperationException($"レスポンスのデシリアライズに失敗しました: {endpoint}");
+        return page.Count;
     }
 
     /// <summary>
@@ -79,17 +101,17 @@ internal class PokeApiClient(HttpClient httpClient, PokeApiRequestLimiter limite
         await limiter.WaitAsync(cancellationToken);
         var response = await httpClient.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<T>(cancellationToken)
-            ?? throw new InvalidOperationException($"Failed to deserialize response from: {url}");
+        return await response.Content.ReadFromJsonAsync<T>(jsonOptions_, cancellationToken)
+            ?? throw new InvalidOperationException($"レスポンスのデシリアライズに失敗しました: {url}");
     }
 
     private void ValidateResourceUrl(string url)
     {
         var baseAddress = httpClient.BaseAddress?.ToString()
-            ?? throw new InvalidOperationException("BaseAddress is not configured.");
+            ?? throw new InvalidOperationException("BaseAddressが設定されていません。");
         if (!url.StartsWith(baseAddress, StringComparison.Ordinal))
         {
-            throw new ArgumentException($"URL must be under the base address: {baseAddress}", nameof(url));
+            throw new ArgumentException($"URLはベースアドレス配下である必要があります: {baseAddress}", nameof(url));
         }
     }
 }

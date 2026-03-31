@@ -1,12 +1,10 @@
 ﻿var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postgres")
-    .AddDatabase("pokemon-tools-db", "pokemon_tools");
+var db = builder.AddConnectionString("pokemon-tools-db");
 
 builder.AddProject<Projects.PokemonTools_Web>("webfrontend")
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
-    .WithReference(postgres)
-    .WaitFor(postgres);
+    .WithReference(db);
 
 builder.Build().Run();

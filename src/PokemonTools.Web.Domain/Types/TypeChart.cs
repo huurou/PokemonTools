@@ -34,7 +34,7 @@ public static class TypeChart
         }
     }
 
-    internal static TypeEffectiveness Combine(TypeEffectiveness effectiveness1, TypeEffectiveness effectiveness2)
+    public static TypeEffectiveness Combine(TypeEffectiveness effectiveness1, TypeEffectiveness effectiveness2)
     {
         return (effectiveness1, effectiveness2) switch
         {

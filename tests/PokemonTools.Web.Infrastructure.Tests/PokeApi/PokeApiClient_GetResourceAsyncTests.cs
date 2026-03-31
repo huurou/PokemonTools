@@ -2,7 +2,6 @@
 using PokemonTools.Web.Infrastructure.PokeApi;
 using System.Net;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace PokemonTools.Web.Infrastructure.Tests.PokeApi;
 
@@ -38,13 +37,11 @@ public class PokeApiClient_GetResourceAsyncTests
         var resource = new NamedApiResource("pikachu", $"{BASE_ADDRESS}pokemon/25/");
         var responseBody = new { id = 25, name = "pikachu" };
         var requestedUrl = "";
-        var client = CreateClient(
-            (request, _) =>
-            {
-                requestedUrl = request.RequestUri!.ToString();
-                return CreateJsonResponse(responseBody);
-            }
-        );
+        var client = CreateClient((request, _) =>
+        {
+            requestedUrl = request.RequestUri!.ToString();
+            return CreateJsonResponse(responseBody);
+        });
 
         // Act
         var result = await client.GetResourceAsync<TestResource>(resource, TestContext.Current.CancellationToken);
@@ -60,8 +57,7 @@ public class PokeApiClient_GetResourceAsyncTests
     {
         // Arrange
         var resource = new NamedApiResource("pikachu", "https://evil.example.com/pokemon/25/");
-        var client = CreateClient((_, _) =>
-            CreateJsonResponse(new { id = 25, name = "pikachu" }));
+        var client = CreateClient((_, _) => CreateJsonResponse(new { id = 25, name = "pikachu" }));
 
         // Act
         var exception = await Record.ExceptionAsync(
@@ -92,13 +88,11 @@ public class PokeApiClient_GetResourceAsyncTests
     {
         var timeProvider = new FakeTimeProvider();
         var limiter = new PokeApiRequestLimiter(timeProvider);
-        var mockHandler = new MockHttpMessageHandler(
-            (request, ct) =>
-            {
-                timeProvider.Advance(TimeSpan.FromMilliseconds(200));
-                return handler(request, ct);
-            }
-        );
+        var mockHandler = new MockHttpMessageHandler((request, ct) =>
+        {
+            timeProvider.Advance(TimeSpan.FromMilliseconds(200));
+            return handler(request, ct);
+        });
         var httpClient = new HttpClient(mockHandler) { BaseAddress = new Uri(BASE_ADDRESS) };
         return new PokeApiClient(httpClient, limiter);
     }
@@ -114,7 +108,4 @@ public class PokeApiClient_GetResourceAsyncTests
     }
 }
 
-internal record TestResource(
-    [property: JsonPropertyName("id")] int Id,
-    [property: JsonPropertyName("name")] string Name
-);
+public record TestResource(int Id, string Name);

@@ -43,13 +43,13 @@ public class Move_ConstructorTests
     }
 
     [Fact]
-    public void タイプにステラを指定_例外が発生する()
+    public void タイプにステラを指定_例外が発生しない()
     {
         // Act
         var exception = Record.Exception(() => CreateWithDefaults(typeId: PokemonType.Stellar.Id));
 
         // Assert
-        Assert.IsType<ArgumentException>(exception);
+        Assert.Null(exception);
     }
 
     [Fact]

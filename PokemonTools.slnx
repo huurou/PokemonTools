@@ -4,7 +4,6 @@
     <Project Path="src/PokemonTools.ServiceDefaults/PokemonTools.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/Test/">
-    <Project Path="tests/PokemonTools.Tests/PokemonTools.Tests.csproj" />
     <Project Path="tests/PokemonTools.Web.Domain.Tests/PokemonTools.Web.Domain.Tests.csproj" />
     <Project Path="tests/PokemonTools.Web.Infrastructure.Tests/PokemonTools.Web.Infrastructure.Tests.csproj" />
   </Folder>

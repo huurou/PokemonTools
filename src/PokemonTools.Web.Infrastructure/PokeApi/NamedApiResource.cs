@@ -4,4 +4,4 @@
 /// PokeAPI の一覧レスポンスに含まれるリソース参照
 /// 名前とリソースURLのペア
 /// </summary>
-internal record NamedApiResource(string Name, string Url);
+public record NamedApiResource(string Name, string Url);
