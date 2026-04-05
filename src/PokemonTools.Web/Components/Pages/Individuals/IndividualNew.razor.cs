@@ -4,14 +4,14 @@ using PokemonTools.Web.Application.Individuals;
 namespace PokemonTools.Web.Components.Pages.Individuals;
 
 public partial class IndividualNew(
-    OwnedIndividualCommandUseCase commandUseCase,
-    OwnedIndividualFormQueryService formQueryService,
     NavigationManager navigationManager,
+    OwnedIndividualCommandUseCase commandUseCase,
+    IOwnedIndividualFormQueryService formQueryService,
     ILogger<IndividualNew> logger
 ) : ComponentBase
 {
     private OwnedIndividualFormDataDto formData_ = default!;
-    private OwnedIndividualFormModel model_ = new();
+    private readonly OwnedIndividualFormModel model_ = new();
     private bool isLoading_ = true;
     private bool isSubmitting_;
     private string? errorMessage_;

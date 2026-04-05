@@ -4,7 +4,7 @@ using PokemonTools.Web.Application.Individuals;
 namespace PokemonTools.Web.Components.Pages.Individuals;
 
 public partial class IndividualList(
-    OwnedIndividualQueryService queryService,
+    IOwnedIndividualQueryService queryService,
     OwnedIndividualCommandUseCase commandUseCase,
     ILogger<IndividualList> logger
 ) : ComponentBase
