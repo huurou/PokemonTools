@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PokemonTools.Web.Domain.Individuals;
+﻿using PokemonTools.Web.Domain.Individuals;
 using PokemonTools.Web.Infrastructure.Individuals;
 using static PokemonTools.Web.Infrastructure.Tests.Individuals.IndividualRepositoryTestHelper;
 
@@ -14,6 +13,7 @@ public class IndividualRepository_GetOwnedIndividualsAsyncTests(PostgreSqlFixtur
         var ct = TestContext.Current.CancellationToken;
         await using var seedContext = fixture.CreateContext();
         await SeedMasterDataAsync(seedContext, ct);
+        await CleanupIndividualsAsync(seedContext, ct);
         var seedRepo = new IndividualRepository(seedContext);
         await seedRepo.AddAsync(CreateDefaultIndividual(
             id: "ind_owned_001",
@@ -39,14 +39,9 @@ public class IndividualRepository_GetOwnedIndividualsAsyncTests(PostgreSqlFixtur
     {
         // Arrange
         var ct = TestContext.Current.CancellationToken;
-        await using var cleanupContext = fixture.CreateContext();
-        await SeedMasterDataAsync(cleanupContext, ct);
-        var ownedEntities = cleanupContext.Individuals
-            .Where(x => x.CategoryId == IndividualCategory.OwnedIndividual.Id.Value);
-        cleanupContext.Individuals.RemoveRange(ownedEntities);
-        await cleanupContext.SaveChangesAsync(ct);
-
         await using var seedContext = fixture.CreateContext();
+        await SeedMasterDataAsync(seedContext, ct);
+        await CleanupIndividualsAsync(seedContext, ct);
         var seedRepo = new IndividualRepository(seedContext);
         await seedRepo.AddAsync(CreateDefaultIndividual(
             id: "ind_preset_empty_test",

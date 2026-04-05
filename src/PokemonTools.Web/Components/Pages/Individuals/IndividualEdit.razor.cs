@@ -4,10 +4,10 @@ using PokemonTools.Web.Application.Individuals;
 namespace PokemonTools.Web.Components.Pages.Individuals;
 
 public partial class IndividualEdit(
-    OwnedIndividualCommandUseCase commandUseCase,
-    OwnedIndividualQueryService queryService,
-    OwnedIndividualFormQueryService formQueryService,
     NavigationManager navigationManager,
+    OwnedIndividualCommandUseCase commandUseCase,
+    IOwnedIndividualQueryService queryService,
+    IOwnedIndividualFormQueryService formQueryService,
     ILogger<IndividualEdit> logger
 ) : ComponentBase
 {
