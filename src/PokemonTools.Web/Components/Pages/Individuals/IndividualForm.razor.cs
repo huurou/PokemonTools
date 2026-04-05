@@ -26,15 +26,9 @@ public partial class IndividualForm : ComponentBase
     private Dictionary<int, SpeciesOptionDto>? speciesById_;
     private Dictionary<int, OptionDto>? abilityById_;
 
-    private uint StatPointTotal => Model.StatPointHp + Model.StatPointAttack + Model.StatPointDefense +
-        Model.StatPointSpecialAttack + Model.StatPointSpecialDefense + Model.StatPointSpeed;
+    private uint StatPointTotal => Model.StatPointTotal;
 
-    private bool IsValid =>
-        Model.SelectedSpeciesId > 0 &&
-        Model.SelectedAbilityId > 0 &&
-        Model.SelectedMove1Id > 0 &&
-        Model.SelectedTeraTypeId > 0 &&
-        StatPointTotal <= 66;
+    private bool IsValid => Model.CanSubmit;
 
     private Dictionary<int, SpeciesOptionDto> SpeciesById =>
         speciesById_ ??= FormData.AllSpecies.ToDictionary(x => x.Id);

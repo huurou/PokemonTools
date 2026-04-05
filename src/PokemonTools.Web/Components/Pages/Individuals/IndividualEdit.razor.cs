@@ -59,8 +59,7 @@ public partial class IndividualEdit(
         errorMessage_ = null;
         try
         {
-            if (model_.SelectedSpeciesId <= 0 || model_.SelectedAbilityId <= 0 ||
-                model_.SelectedMove1Id <= 0 || model_.SelectedTeraTypeId <= 0)
+            if (!model_.CanSubmit)
             {
                 errorMessage_ = "必須項目を入力してください";
                 return;

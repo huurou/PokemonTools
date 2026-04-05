@@ -28,6 +28,16 @@ public class OwnedIndividualFormModel
 
     public string? Memo { get; set; }
 
+    public uint StatPointTotal => StatPointHp + StatPointAttack + StatPointDefense +
+        StatPointSpecialAttack + StatPointSpecialDefense + StatPointSpeed;
+
+    public bool CanSubmit =>
+        SelectedSpeciesId > 0 &&
+        SelectedAbilityId > 0 &&
+        SelectedMove1Id > 0 &&
+        SelectedTeraTypeId > 0 &&
+        StatPointTotal <= 66;
+
     public void ApplyDefaults(OwnedIndividualFormDataDto formData)
     {
         SelectedStatAlignmentId = formData.DefaultStatAlignmentId;
