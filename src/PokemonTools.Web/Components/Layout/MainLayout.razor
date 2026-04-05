@@ -1,13 +1,13 @@
 @inherits LayoutComponentBase
 
-<div class="relative flex flex-col min-[641px]:flex-row">
+<div class="relative flex flex-col sidebar:flex-row">
     <div class="bg-gradient-to-b from-[rgb(5,39,103)] to-[#3a0647]
-                min-[641px]:w-[250px] min-[641px]:h-screen min-[641px]:sticky min-[641px]:top-0">
+                sidebar:w-[250px] sidebar:h-screen sidebar:sticky sidebar:top-0">
         <NavMenu />
     </div>
 
     <main class="flex-1">
-        <article class="px-4 pt-[1.1rem] min-[641px]:pl-8 min-[641px]:pr-6">
+        <article class="px-4 pt-[1.1rem] sidebar:pl-8 sidebar:pr-6">
             @Body
         </article>
     </main>

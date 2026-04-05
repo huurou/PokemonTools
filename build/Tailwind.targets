@@ -1,5 +1,5 @@
 ﻿<Project>
-  <Target Name="TailwindBuild" BeforeTargets="Build"
+  <Target Name="_TailwindCompile"
           Condition="Exists('$(MSBuildProjectDirectory)/Styles/app.css')">
     <Exec Command="npx @tailwindcss/cli -i Styles/app.css -o wwwroot/app.generated.css --minify"
           WorkingDirectory="$(MSBuildProjectDirectory)"
@@ -7,13 +7,8 @@
           StandardErrorImportance="Low" />
   </Target>
 
-  <Target Name="TailwindPublish" BeforeTargets="Publish"
-          Condition="Exists('$(MSBuildProjectDirectory)/Styles/app.css')">
-    <Exec Command="npx @tailwindcss/cli -i Styles/app.css -o wwwroot/app.generated.css --minify"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          StandardOutputImportance="Low"
-          StandardErrorImportance="Low" />
-  </Target>
+  <Target Name="TailwindBuild" BeforeTargets="Build" DependsOnTargets="_TailwindCompile" />
+  <Target Name="TailwindPublish" BeforeTargets="Publish" DependsOnTargets="_TailwindCompile" />
 
   <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)/Styles')">
     <Content Remove="Styles\**" />
