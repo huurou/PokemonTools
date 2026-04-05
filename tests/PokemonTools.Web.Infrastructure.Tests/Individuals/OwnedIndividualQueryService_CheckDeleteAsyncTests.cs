@@ -13,6 +13,8 @@ public class OwnedIndividualQueryService_CheckDeleteAsyncTests(PostgreSqlFixture
         var ct = TestContext.Current.CancellationToken;
         await using var seedContext = fixture.CreateContext();
         await SeedMasterDataAsync(seedContext, ct);
+        await CleanupPartiesAsync(seedContext, ct);
+        await CleanupIndividualsAsync(seedContext, ct);
         var seedRepo = new IndividualRepository(seedContext);
         await seedRepo.AddAsync(CreateDefaultIndividual(id: "ind_qs_del_in_party"), ct);
         seedContext.Parties.Add(new PartyEntity
@@ -40,6 +42,8 @@ public class OwnedIndividualQueryService_CheckDeleteAsyncTests(PostgreSqlFixture
         var ct = TestContext.Current.CancellationToken;
         await using var seedContext = fixture.CreateContext();
         await SeedMasterDataAsync(seedContext, ct);
+        await CleanupPartiesAsync(seedContext, ct);
+        await CleanupIndividualsAsync(seedContext, ct);
         var seedRepo = new IndividualRepository(seedContext);
         await seedRepo.AddAsync(CreateDefaultIndividual(id: "ind_qs_del_no_party"), ct);
 

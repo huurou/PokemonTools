@@ -15,6 +15,7 @@ public class OwnedIndividualQueryService_GetDetailAsyncTests(PostgreSqlFixture f
         var ct = TestContext.Current.CancellationToken;
         await using var seedContext = fixture.CreateContext();
         await SeedMasterDataAsync(seedContext, ct);
+        await CleanupIndividualsAsync(seedContext, ct);
         var seedRepo = new IndividualRepository(seedContext);
         await seedRepo.AddAsync(CreateDefaultIndividual(
             id: "ind_qs_detail_001",
@@ -59,6 +60,8 @@ public class OwnedIndividualQueryService_GetDetailAsyncTests(PostgreSqlFixture f
     {
         // Arrange
         var ct = TestContext.Current.CancellationToken;
+        await using var seedContext = fixture.CreateContext();
+        await CleanupIndividualsAsync(seedContext, ct);
 
         // Act
         await using var context = fixture.CreateContext();
@@ -76,6 +79,7 @@ public class OwnedIndividualQueryService_GetDetailAsyncTests(PostgreSqlFixture f
         var ct = TestContext.Current.CancellationToken;
         await using var seedContext = fixture.CreateContext();
         await SeedMasterDataAsync(seedContext, ct);
+        await CleanupIndividualsAsync(seedContext, ct);
         var seedRepo = new IndividualRepository(seedContext);
         await seedRepo.AddAsync(CreateDefaultIndividual(
             id: "ind_qs_detail_preset",

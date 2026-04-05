@@ -68,6 +68,13 @@ internal static class IndividualRepositoryTestHelper
         context.ChangeTracker.Clear();
     }
 
+    internal static async Task CleanupPartiesAsync(PokemonToolsDbContext context, CancellationToken ct)
+    {
+        context.Parties.RemoveRange(context.Parties);
+        await context.SaveChangesAsync(ct);
+        context.ChangeTracker.Clear();
+    }
+
     internal static Individual CreateDefaultIndividual(
         string? id = null,
         string? name = null,
