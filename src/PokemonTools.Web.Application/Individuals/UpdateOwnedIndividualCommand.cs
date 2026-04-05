@@ -1,25 +1,22 @@
-﻿using PokemonTools.Web.Domain.Abilities;
-using PokemonTools.Web.Domain.Individuals;
-using PokemonTools.Web.Domain.Items;
-using PokemonTools.Web.Domain.Moves;
-using PokemonTools.Web.Domain.Species;
-using PokemonTools.Web.Domain.Statistics;
-using PokemonTools.Web.Domain.Types;
-
-namespace PokemonTools.Web.Application.Individuals;
+﻿namespace PokemonTools.Web.Application.Individuals;
 
 public record UpdateOwnedIndividualCommand(
-    IndividualId Id,
+    string Id,
     string? Name,
-    SpeciesId SpeciesId,
-    StatAlignmentId StatAlignmentId,
-    AbilityId AbilityId,
-    StatPoints StatPoints,
-    MoveId Move1Id,
-    MoveId? Move2Id,
-    MoveId? Move3Id,
-    MoveId? Move4Id,
-    ItemId? HeldItemId,
-    TypeId TeraTypeId,
+    int SpeciesId,
+    int StatAlignmentId,
+    int AbilityId,
+    uint StatPointHp,
+    uint StatPointAttack,
+    uint StatPointDefense,
+    uint StatPointSpecialAttack,
+    uint StatPointSpecialDefense,
+    uint StatPointSpeed,
+    int Move1Id,
+    int? Move2Id,
+    int? Move3Id,
+    int? Move4Id,
+    int? HeldItemId,
+    int TeraTypeId,
     string? Memo
 );

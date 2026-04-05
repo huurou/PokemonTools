@@ -24,6 +24,15 @@ public class SpeciesRepository(PokemonToolsDbContext context) : ISpeciesReposito
         return entity is not null ? ToDomain(entity) : null;
     }
 
+    public async Task<List<PokemonSpecies>> GetByIdsAsync(IEnumerable<SpeciesId> ids, CancellationToken cancellationToken = default)
+    {
+        var idValues = ids.Select(x => x.Value).ToList();
+        var entities = await context.Species
+            .Where(x => idValues.Contains(x.SpeciesId))
+            .ToListAsync(cancellationToken);
+        return entities.Select(ToDomain).ToList();
+    }
+
     private static PokemonSpecies ToDomain(SpeciesEntity x)
     {
         return new PokemonSpecies(

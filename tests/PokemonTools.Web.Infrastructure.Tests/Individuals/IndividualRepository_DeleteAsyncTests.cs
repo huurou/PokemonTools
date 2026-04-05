@@ -8,6 +8,22 @@ namespace PokemonTools.Web.Infrastructure.Tests.Individuals;
 public class IndividualRepository_DeleteAsyncTests(PostgreSqlFixture fixture) : IClassFixture<PostgreSqlFixture>
 {
     [Fact]
+    public async Task 存在しないID_例外が発生しない()
+    {
+        // Arrange
+        var ct = TestContext.Current.CancellationToken;
+        await using var context = fixture.CreateContext();
+        var repository = new IndividualRepository(context);
+
+        // Act
+        var exception = await Record.ExceptionAsync(() =>
+            repository.DeleteAsync(new IndividualId("ind_nonexistent_delete"), ct));
+
+        // Assert
+        Assert.Null(exception);
+    }
+
+    [Fact]
     public async Task 存在するID_削除される()
     {
         // Arrange

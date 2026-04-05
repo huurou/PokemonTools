@@ -19,4 +19,9 @@ public interface ISpeciesRepository
     /// 指定したIDの種族を取得します。
     /// </summary>
     Task<PokemonSpecies?> FindByIdAsync(SpeciesId id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 指定した複数IDの種族を取得します。
+    /// </summary>
+    Task<List<PokemonSpecies>> GetByIdsAsync(IEnumerable<SpeciesId> ids, CancellationToken cancellationToken = default);
 }

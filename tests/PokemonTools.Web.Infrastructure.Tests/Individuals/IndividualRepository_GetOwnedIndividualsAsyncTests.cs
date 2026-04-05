@@ -34,11 +34,10 @@ public class IndividualRepository_GetOwnedIndividualsAsyncTests(PostgreSqlFixtur
     }
 
     [Fact]
-    public async Task 個体が存在しない場合_空リストが返される()
+    public async Task 個体が存在しない場合_空コレクションが返される()
     {
         // Arrange
         var ct = TestContext.Current.CancellationToken;
-        // 他テストで追加されたデータがあるが、カテゴリフィルタで動作確認
 
         // Act
         await using var context = fixture.CreateContext();

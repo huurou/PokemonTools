@@ -10,6 +10,26 @@ namespace PokemonTools.Web.Infrastructure.Tests.Individuals;
 public class IndividualRepository_UpdateAsyncTests(PostgreSqlFixture fixture) : IClassFixture<PostgreSqlFixture>
 {
     [Fact]
+    public async Task 存在しないID_例外が発生する()
+    {
+        // Arrange
+        var ct = TestContext.Current.CancellationToken;
+        await using var seedContext = fixture.CreateContext();
+        await SeedMasterDataAsync(seedContext, ct);
+
+        await using var context = fixture.CreateContext();
+        var repository = new IndividualRepository(context);
+        var nonExistent = CreateDefaultIndividual(id: "ind_nonexistent_update");
+
+        // Act
+        var exception = await Record.ExceptionAsync(() =>
+            repository.UpdateAsync(nonExistent, ct));
+
+        // Assert
+        Assert.IsType<InvalidOperationException>(exception);
+    }
+
+    [Fact]
     public async Task 既存個体のフィールドを更新_DBに反映される()
     {
         // Arrange

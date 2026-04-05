@@ -1,41 +1,35 @@
-﻿@using PokemonTools.Web.Domain.Types
-@using PokemonTools.Web.Domain.Statistics
-
-<div class="row">
+﻿<div class="row">
     <div class="col-md-8">
         <div class="mb-3">
             <label class="form-label">種族 <span class="text-danger">*</span></label>
             <input type="text" class="form-control mb-1" placeholder="種族名で検索..." @bind="speciesFilter_" @bind:event="oninput" />
-            <select class="form-select" @bind="SelectedSpeciesId" @bind:after="HandleSpeciesChangeAsync">
+            <select class="form-select" @bind="Model.SelectedSpeciesId" @bind:after="HandleSpeciesChange">
                 <option value="0">-- 選択してください --</option>
                 @foreach (var species in FilteredSpecies)
                 {
-                    <option value="@species.Id.Value">@species.Name</option>
+                    <option value="@species.Id">@species.Name</option>
                 }
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">ニックネーム</label>
-            <input type="text" class="form-control" @bind="Name" @bind:after="() => NameChanged.InvokeAsync(Name)" placeholder="未入力の場合は種族名で表示" />
+            <input type="text" class="form-control" @bind="Model.Name" placeholder="未入力の場合は種族名で表示" />
         </div>
 
         <div class="mb-3">
             <label class="form-label">能力補正 <span class="text-danger">*</span></label>
-            <select class="form-select" @bind="SelectedStatAlignmentId" @bind:after="() => SelectedStatAlignmentIdChanged.InvokeAsync(SelectedStatAlignmentId)">
-                @foreach (var sa in StatAlignment.All)
+            <select class="form-select" @bind="Model.SelectedStatAlignmentId">
+                @foreach (var sa in FormData.AllStatAlignments)
                 {
-                    var label = sa.IncreasedStat.HasValue
-                        ? $"{sa.Name}（{GetStatName(sa.IncreasedStat.Value)}↑ {GetStatName(sa.DecreasedStat!.Value)}↓）"
-                        : $"{sa.Name}（補正なし）";
-                    <option value="@sa.Id.Value">@label</option>
+                    <option value="@sa.Id">@sa.Name</option>
                 }
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">特性 <span class="text-danger">*</span></label>
-            <select class="form-select" @bind="SelectedAbilityId" @bind:after="() => SelectedAbilityIdChanged.InvokeAsync(SelectedAbilityId)" disabled="@(AvailableAbilities.Count == 0)">
+            <select class="form-select" @bind="Model.SelectedAbilityId" disabled="@(AvailableAbilities.Count == 0)">
                 @if (AvailableAbilities.Count == 0)
                 {
                     <option value="0">-- 種族を選択してください --</option>
@@ -44,7 +38,7 @@
                 {
                     @foreach (var ability in AvailableAbilities)
                     {
-                        <option value="@ability.Id.Value">@ability.Name</option>
+                        <option value="@ability.Id">@ability.Name</option>
                     }
                 }
             </select>
@@ -55,27 +49,27 @@
             <div class="row g-2">
                 <div class="col-2">
                     <label class="form-label small">HP</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="StatPointHp" @bind:event="oninput" @bind:after="() => StatPointHpChanged.InvokeAsync(StatPointHp)" />
+                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointHp" @bind:event="oninput" />
                 </div>
                 <div class="col-2">
                     <label class="form-label small">こうげき</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="StatPointAttack" @bind:event="oninput" @bind:after="() => StatPointAttackChanged.InvokeAsync(StatPointAttack)" />
+                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointAttack" @bind:event="oninput" />
                 </div>
                 <div class="col-2">
                     <label class="form-label small">ぼうぎょ</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="StatPointDefense" @bind:event="oninput" @bind:after="() => StatPointDefenseChanged.InvokeAsync(StatPointDefense)" />
+                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointDefense" @bind:event="oninput" />
                 </div>
                 <div class="col-2">
                     <label class="form-label small">とくこう</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="StatPointSpecialAttack" @bind:event="oninput" @bind:after="() => StatPointSpecialAttackChanged.InvokeAsync(StatPointSpecialAttack)" />
+                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointSpecialAttack" @bind:event="oninput" />
                 </div>
                 <div class="col-2">
                     <label class="form-label small">とくぼう</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="StatPointSpecialDefense" @bind:event="oninput" @bind:after="() => StatPointSpecialDefenseChanged.InvokeAsync(StatPointSpecialDefense)" />
+                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointSpecialDefense" @bind:event="oninput" />
                 </div>
                 <div class="col-2">
                     <label class="form-label small">すばやさ</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="StatPointSpeed" @bind:event="oninput" @bind:after="() => StatPointSpeedChanged.InvokeAsync(StatPointSpeed)" />
+                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointSpeed" @bind:event="oninput" />
                 </div>
             </div>
             <small class="text-muted">合計: @StatPointTotal / 66</small>
@@ -88,11 +82,11 @@
         <div class="mb-3">
             <label class="form-label">技1 <span class="text-danger">*</span></label>
             <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter1_" @bind:event="oninput" />
-            <select class="form-select" @bind="SelectedMove1Id" @bind:after="() => SelectedMove1IdChanged.InvokeAsync(SelectedMove1Id)">
+            <select class="form-select" @bind="Model.SelectedMove1Id">
                 <option value="0">-- 選択してください --</option>
                 @foreach (var move in FilteredMoves1)
                 {
-                    <option value="@move.Id.Value">@move.Name</option>
+                    <option value="@move.Id">@move.Name</option>
                 }
             </select>
         </div>
@@ -100,11 +94,11 @@
         <div class="mb-3">
             <label class="form-label">技2</label>
             <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter2_" @bind:event="oninput" />
-            <select class="form-select" @bind="SelectedMove2Id" @bind:after="() => SelectedMove2IdChanged.InvokeAsync(SelectedMove2Id)">
+            <select class="form-select" @bind="Model.SelectedMove2Id">
                 <option value="0">-- なし --</option>
                 @foreach (var move in FilteredMoves2)
                 {
-                    <option value="@move.Id.Value">@move.Name</option>
+                    <option value="@move.Id">@move.Name</option>
                 }
             </select>
         </div>
@@ -112,11 +106,11 @@
         <div class="mb-3">
             <label class="form-label">技3</label>
             <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter3_" @bind:event="oninput" />
-            <select class="form-select" @bind="SelectedMove3Id" @bind:after="() => SelectedMove3IdChanged.InvokeAsync(SelectedMove3Id)">
+            <select class="form-select" @bind="Model.SelectedMove3Id">
                 <option value="0">-- なし --</option>
                 @foreach (var move in FilteredMoves3)
                 {
-                    <option value="@move.Id.Value">@move.Name</option>
+                    <option value="@move.Id">@move.Name</option>
                 }
             </select>
         </div>
@@ -124,11 +118,11 @@
         <div class="mb-3">
             <label class="form-label">技4</label>
             <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter4_" @bind:event="oninput" />
-            <select class="form-select" @bind="SelectedMove4Id" @bind:after="() => SelectedMove4IdChanged.InvokeAsync(SelectedMove4Id)">
+            <select class="form-select" @bind="Model.SelectedMove4Id">
                 <option value="0">-- なし --</option>
                 @foreach (var move in FilteredMoves4)
                 {
-                    <option value="@move.Id.Value">@move.Name</option>
+                    <option value="@move.Id">@move.Name</option>
                 }
             </select>
         </div>
@@ -136,28 +130,28 @@
         <div class="mb-3">
             <label class="form-label">持ち物</label>
             <input type="text" class="form-control mb-1" placeholder="道具名で検索..." @bind="itemFilter_" @bind:event="oninput" />
-            <select class="form-select" @bind="SelectedHeldItemId" @bind:after="() => SelectedHeldItemIdChanged.InvokeAsync(SelectedHeldItemId)">
+            <select class="form-select" @bind="Model.SelectedHeldItemId">
                 <option value="0">-- なし --</option>
                 @foreach (var item in FilteredItems)
                 {
-                    <option value="@item.Id.Value">@item.Name</option>
+                    <option value="@item.Id">@item.Name</option>
                 }
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">テラスタイプ <span class="text-danger">*</span></label>
-            <select class="form-select" @bind="SelectedTeraTypeId" @bind:after="() => SelectedTeraTypeIdChanged.InvokeAsync(SelectedTeraTypeId)">
-                @foreach (var type in TeraTypeOptions)
+            <select class="form-select" @bind="Model.SelectedTeraTypeId">
+                @foreach (var type in FormData.AllTeraTypes)
                 {
-                    <option value="@type.Id.Value">@type.Name</option>
+                    <option value="@type.Id">@type.Name</option>
                 }
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">メモ</label>
-            <textarea class="form-control" rows="3" @bind="Memo" @bind:after="() => MemoChanged.InvokeAsync(Memo)"></textarea>
+            <textarea class="form-control" rows="3" @bind="Model.Memo"></textarea>
         </div>
 
         <div class="mb-3">

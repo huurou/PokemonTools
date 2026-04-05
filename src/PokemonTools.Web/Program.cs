@@ -56,6 +56,7 @@ builder.Services.AddScoped<IIndividualRepository, IndividualRepository>();
 builder.Services.AddScoped<IPartyRepository, PartyRepository>();
 builder.Services.AddScoped<OwnedIndividualCommandUseCase>();
 builder.Services.AddScoped<OwnedIndividualQueryService>();
+builder.Services.AddScoped<OwnedIndividualFormQueryService>();
 
 
 var app = builder.Build();

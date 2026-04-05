@@ -70,6 +70,7 @@ public class IndividualRepository(PokemonToolsDbContext context) : IIndividualRe
         await context.Individuals
             .Where(x => x.IndividualId == id.Value)
             .ExecuteDeleteAsync(cancellationToken);
+        context.ChangeTracker.Clear();
     }
 
     private static Individual ToDomain(IndividualEntity x)

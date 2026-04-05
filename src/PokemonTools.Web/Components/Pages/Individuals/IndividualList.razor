@@ -34,7 +34,7 @@ else
                     <td>@individual.DisplayName</td>
                     <td>@individual.SpeciesName</td>
                     <td>
-                        <a class="btn btn-sm btn-outline-primary me-1" href="individuals/@individual.Id.Value/edit">編集</a>
+                        <a class="btn btn-sm btn-outline-primary me-1" href="individuals/@individual.Id/edit">編集</a>
                         <button class="btn btn-sm btn-outline-danger" @onclick="() => OnDeleteClick(individual.Id)">削除</button>
                     </td>
                 </tr>
