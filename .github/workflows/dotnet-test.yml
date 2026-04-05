@@ -6,6 +6,8 @@ on:
     paths:
       - 'src/**/*.cs'
       - 'src/**/*.csproj'
+      - 'src/**/*.razor'
+      - 'src/**/Styles/**'
       - 'tests/**/*.cs'
       - 'tests/**/*.csproj'
       - '**/*.props'
@@ -13,12 +15,17 @@ on:
       - '*.slnx'
       - 'global.json'
       - 'nuget.config'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'build/**'
       - '.github/workflows/dotnet-test.yml'
   pull_request:
     branches: [main]
     paths:
       - 'src/**/*.cs'
       - 'src/**/*.csproj'
+      - 'src/**/*.razor'
+      - 'src/**/Styles/**'
       - 'tests/**/*.cs'
       - 'tests/**/*.csproj'
       - '**/*.props'
@@ -26,6 +33,9 @@ on:
       - '*.slnx'
       - 'global.json'
       - 'nuget.config'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'build/**'
       - '.github/workflows/dotnet-test.yml'
 
 jobs:
@@ -47,6 +57,15 @@ jobs:
           dotnet-version: '10.0.x'
           cache: true
           cache-dependency-path: '**/*.csproj'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
 
       - name: Install .NET HTTPS Development Certificate
         run: |

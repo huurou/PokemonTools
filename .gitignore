@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Tailwind CSS build output
+*.generated.css
+
 # dotenv files
 .env
 
