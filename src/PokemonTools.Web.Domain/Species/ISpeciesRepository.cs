@@ -9,4 +9,14 @@ public interface ISpeciesRepository
     /// <param name="cancellationToken">キャンセルトークン</param>
     /// <returns></returns>
     Task UpsertRangeAsync(List<PokemonSpecies> species, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 全種族を取得します。
+    /// </summary>
+    Task<List<PokemonSpecies>> GetAllAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 指定したIDの種族を取得します。
+    /// </summary>
+    Task<PokemonSpecies?> FindByIdAsync(SpeciesId id, CancellationToken cancellationToken = default);
 }

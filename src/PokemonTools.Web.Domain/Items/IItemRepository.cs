@@ -9,4 +9,9 @@ public interface IItemRepository
     /// <param name="cancellationToken">キャンセルトークン</param>
     /// <returns></returns>
     Task UpsertRangeAsync(List<Item> items, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 全道具を取得します。
+    /// </summary>
+    Task<List<Item>> GetAllAsync(CancellationToken cancellationToken = default);
 }

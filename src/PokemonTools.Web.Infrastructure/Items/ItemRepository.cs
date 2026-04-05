@@ -44,4 +44,12 @@ public class ItemRepository(PokemonToolsDbContext context) : IItemRepository
         await context.SaveChangesAsync(cancellationToken);
         context.ChangeTracker.Clear();
     }
+
+    public async Task<List<Item>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Items
+            .OrderBy(x => x.ItemId)
+            .ToListAsync(cancellationToken);
+        return entities.Select(x => new Item(new ItemId(x.ItemId), x.ItemName, (uint?)x.FlingPower)).ToList();
+    }
 }

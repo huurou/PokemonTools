@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PokemonTools.Web.Domain.Abilities;
 using PokemonTools.Web.Domain.Species;
+using PokemonTools.Web.Domain.Statistics;
+using PokemonTools.Web.Domain.Types;
 using PokemonTools.Web.Infrastructure.Db;
 using PokemonTools.Web.Infrastructure.Db.Species;
 
@@ -7,6 +10,36 @@ namespace PokemonTools.Web.Infrastructure.Species;
 
 public class SpeciesRepository(PokemonToolsDbContext context) : ISpeciesRepository
 {
+    public async Task<List<PokemonSpecies>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Species
+            .OrderBy(x => x.SpeciesId)
+            .ToListAsync(cancellationToken);
+        return entities.Select(ToDomain).ToList();
+    }
+
+    public async Task<PokemonSpecies?> FindByIdAsync(SpeciesId id, CancellationToken cancellationToken = default)
+    {
+        var entity = await context.Species.FindAsync([id.Value], cancellationToken);
+        return entity is not null ? ToDomain(entity) : null;
+    }
+
+    private static PokemonSpecies ToDomain(SpeciesEntity x)
+    {
+        return new PokemonSpecies(
+            new SpeciesId(x.SpeciesId),
+            x.SpeciesName,
+            new TypeId(x.Type1Id),
+            x.Type2Id is not null ? new TypeId(x.Type2Id.Value) : null,
+            new AbilityId(x.Ability1Id),
+            x.Ability2Id is not null ? new AbilityId(x.Ability2Id.Value) : null,
+            x.HiddenAbilityId is not null ? new AbilityId(x.HiddenAbilityId.Value) : null,
+            new BaseStats((uint)x.BaseStatHp, (uint)x.BaseStatAttack, (uint)x.BaseStatDefense,
+                (uint)x.BaseStatSpecialAttack, (uint)x.BaseStatSpecialDefense, (uint)x.BaseStatSpeed),
+            new Weight(x.Weight)
+        );
+    }
+
     public async Task UpsertRangeAsync(List<PokemonSpecies> species, CancellationToken cancellationToken = default)
     {
         if (species.Count == 0) { return; }

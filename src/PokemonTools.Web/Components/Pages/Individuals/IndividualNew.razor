@@ -1,0 +1,41 @@
+﻿@page "/individuals/new"
+@rendermode InteractiveServer
+
+<PageTitle>手持ち登録</PageTitle>
+
+<h1>手持ち登録</h1>
+
+@if (isLoading_)
+{
+    <p>読み込み中...</p>
+}
+else
+{
+    <IndividualForm
+        SubmitLabel="登録"
+        OnSubmit="HandleSubmit"
+        ErrorMessage="@errorMessage_"
+        IsSubmitting="@isSubmitting_"
+        AllSpecies="allSpecies_"
+        AllMoves="allMoves_"
+        AllItems="allItems_"
+        AvailableAbilities="availableAbilities_"
+        OnSpeciesChanged="HandleSpeciesChanged"
+        @bind-Name="name_"
+        @bind-SelectedSpeciesId="selectedSpeciesId_"
+        @bind-SelectedStatAlignmentId="selectedStatAlignmentId_"
+        @bind-SelectedAbilityId="selectedAbilityId_"
+        @bind-StatPointHp="statPointHp_"
+        @bind-StatPointAttack="statPointAttack_"
+        @bind-StatPointDefense="statPointDefense_"
+        @bind-StatPointSpecialAttack="statPointSpecialAttack_"
+        @bind-StatPointSpecialDefense="statPointSpecialDefense_"
+        @bind-StatPointSpeed="statPointSpeed_"
+        @bind-SelectedMove1Id="selectedMove1Id_"
+        @bind-SelectedMove2Id="selectedMove2Id_"
+        @bind-SelectedMove3Id="selectedMove3Id_"
+        @bind-SelectedMove4Id="selectedMove4Id_"
+        @bind-SelectedHeldItemId="selectedHeldItemId_"
+        @bind-SelectedTeraTypeId="selectedTeraTypeId_"
+        @bind-Memo="memo_" />
+}

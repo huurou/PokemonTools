@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokemonTools.Web.Domain.Moves;
+using PokemonTools.Web.Domain.Types;
 using PokemonTools.Web.Infrastructure.Db;
 using PokemonTools.Web.Infrastructure.Db.Moves;
 
@@ -47,5 +48,19 @@ public class MoveRepository(PokemonToolsDbContext context) : IMoveRepository
 
         await context.SaveChangesAsync(cancellationToken);
         context.ChangeTracker.Clear();
+    }
+
+    public async Task<List<Move>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Moves
+            .OrderBy(x => x.MoveId)
+            .ToListAsync(cancellationToken);
+        return entities.Select(x => new Move(
+            new MoveId(x.MoveId),
+            x.MoveName,
+            new TypeId(x.TypeId),
+            new MoveDamageClassId(x.MoveDamageClassId),
+            (uint?)x.Power
+        )).ToList();
     }
 }
