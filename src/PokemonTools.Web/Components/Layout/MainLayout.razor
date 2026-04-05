@@ -1,16 +1,13 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+<div class="relative flex flex-col min-[641px]:flex-row">
+    <div class="bg-gradient-to-b from-[rgb(5,39,103)] to-[#3a0647]
+                min-[641px]:w-[250px] min-[641px]:h-screen min-[641px]:sticky min-[641px]:top-0">
         <NavMenu />
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+    <main class="flex-1">
+        <article class="px-4 pt-[1.1rem] min-[641px]:pl-8 min-[641px]:pr-6">
             @Body
         </article>
     </main>
@@ -19,5 +16,5 @@
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+    <a class="dismiss">&#x1F5D9;</a>
 </div>

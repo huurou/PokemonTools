@@ -37,7 +37,21 @@ dotnet ef database update --project src/PokemonTools.Web.Infrastructure --startu
 
 # カバレッジレポート生成（要 dotnet-reportgenerator-globaltool）
 pwsh scripts/TestCoverage.ps1
+
+# CSS ビルド（Tailwind）
+npm run css:build
+
+# CSS ウォッチ（開発時）
+npm run css:watch
 ```
+
+## CSS
+
+- **Tailwind CSS v4** でスタイリング。CSS isolationファイル (.razor.css) は使用しない
+- Tailwindソース: `src/PokemonTools.Web/Styles/app.css`
+- ビルド出力: `src/PokemonTools.Web/wwwroot/app.generated.css` (git管理外)
+- MSBuild統合: `build/Tailwind.targets` でビルド/パブリッシュ時に自動生成
+- Bootstrapクラスと同名のコンポーネントクラス (`btn`, `form-control`, `alert` 等) は `@layer components` で定義済み
 
 ## アーキテクチャ
 

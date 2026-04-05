@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "css:web": "tailwindcss -i src/PokemonTools.Web/Styles/app.css -o src/PokemonTools.Web/wwwroot/app.generated.css --minify",
+    "css:build": "npm run css:web",
+    "css:watch": "tailwindcss -i src/PokemonTools.Web/Styles/app.css -o src/PokemonTools.Web/wwwroot/app.generated.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "tailwindcss": "^4.2.2"
+  }
+}

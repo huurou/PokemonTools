@@ -1,0 +1,21 @@
+﻿<Project>
+  <Target Name="TailwindBuild" BeforeTargets="Build"
+          Condition="Exists('$(MSBuildProjectDirectory)/Styles/app.css')">
+    <Exec Command="npx @tailwindcss/cli -i Styles/app.css -o wwwroot/app.generated.css --minify"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          StandardOutputImportance="Low"
+          StandardErrorImportance="Low" />
+  </Target>
+
+  <Target Name="TailwindPublish" BeforeTargets="Publish"
+          Condition="Exists('$(MSBuildProjectDirectory)/Styles/app.css')">
+    <Exec Command="npx @tailwindcss/cli -i Styles/app.css -o wwwroot/app.generated.css --minify"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          StandardOutputImportance="Low"
+          StandardErrorImportance="Low" />
+  </Target>
+
+  <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)/Styles')">
+    <Content Remove="Styles\**" />
+  </ItemGroup>
+</Project>

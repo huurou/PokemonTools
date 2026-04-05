@@ -130,7 +130,7 @@ function Get-FileContentWithEncoding {
     $strictUtf8 = New-Object System.Text.UTF8Encoding ($false, $true)
     try {
         $content = $strictUtf8.GetString($bytes)
-        return [PSCustomObject]@{ Content = $content; Encoding = [System.Text.Encoding]::UTF8 }
+        return [PSCustomObject]@{ Content = $content; Encoding = (New-Object System.Text.UTF8Encoding $false) }
     }
     catch [System.Text.DecoderFallbackException] {
         # UTF-8 として失敗した場合は Shift_JIS とみなして変換
