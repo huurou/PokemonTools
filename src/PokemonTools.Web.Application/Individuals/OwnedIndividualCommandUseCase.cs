@@ -42,14 +42,20 @@ public class OwnedIndividualCommandUseCase(IIndividualRepository individualRepos
             throw new InvalidOperationException($"手持ち個体以外は更新できません: {command.Id}");
         }
 
-        var updated = CreateIndividual(
-            individualId, command.Name,
-            command.SpeciesId, command.StatAlignmentId, command.AbilityId,
-            command.StatPointHp, command.StatPointAttack, command.StatPointDefense,
-            command.StatPointSpecialAttack, command.StatPointSpecialDefense, command.StatPointSpeed,
-            command.Move1Id, command.Move2Id, command.Move3Id, command.Move4Id,
-            command.HeldItemId, command.TeraTypeId, command.Memo,
-            existing.CategoryId);
+        var updated = existing.Update(
+            command.Name,
+            new SpeciesId(command.SpeciesId),
+            new StatAlignmentId(command.StatAlignmentId),
+            new AbilityId(command.AbilityId),
+            new StatPoints(command.StatPointHp, command.StatPointAttack, command.StatPointDefense,
+                command.StatPointSpecialAttack, command.StatPointSpecialDefense, command.StatPointSpeed),
+            new MoveId(command.Move1Id),
+            command.Move2Id is not null ? new MoveId(command.Move2Id.Value) : null,
+            command.Move3Id is not null ? new MoveId(command.Move3Id.Value) : null,
+            command.Move4Id is not null ? new MoveId(command.Move4Id.Value) : null,
+            command.HeldItemId is not null ? new ItemId(command.HeldItemId.Value) : null,
+            new TypeId(command.TeraTypeId),
+            command.Memo);
         await individualRepository.UpdateAsync(updated, cancellationToken);
     }
 

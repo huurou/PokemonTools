@@ -33,4 +33,43 @@ public class OwnedIndividualFormModel
         SelectedStatAlignmentId = formData.DefaultStatAlignmentId;
         SelectedTeraTypeId = formData.DefaultTeraTypeId;
     }
+
+    public RegisterOwnedIndividualCommand ToRegisterCommand()
+    {
+        return new RegisterOwnedIndividualCommand(
+            string.IsNullOrWhiteSpace(Name) ? null : Name,
+            SelectedSpeciesId,
+            SelectedStatAlignmentId,
+            SelectedAbilityId,
+            StatPointHp, StatPointAttack, StatPointDefense,
+            StatPointSpecialAttack, StatPointSpecialDefense, StatPointSpeed,
+            SelectedMove1Id,
+            SelectedMove2Id > 0 ? SelectedMove2Id : null,
+            SelectedMove3Id > 0 ? SelectedMove3Id : null,
+            SelectedMove4Id > 0 ? SelectedMove4Id : null,
+            SelectedHeldItemId > 0 ? SelectedHeldItemId : null,
+            SelectedTeraTypeId,
+            string.IsNullOrWhiteSpace(Memo) ? null : Memo
+        );
+    }
+
+    public UpdateOwnedIndividualCommand ToUpdateCommand(string id)
+    {
+        return new UpdateOwnedIndividualCommand(
+            id,
+            string.IsNullOrWhiteSpace(Name) ? null : Name,
+            SelectedSpeciesId,
+            SelectedStatAlignmentId,
+            SelectedAbilityId,
+            StatPointHp, StatPointAttack, StatPointDefense,
+            StatPointSpecialAttack, StatPointSpecialDefense, StatPointSpeed,
+            SelectedMove1Id,
+            SelectedMove2Id > 0 ? SelectedMove2Id : null,
+            SelectedMove3Id > 0 ? SelectedMove3Id : null,
+            SelectedMove4Id > 0 ? SelectedMove4Id : null,
+            SelectedHeldItemId > 0 ? SelectedHeldItemId : null,
+            SelectedTeraTypeId,
+            string.IsNullOrWhiteSpace(Memo) ? null : Memo
+        );
+    }
 }

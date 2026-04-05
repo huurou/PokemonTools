@@ -36,21 +36,7 @@ public partial class IndividualNew(
                 return;
             }
 
-            var command = new RegisterOwnedIndividualCommand(
-                string.IsNullOrWhiteSpace(model_.Name) ? null : model_.Name,
-                model_.SelectedSpeciesId,
-                model_.SelectedStatAlignmentId,
-                model_.SelectedAbilityId,
-                model_.StatPointHp, model_.StatPointAttack, model_.StatPointDefense,
-                model_.StatPointSpecialAttack, model_.StatPointSpecialDefense, model_.StatPointSpeed,
-                model_.SelectedMove1Id,
-                model_.SelectedMove2Id > 0 ? model_.SelectedMove2Id : null,
-                model_.SelectedMove3Id > 0 ? model_.SelectedMove3Id : null,
-                model_.SelectedMove4Id > 0 ? model_.SelectedMove4Id : null,
-                model_.SelectedHeldItemId > 0 ? model_.SelectedHeldItemId : null,
-                model_.SelectedTeraTypeId,
-                string.IsNullOrWhiteSpace(model_.Memo) ? null : model_.Memo
-            );
+            var command = model_.ToRegisterCommand();
             await commandUseCase.RegisterAsync(command);
             navigationManager.NavigateTo("individuals");
         }

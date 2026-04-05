@@ -23,6 +23,8 @@ public partial class IndividualForm : ComponentBase
     private string moveFilter3_ = "";
     private string moveFilter4_ = "";
     private string itemFilter_ = "";
+    private Dictionary<int, SpeciesOptionDto>? speciesById_;
+    private Dictionary<int, OptionDto>? abilityById_;
 
     private uint StatPointTotal => Model.StatPointHp + Model.StatPointAttack + Model.StatPointDefense +
         Model.StatPointSpecialAttack + Model.StatPointSpecialDefense + Model.StatPointSpeed;
@@ -34,19 +36,24 @@ public partial class IndividualForm : ComponentBase
         Model.SelectedTeraTypeId > 0 &&
         StatPointTotal <= 66;
 
+    private Dictionary<int, SpeciesOptionDto> SpeciesById =>
+        speciesById_ ??= FormData.AllSpecies.ToDictionary(x => x.Id);
+
+    private Dictionary<int, OptionDto> AbilityById =>
+        abilityById_ ??= FormData.AllAbilities.ToDictionary(x => x.Id);
+
     private List<OptionDto> AvailableAbilities
     {
         get
         {
-            var species = FormData.AllSpecies.FirstOrDefault(x => x.Id == Model.SelectedSpeciesId);
-            if (species is null) { return []; }
+            if (!SpeciesById.TryGetValue(Model.SelectedSpeciesId, out var species)) { return []; }
             var abilityIds = new List<int> { species.Ability1Id };
             if (species.Ability2Id is not null) { abilityIds.Add(species.Ability2Id.Value); }
             if (species.HiddenAbilityId is not null) { abilityIds.Add(species.HiddenAbilityId.Value); }
             return abilityIds
-                .Select(x => FormData.AllAbilities.FirstOrDefault(y => y.Id == x))
-                .Where(x => x is not null)
-                .ToList()!;
+                .Where(x => AbilityById.ContainsKey(x))
+                .Select(x => AbilityById[x])
+                .ToList();
         }
     }
 
@@ -74,7 +81,7 @@ public partial class IndividualForm : ComponentBase
     {
         get
         {
-            var species = FormData.AllSpecies.FirstOrDefault(x => x.Id == Model.SelectedSpeciesId);
+            SpeciesById.TryGetValue(Model.SelectedSpeciesId, out var species);
             return IndividualStatsPreview.Calculate(
                 species, Model.SelectedStatAlignmentId,
                 Model.StatPointHp, Model.StatPointAttack, Model.StatPointDefense,

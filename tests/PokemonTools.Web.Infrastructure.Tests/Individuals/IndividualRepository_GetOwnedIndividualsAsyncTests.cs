@@ -1,4 +1,5 @@
-﻿using PokemonTools.Web.Domain.Individuals;
+﻿using Microsoft.EntityFrameworkCore;
+using PokemonTools.Web.Domain.Individuals;
 using PokemonTools.Web.Infrastructure.Individuals;
 using static PokemonTools.Web.Infrastructure.Tests.Individuals.IndividualRepositoryTestHelper;
 
@@ -34,10 +35,23 @@ public class IndividualRepository_GetOwnedIndividualsAsyncTests(PostgreSqlFixtur
     }
 
     [Fact]
-    public async Task 個体が存在しない場合_空コレクションが返される()
+    public async Task 手持ち個体が存在しない場合_空コレクションが返される()
     {
         // Arrange
         var ct = TestContext.Current.CancellationToken;
+        await using var cleanupContext = fixture.CreateContext();
+        await SeedMasterDataAsync(cleanupContext, ct);
+        var ownedEntities = cleanupContext.Individuals
+            .Where(x => x.CategoryId == IndividualCategory.OwnedIndividual.Id.Value);
+        cleanupContext.Individuals.RemoveRange(ownedEntities);
+        await cleanupContext.SaveChangesAsync(ct);
+
+        await using var seedContext = fixture.CreateContext();
+        var seedRepo = new IndividualRepository(seedContext);
+        await seedRepo.AddAsync(CreateDefaultIndividual(
+            id: "ind_preset_empty_test",
+            categoryId: IndividualCategory.DamageCalculationPreset.Id
+        ), ct);
 
         // Act
         await using var context = fixture.CreateContext();
@@ -45,6 +59,6 @@ public class IndividualRepository_GetOwnedIndividualsAsyncTests(PostgreSqlFixtur
         var result = await repository.GetOwnedIndividualsAsync(ct);
 
         // Assert
-        Assert.IsType<List<Individual>>(result);
+        Assert.Empty(result);
     }
 }
