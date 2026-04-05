@@ -9,4 +9,9 @@ public interface IMoveRepository
     /// <param name="cancellationToken">キャンセルトークン</param>
     /// <returns></returns>
     Task UpsertRangeAsync(List<Move> moves, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 全技を取得します。
+    /// </summary>
+    Task<List<Move>> GetAllAsync(CancellationToken cancellationToken = default);
 }

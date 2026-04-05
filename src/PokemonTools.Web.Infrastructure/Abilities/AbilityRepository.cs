@@ -42,4 +42,18 @@ public class AbilityRepository(PokemonToolsDbContext context) : IAbilityReposito
         await context.SaveChangesAsync(cancellationToken);
         context.ChangeTracker.Clear();
     }
+
+    public async Task<List<Ability>> GetByIdsAsync(IEnumerable<AbilityId> ids, CancellationToken cancellationToken = default)
+    {
+        var idValues = ids.Select(x => x.Value).ToList();
+        var entities = await context.Abilities
+            .Where(x => idValues.Contains(x.AbilityId))
+            .ToListAsync(cancellationToken);
+        var dict = entities.ToDictionary(x => x.AbilityId);
+        return idValues
+            .Where(x => dict.ContainsKey(x))
+            .Select(x => dict[x])
+            .Select(x => new Ability(new AbilityId(x.AbilityId), x.AbilityName))
+            .ToList();
+    }
 }

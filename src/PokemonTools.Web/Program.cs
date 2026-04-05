@@ -1,15 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokemonTools.ServiceDefaults;
+using PokemonTools.Web.Application.Individuals;
 using PokemonTools.Web.Application.MasterData;
 using PokemonTools.Web.Components;
 using PokemonTools.Web.Domain.Abilities;
+using PokemonTools.Web.Domain.Individuals;
 using PokemonTools.Web.Domain.Items;
 using PokemonTools.Web.Domain.Moves;
+using PokemonTools.Web.Domain.Parties;
 using PokemonTools.Web.Domain.Species;
 using PokemonTools.Web.Infrastructure.Abilities;
 using PokemonTools.Web.Infrastructure.Db;
+using PokemonTools.Web.Infrastructure.Individuals;
 using PokemonTools.Web.Infrastructure.Items;
 using PokemonTools.Web.Infrastructure.Moves;
+using PokemonTools.Web.Infrastructure.Parties;
 using PokemonTools.Web.Infrastructure.PokeApi;
 using PokemonTools.Web.Infrastructure.Species;
 
@@ -26,7 +31,14 @@ builder.Services.AddOutputCache();
 
 builder.AddNpgsqlDbContext<PokemonToolsDbContext>(
     "pokemon-tools-db",
-    configureDbContextOptions: options => options.AddInterceptors(new TimestampSaveChangesInterceptor(TimeProvider.System))
+    configureDbContextOptions: options =>
+    {
+        options.AddInterceptors(new TimestampSaveChangesInterceptor(TimeProvider.System));
+        if (builder.Environment.IsDevelopment())
+        {
+            options.EnableSensitiveDataLogging();
+        }
+    }
 );
 
 builder.Services.AddPokeApiClient();
@@ -40,6 +52,11 @@ builder.Services.AddScoped<IAbilityRepository, AbilityRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IMoveRepository, MoveRepository>();
 builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+builder.Services.AddScoped<IIndividualRepository, IndividualRepository>();
+builder.Services.AddScoped<IPartyRepository, PartyRepository>();
+builder.Services.AddScoped<OwnedIndividualCommandUseCase>();
+builder.Services.AddScoped<OwnedIndividualQueryService>();
+builder.Services.AddScoped<OwnedIndividualFormQueryService>();
 
 
 var app = builder.Build();

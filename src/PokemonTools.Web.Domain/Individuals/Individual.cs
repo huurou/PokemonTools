@@ -161,4 +161,22 @@ public record Individual
         return new Individual(Id, Name, SpeciesId, StatAlignmentId, AbilityId, StatPoints,
             move1Id, move2Id, move3Id, move4Id, HeldItemId, TeraTypeId, Memo, CategoryId);
     }
+
+    public Individual Update(
+        string? name,
+        SpeciesId speciesId,
+        StatAlignmentId statAlignmentId,
+        AbilityId abilityId,
+        StatPoints statPoints,
+        MoveId move1Id,
+        MoveId? move2Id,
+        MoveId? move3Id,
+        MoveId? move4Id,
+        ItemId? heldItemId,
+        TypeId teraTypeId,
+        string? memo)
+    {
+        return new Individual(Id, name, speciesId, statAlignmentId, abilityId, statPoints,
+            move1Id, move2Id, move3Id, move4Id, heldItemId, teraTypeId, memo, CategoryId);
+    }
 }

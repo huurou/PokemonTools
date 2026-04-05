@@ -1,0 +1,26 @@
+﻿@page "/individuals/{Id}/edit"
+@rendermode InteractiveServer
+
+<PageTitle>手持ち編集</PageTitle>
+
+<h1>手持ち編集</h1>
+
+@if (isLoading_)
+{
+    <p>読み込み中...</p>
+}
+else if (notFound_)
+{
+    <div class="alert alert-warning">指定された個体が見つかりませんでした。</div>
+    <a class="btn btn-secondary" href="individuals">一覧に戻る</a>
+}
+else
+{
+    <IndividualForm
+        SubmitLabel="更新"
+        OnSubmit="HandleSubmit"
+        ErrorMessage="@errorMessage_"
+        IsSubmitting="@isSubmitting_"
+        FormData="formData_"
+        Model="model_" />
+}

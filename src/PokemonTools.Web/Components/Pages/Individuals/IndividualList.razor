@@ -1,0 +1,74 @@
+﻿@page "/individuals"
+@rendermode InteractiveServer
+
+<PageTitle>手持ち管理</PageTitle>
+
+<h1>手持ち管理</h1>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="individuals/new">新規登録</a>
+</div>
+
+@if (isLoading_)
+{
+    <p>読み込み中...</p>
+}
+else if (individuals_.Count == 0)
+{
+    <div class="alert alert-info">手持ち個体がまだ登録されていません。</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>表示名</th>
+                <th>種族</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var individual in individuals_)
+            {
+                <tr>
+                    <td>@individual.DisplayName</td>
+                    <td>@individual.SpeciesName</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary me-1" href="individuals/@individual.Id/edit">編集</a>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => OnDeleteClick(individual.Id)">削除</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (showDeleteConfirm_)
+{
+    <div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">削除確認</h5>
+                    <button type="button" class="btn-close" @onclick="CancelDelete"></button>
+                </div>
+                <div class="modal-body">
+                    @if (deleteIsInParty_)
+                    {
+                        <div class="alert alert-warning mb-2">この個体はパーティに所属しています。削除するとパーティのスロットが空になります。</div>
+                    }
+                    <p>この個体を削除しますか？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">キャンセル</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">削除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (errorMessage_ is not null)
+{
+    <div class="alert alert-danger mt-3">@errorMessage_</div>
+}
