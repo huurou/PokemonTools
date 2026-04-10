@@ -73,10 +73,10 @@ jobs:
           dotnet linux-dev-certs install
 
       - name: Restore
-        run: dotnet restore PokemonTools.slnx
+        run: dotnet restore
 
       - name: Build
-        run: dotnet build PokemonTools.slnx --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore
 
       - name: Test
         run: dotnet test --configuration Release --no-build --results-directory TestResults --report-xunit-trx
