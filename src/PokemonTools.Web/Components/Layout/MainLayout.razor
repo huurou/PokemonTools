@@ -1,4 +1,4 @@
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <div class="relative flex flex-col sidebar:flex-row">
     <div class="bg-gradient-to-b from-[rgb(5,39,103)] to-[#3a0647]
@@ -13,8 +13,9 @@
     </main>
 </div>
 
-<div id="blazor-error-ui">
+<div id="blazor-error-ui"
+     class="fixed bottom-0 left-0 w-full z-[1000] bg-[lightyellow] shadow-[0_-1px_2px_rgba(0,0,0,0.2)] py-2.5 px-5 hidden">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
-    <a class="dismiss">&#x1F5D9;</a>
+    <a class="dismiss cursor-pointer absolute right-3 top-2">&#x1F5D9;</a>
 </div>

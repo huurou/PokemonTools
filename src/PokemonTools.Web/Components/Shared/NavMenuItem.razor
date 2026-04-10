@@ -1,0 +1,16 @@
+﻿<NavLink class="flex items-center h-12 px-3 rounded text-[#d7d7d7] no-underline
+                hover:bg-white/10 hover:text-white
+                [&.active]:bg-white/[0.37] [&.active]:text-white"
+         href="@Href" Match="@Match">
+    <svg class="w-5 h-5 mr-3 -mt-px fill-white shrink-0" viewBox="0 0 16 16">
+        @ChildContent
+    </svg>
+    @Text
+</NavLink>
+
+@code {
+    [Parameter] public string Href { get; set; } = "";
+    [Parameter] public NavLinkMatch Match { get; set; } = NavLinkMatch.Prefix;
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

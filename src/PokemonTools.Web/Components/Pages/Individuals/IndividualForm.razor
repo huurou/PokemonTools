@@ -1,9 +1,9 @@
-﻿<div class="row">
-    <div class="col-md-8">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <div class="md:col-span-8">
         <div class="mb-3">
-            <label class="form-label">種族 <span class="text-danger">*</span></label>
-            <input type="text" class="form-control mb-1" placeholder="種族名で検索..." @bind="speciesFilter_" @bind:event="oninput" />
-            <select class="form-select" @bind="Model.SelectedSpeciesId" @bind:after="HandleSpeciesChange">
+            <FormLabel Required>種族</FormLabel>
+            <input type="text" class="app-input mb-1" placeholder="種族名で検索..." @bind="speciesFilter_" @bind:event="oninput" />
+            <select class="app-select" @bind="Model.SelectedSpeciesId" @bind:after="HandleSpeciesChange">
                 <option value="0">-- 選択してください --</option>
                 @foreach (var species in FilteredSpecies)
                 {
@@ -13,13 +13,13 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">ニックネーム</label>
-            <input type="text" class="form-control" @bind="Model.Name" placeholder="未入力の場合は種族名で表示" />
+            <FormLabel>ニックネーム</FormLabel>
+            <input type="text" class="app-input" @bind="Model.Name" placeholder="未入力の場合は種族名で表示" />
         </div>
 
         <div class="mb-3">
-            <label class="form-label">能力補正 <span class="text-danger">*</span></label>
-            <select class="form-select" @bind="Model.SelectedStatAlignmentId">
+            <FormLabel Required>能力補正</FormLabel>
+            <select class="app-select" @bind="Model.SelectedStatAlignmentId">
                 @foreach (var sa in FormData.AllStatAlignments)
                 {
                     <option value="@sa.Id">@sa.Name</option>
@@ -28,8 +28,8 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">特性 <span class="text-danger">*</span></label>
-            <select class="form-select" @bind="Model.SelectedAbilityId" disabled="@(AvailableAbilities.Count == 0)">
+            <FormLabel Required>特性</FormLabel>
+            <select class="app-select" @bind="Model.SelectedAbilityId" disabled="@(AvailableAbilities.Count == 0)">
                 @if (AvailableAbilities.Count == 0)
                 {
                     <option value="0">-- 種族を選択してください --</option>
@@ -45,34 +45,34 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">能力ポイント <span class="text-danger">*</span></label>
-            <div class="row g-2">
-                <div class="col-2">
-                    <label class="form-label small">HP</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointHp" @bind:event="oninput" />
+            <FormLabel Required>能力ポイント</FormLabel>
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                <div>
+                    <FormLabel Size="FormLabelSize.Small">HP</FormLabel>
+                    <input type="number" class="app-input" min="0" max="32" @bind="Model.StatPointHp" @bind:event="oninput" />
                 </div>
-                <div class="col-2">
-                    <label class="form-label small">こうげき</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointAttack" @bind:event="oninput" />
+                <div>
+                    <FormLabel Size="FormLabelSize.Small">こうげき</FormLabel>
+                    <input type="number" class="app-input" min="0" max="32" @bind="Model.StatPointAttack" @bind:event="oninput" />
                 </div>
-                <div class="col-2">
-                    <label class="form-label small">ぼうぎょ</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointDefense" @bind:event="oninput" />
+                <div>
+                    <FormLabel Size="FormLabelSize.Small">ぼうぎょ</FormLabel>
+                    <input type="number" class="app-input" min="0" max="32" @bind="Model.StatPointDefense" @bind:event="oninput" />
                 </div>
-                <div class="col-2">
-                    <label class="form-label small">とくこう</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointSpecialAttack" @bind:event="oninput" />
+                <div>
+                    <FormLabel Size="FormLabelSize.Small">とくこう</FormLabel>
+                    <input type="number" class="app-input" min="0" max="32" @bind="Model.StatPointSpecialAttack" @bind:event="oninput" />
                 </div>
-                <div class="col-2">
-                    <label class="form-label small">とくぼう</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointSpecialDefense" @bind:event="oninput" />
+                <div>
+                    <FormLabel Size="FormLabelSize.Small">とくぼう</FormLabel>
+                    <input type="number" class="app-input" min="0" max="32" @bind="Model.StatPointSpecialDefense" @bind:event="oninput" />
                 </div>
-                <div class="col-2">
-                    <label class="form-label small">すばやさ</label>
-                    <input type="number" class="form-control" min="0" max="32" @bind="Model.StatPointSpeed" @bind:event="oninput" />
+                <div>
+                    <FormLabel Size="FormLabelSize.Small">すばやさ</FormLabel>
+                    <input type="number" class="app-input" min="0" max="32" @bind="Model.StatPointSpeed" @bind:event="oninput" />
                 </div>
             </div>
-            <small class="text-muted">合計: @StatPointTotal / 66</small>
+            <small class="text-[#6c757d]">合計: @StatPointTotal / 66</small>
             @if (StatPointTotal > 66)
             {
                 <small class="text-danger ms-2">合計が66を超えています</small>
@@ -80,9 +80,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">技1 <span class="text-danger">*</span></label>
-            <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter1_" @bind:event="oninput" />
-            <select class="form-select" @bind="Model.SelectedMove1Id">
+            <FormLabel Required>技1</FormLabel>
+            <input type="text" class="app-input mb-1" placeholder="技名で検索..." @bind="moveFilter1_" @bind:event="oninput" />
+            <select class="app-select" @bind="Model.SelectedMove1Id">
                 <option value="0">-- 選択してください --</option>
                 @foreach (var move in FilteredMoves1)
                 {
@@ -92,9 +92,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">技2</label>
-            <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter2_" @bind:event="oninput" />
-            <select class="form-select" @bind="Model.SelectedMove2Id">
+            <FormLabel>技2</FormLabel>
+            <input type="text" class="app-input mb-1" placeholder="技名で検索..." @bind="moveFilter2_" @bind:event="oninput" />
+            <select class="app-select" @bind="Model.SelectedMove2Id">
                 <option value="0">-- なし --</option>
                 @foreach (var move in FilteredMoves2)
                 {
@@ -104,9 +104,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">技3</label>
-            <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter3_" @bind:event="oninput" />
-            <select class="form-select" @bind="Model.SelectedMove3Id">
+            <FormLabel>技3</FormLabel>
+            <input type="text" class="app-input mb-1" placeholder="技名で検索..." @bind="moveFilter3_" @bind:event="oninput" />
+            <select class="app-select" @bind="Model.SelectedMove3Id">
                 <option value="0">-- なし --</option>
                 @foreach (var move in FilteredMoves3)
                 {
@@ -116,9 +116,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">技4</label>
-            <input type="text" class="form-control mb-1" placeholder="技名で検索..." @bind="moveFilter4_" @bind:event="oninput" />
-            <select class="form-select" @bind="Model.SelectedMove4Id">
+            <FormLabel>技4</FormLabel>
+            <input type="text" class="app-input mb-1" placeholder="技名で検索..." @bind="moveFilter4_" @bind:event="oninput" />
+            <select class="app-select" @bind="Model.SelectedMove4Id">
                 <option value="0">-- なし --</option>
                 @foreach (var move in FilteredMoves4)
                 {
@@ -128,9 +128,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">持ち物</label>
-            <input type="text" class="form-control mb-1" placeholder="道具名で検索..." @bind="itemFilter_" @bind:event="oninput" />
-            <select class="form-select" @bind="Model.SelectedHeldItemId">
+            <FormLabel>持ち物</FormLabel>
+            <input type="text" class="app-input mb-1" placeholder="道具名で検索..." @bind="itemFilter_" @bind:event="oninput" />
+            <select class="app-select" @bind="Model.SelectedHeldItemId">
                 <option value="0">-- なし --</option>
                 @foreach (var item in FilteredItems)
                 {
@@ -140,8 +140,8 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">テラスタイプ <span class="text-danger">*</span></label>
-            <select class="form-select" @bind="Model.SelectedTeraTypeId">
+            <FormLabel Required>テラスタイプ</FormLabel>
+            <select class="app-select" @bind="Model.SelectedTeraTypeId">
                 @foreach (var type in FormData.AllTeraTypes)
                 {
                     <option value="@type.Id">@type.Name</option>
@@ -150,30 +150,30 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">メモ</label>
-            <textarea class="form-control" rows="3" @bind="Model.Memo"></textarea>
+            <FormLabel>メモ</FormLabel>
+            <textarea class="app-input" rows="3" @bind="Model.Memo"></textarea>
         </div>
 
         <div class="mb-3">
-            <button class="btn btn-primary me-2" @onclick="OnSubmit" disabled="@(!IsValid || IsSubmitting)">
+            <Button OnClick="OnSubmit" Disabled="@(!IsValid || IsSubmitting)" class="me-2">
                 @(IsSubmitting ? "保存中..." : SubmitLabel)
-            </button>
-            <a class="btn btn-secondary" href="individuals">キャンセル</a>
+            </Button>
+            <Button Variant="ButtonVariant.Secondary" Href="individuals">キャンセル</Button>
         </div>
 
         @if (ErrorMessage is not null)
         {
-            <div class="alert alert-danger">@ErrorMessage</div>
+            <Alert Variant="AlertVariant.Danger">@ErrorMessage</Alert>
         }
     </div>
 
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">Lv.50 実数値</div>
-            <div class="card-body">
+    <div class="md:col-span-4">
+        <div class="border border-[#dee2e6] rounded-md bg-white">
+            <div class="px-4 py-3 bg-[#f8f9fa] border-b border-[#dee2e6] font-semibold">Lv.50 実数値</div>
+            <div class="p-4">
                 @if (CalculatedStats is not null)
                 {
-                    <table class="table table-sm mb-0">
+                    <table class="w-full border-collapse [&_td]:py-1 [&_td]:px-2 [&_td]:border-b [&_td]:border-[#dee2e6] mb-0">
                         <tr><td>HP</td><td class="text-end"><strong>@CalculatedStats.Hp</strong></td></tr>
                         <tr><td>こうげき</td><td class="text-end"><strong>@CalculatedStats.Attack</strong></td></tr>
                         <tr><td>ぼうぎょ</td><td class="text-end"><strong>@CalculatedStats.Defense</strong></td></tr>
@@ -184,7 +184,7 @@
                 }
                 else
                 {
-                    <p class="text-muted mb-0">種族を選択すると実数値が表示されます</p>
+                    <p class="text-[#6c757d] mb-0">種族を選択すると実数値が表示されます</p>
                 }
             </div>
         </div>
