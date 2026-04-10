@@ -1,0 +1,9 @@
+﻿@if (Href is not null)
+{
+    <a href="@Href" class="@MergedCssClass" @attributes="FilteredAttributes">@ChildContent</a>
+}
+else
+{
+    <button type="@(Type ?? "button")" class="@MergedCssClass" disabled="@Disabled"
+            @onclick="OnClick" @attributes="FilteredAttributes">@ChildContent</button>
+}

@@ -8,13 +8,13 @@
 <p>PokeAPIからマスターデータを取得してDBに保存します。</p>
 
 <div class="mb-3">
-    <button class="btn btn-primary me-2" @onclick="ImportAll" disabled="@isRunning_">全データインポート</button>
-    <button class="btn btn-outline-secondary me-2" @onclick="ImportItems" disabled="@isRunning_">道具</button>
-    <button class="btn btn-outline-secondary me-2" @onclick="ImportMoves" disabled="@isRunning_">技</button>
-    <button class="btn btn-outline-secondary me-2" @onclick="ImportAbilitiesAndSpecies" disabled="@isRunning_">特性・種族</button>
+    <Button OnClick="ImportAll" Disabled="@isRunning_" class="me-2">全データインポート</Button>
+    <Button Variant="ButtonVariant.OutlineSecondary" OnClick="ImportItems" Disabled="@isRunning_" class="me-2">道具</Button>
+    <Button Variant="ButtonVariant.OutlineSecondary" OnClick="ImportMoves" Disabled="@isRunning_" class="me-2">技</Button>
+    <Button Variant="ButtonVariant.OutlineSecondary" OnClick="ImportAbilitiesAndSpecies" Disabled="@isRunning_" class="me-2">特性・種族</Button>
     @if (isRunning_)
     {
-        <button class="btn btn-danger" @onclick="CancelImport">キャンセル</button>
+        <Button Variant="ButtonVariant.Danger" OnClick="CancelImport">キャンセル</Button>
     }
 </div>
 
@@ -30,12 +30,12 @@
         @currentProgress_.Current / @currentProgress_.Total 件 (@percentageText%)
         @if (currentProgress_.CurrentName is not null)
         {
-            <span class="text-muted ms-2">@currentProgress_.CurrentName</span>
+            <span class="text-[#6c757d] ms-2">@currentProgress_.CurrentName</span>
         }
     </div>
 
-    <div class="progress mb-3" style="height: 24px;">
-        <div class="progress-bar progress-bar-striped progress-bar-animated"
+    <div class="flex overflow-hidden bg-[#e9ecef] rounded-md h-6 mb-3">
+        <div class="flex flex-col justify-center overflow-hidden text-white text-center whitespace-nowrap bg-primary transition-[width] duration-600 ease-out bg-[length:1rem_1rem] bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)] animate-[progress-stripes_1s_linear_infinite]"
              role="progressbar"
              style="width: @(percentageText)%"
              aria-valuenow="@percentageText"
@@ -47,15 +47,15 @@
 
 @if (status_ == ImportStatus.Completed)
 {
-    <div class="alert alert-success">インポートが完了しました。</div>
+    <Alert Variant="AlertVariant.Success">インポートが完了しました。</Alert>
 }
 
 @if (status_ == ImportStatus.Cancelled)
 {
-    <div class="alert alert-warning">インポートがキャンセルされました。</div>
+    <Alert Variant="AlertVariant.Warning">インポートがキャンセルされました。</Alert>
 }
 
 @if (errorMessage_ is not null)
 {
-    <div class="alert alert-danger">エラー: @errorMessage_</div>
+    <Alert Variant="AlertVariant.Danger">エラー: @errorMessage_</Alert>
 }
