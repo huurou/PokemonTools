@@ -7,10 +7,3 @@
     </svg>
     @Text
 </NavLink>
-
-@code {
-    [Parameter] public string Href { get; set; } = "";
-    [Parameter] public NavLinkMatch Match { get; set; } = NavLinkMatch.Prefix;
-    [Parameter] public string Text { get; set; } = "";
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-}

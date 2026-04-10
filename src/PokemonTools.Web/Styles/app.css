@@ -34,6 +34,10 @@
     .blazor-error-boundary::after {
         content: "An error has occurred.";
     }
+
+    .validation-message {
+        @apply text-danger text-sm;
+    }
 }
 
 @layer components {
